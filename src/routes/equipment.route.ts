@@ -16,19 +16,19 @@ import { getEquipmentsRequestSchema } from '../validators/schemas/get-equipments
 
 const router = Router();
 
-router.route('/equipment')
+router.route('/')
       .get(getEquipments)
       .post(validate({body: createEquipmentRequestSchema}), createEquipment);
 
-router.route('/equipment/:id')
+router.route('/:id')
       .get(validate({params: getEquipmentRequestSchema}), getEquipment)
       .patch(validate({body: updateEquipmentRequestSchema}), updateEquipment)
       .delete(deleteEquipment);
 
-router.route('/equipment/:id/requests')
+router.route('/:id/requests')
       .get(getEquipmentRequests);
 
-router.route('/equipment/:id/weather')
+router.route('/:id/weather')
       .get(getEquipmentWeather);
 
 export default router;

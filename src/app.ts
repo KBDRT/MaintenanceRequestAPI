@@ -5,6 +5,6 @@ const app: Express = express();
 
 app.use(express.json());          
 // app.use(express.urlencoded({ extended: true })); 
-app.use('/api', router);
+app.use('/api/equipments', router);
 
 export default app;
