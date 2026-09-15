@@ -8,6 +8,8 @@ export const getEquipments = async (req: Request, res: Response): Promise<void> 
 
 export const createEquipment = async (req: Request, res: Response): Promise<void> => {
   // const { body } = req.body;
+  console.log(req.body);
+  console.log(typeof(req.body));
   await service.addEquipment(req.body);
   res.status(200).json({ ok: true });
 };

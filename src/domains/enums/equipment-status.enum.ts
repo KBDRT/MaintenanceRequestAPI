@@ -1,6 +1,6 @@
 export enum EquipmentStatus {
-  operational,
-  maintenance,
-  fault,
-  decommissioned
+  operational = 'operational', 
+  maintenance = 'maintenance', 
+  fault = 'fault',
+  decommissioned = 'decommissioned'
 }

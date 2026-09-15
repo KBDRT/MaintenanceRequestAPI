@@ -1,6 +1,6 @@
 export enum EquipmentType {
-  turbine,
-  inverter,
-  sensor,
-  substation
+  turbine = 'turbine', 
+  inverter = 'inverter', 
+  sensor = 'sensor',
+  substation = 'substation'
 }
