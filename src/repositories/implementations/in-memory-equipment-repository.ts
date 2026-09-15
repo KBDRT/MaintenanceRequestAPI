@@ -1,5 +1,5 @@
-import { Equipment } from '../../domains/entities/Equipment.js';
-import { IEquipmentRepository } from '../abstractions/IEquipmentRepository.js';
+import { Equipment } from '../../domains/entities/equipment.entity.js';
+import { IEquipmentRepository } from '../abstractions/equipment-repository.interface.js';
 
 export class EquipmentRepositoryMemory implements IEquipmentRepository{
   async get(): Promise<Equipment[]> {

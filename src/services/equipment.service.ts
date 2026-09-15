@@ -1,8 +1,8 @@
-import { IEquipmentRepository } from "../repositories/abstractions/IEquipmentRepository.js";
-import { EquipmentRepositoryMemory } from "../repositories/implementations/EquipmentRepositoryMemory.js";
+import { IEquipmentRepository } from "../repositories/abstractions/equipment-repository.interface.js";
+import { EquipmentRepositoryMemory } from "../repositories/implementations/in-memory-equipment-repository.js";
 
 const repository: IEquipmentRepository = new EquipmentRepositoryMemory();
 
-export const createEqupment = (): void => {
+export const createEquipment = (): void => {
   
 };

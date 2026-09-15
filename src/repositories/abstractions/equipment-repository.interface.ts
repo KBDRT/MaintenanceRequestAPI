@@ -1,4 +1,4 @@
-import { Equipment } from "../../domains/entities/Equipment.js";
+import { Equipment } from "../../domains/entities/equipment.entity.js";
 
 export interface IEquipmentRepository {
   get(): Promise<Equipment[]>,
