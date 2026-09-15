@@ -8,16 +8,28 @@ export class EquipmentRepositoryMemory implements IEquipmentRepository{
 
   async get(request: getEquipmentsRequest): Promise<Equipment[]> {
 
-    const filtered = this.equipments.filter(x =>
+    let filtered = this.equipments.filter(x =>
       (!request.status?.length || request.status.includes(x.status)))
       .filter(x =>
         (!request.type?.length || request.type.includes(x.type)));
 
-    // if (request.sort) {
-    //   for (const fieldName of request.sort) {
-    //     filtered.sort((a, b) => (a[fieldName] - b[fieldName]))
-    //   }
-    // }
+    if (request.dateFrom) {
+      const dateFrom = request.dateFrom;
+      filtered = filtered.filter(x => x.installedAt >= dateFrom);
+    }
+
+    if (request.dateTo) {
+      const dateTo = request.dateTo;
+      filtered = filtered.filter(x => x.installedAt <= dateTo);
+    }
+
+    if (request.sort && typeof request.sort != "string") {
+      const sortRules = request.sort;
+      for (const fieldName of sortRules) {
+        filtered.sort((a, b) => String(a[fieldName]).localeCompare(String(b[fieldName])));
+      }
+    }
+
     return filtered;
   }
 
