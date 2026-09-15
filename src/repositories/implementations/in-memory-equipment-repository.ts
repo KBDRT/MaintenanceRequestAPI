@@ -16,7 +16,8 @@ export class EquipmentRepositoryMemory implements IEquipmentRepository{
     return this.equipments.find(x => x.id == id);
   }
   async update(updatedEquipment: Equipment): Promise<void> {
-    throw new Error('Method not implemented.');
+    this.delete(updatedEquipment.id);
+    this.add(updatedEquipment);
   }
   async delete(id: string): Promise<void> {
     const newList = this.equipments.filter(n => n.id != id);

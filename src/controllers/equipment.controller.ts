@@ -22,6 +22,9 @@ export const getEquipment = async (req: Request, res: Response): Promise<void> =
 
 export const updateEquipment = async (req: Request, res: Response): Promise<void> => {
   const { id } = req.params;
+  if (typeof(id) == "string") {
+    await service.updateEquipment(id, req.body);
+  }
   res.status(200).json({ ok: true });
 };
 
