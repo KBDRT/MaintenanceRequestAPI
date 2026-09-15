@@ -1,11 +1,8 @@
-import express, { Request, Response } from 'express';
+import express, {Express} from 'express';
+import router from './routes/equipment.route.js';
 
-export const app = express();
+const app: Express = express();
 
-app.use(express.json());
+app.use('/api', router);
 
-app.get('/', (_req: Request, res: Response) => {
-  res.json({ message: 'Hello from Express + TS ESM!' });
-});
-
-
+export default app;
