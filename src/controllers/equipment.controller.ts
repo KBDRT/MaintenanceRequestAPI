@@ -1,15 +1,20 @@
 import { Request, Response } from 'express';
 import * as service from './../services/equipment.service.js';
+import { parseFilterQuery } from '../helpers/filter-params-parser.js';
 
 export const getEquipments = async (req: Request, res: Response): Promise<void> => {
-  const result = await service.getEquipments();
-  res.status(200).json(result);
+  // console.log(req.query);
+
+  parseFilterQuery(req.query);
+
+  // if (typeof(req.query) == "Get") {
+    const result = await service.getEquipments(req.query);
+    res.status(200).json(result);
+  // }
 };
 
 export const createEquipment = async (req: Request, res: Response): Promise<void> => {
   // const { body } = req.body;
-  console.log(req.body);
-  console.log(typeof(req.body));
   await service.addEquipment(req.body);
   res.status(200).json({ ok: true });
 };

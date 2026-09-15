@@ -12,12 +12,13 @@ import { validate } from '../middlewares/validator.middleware.js';
 import { getEquipmentRequestSchema } from '../validators/schemas/get-equipment.schema.js';
 import { createEquipmentRequestSchema } from '../validators/schemas/create-equipment.schema.js';
 import { updateEquipmentRequestSchema } from '../validators/schemas/update-equipment.schema.js';
+import { getEquipmentsRequestSchema } from '../validators/schemas/get-equipments.schema.js';
 
 const router = Router();
 
 router.route('/equipment')
       .get(getEquipments)
-      .post(validate({body: createEquipmentRequestSchema}),createEquipment);
+      .post(validate({body: createEquipmentRequestSchema}), createEquipment);
 
 router.route('/equipment/:id')
       .get(validate({params: getEquipmentRequestSchema}), getEquipment)

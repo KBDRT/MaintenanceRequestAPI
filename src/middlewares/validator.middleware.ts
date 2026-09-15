@@ -23,6 +23,7 @@ export function validate(schemas: RequestValidatorSchemas) {
         }
         return res.status(400).json({ message: messages }); // генерировать ошибку через return next(new ValidationError(result.error));
       }
+      req[part] = result.data;
     }
     next();
   };

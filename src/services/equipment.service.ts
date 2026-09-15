@@ -1,5 +1,6 @@
 import { Equipment } from "../domains/entities/equipment.entity.js";
 import { CreateEquipmentRequest } from "../dto/contracts/create-equipment.request.js";
+import { getEquipmentsRequest } from "../dto/contracts/get-equipments.request.js";
 import { UpdateEquipmentRequest } from "../dto/contracts/update-equipment.request.js";
 import { IEquipmentRepository } from "../repositories/abstractions/equipment-repository.interface.js";
 import { EquipmentRepositoryMemory } from "../repositories/implementations/in-memory-equipment-repository.js";
@@ -20,8 +21,8 @@ export const addEquipment = async(equipmentInfo: CreateEquipmentRequest): Promis
   let result = await repository.add(newEquipment);
 };
 
-export const getEquipments = async(): Promise<Equipment[]> => {
-  return await repository.get();
+export const getEquipments = async(request: getEquipmentsRequest): Promise<Equipment[]> => {
+  return await repository.get(request);
 };
 
 export const deleteEquipment = async(id: string): Promise<void> => {

@@ -1,7 +1,8 @@
 import { Equipment } from "../../domains/entities/equipment.entity.js";
+import { getEquipmentsRequest } from "../../dto/contracts/get-equipments.request.js";
 
 export interface IEquipmentRepository {
-  get(): Promise<Equipment[]>,
+  get(request: getEquipmentsRequest): Promise<Equipment[]>,
   add(newEquipment: Equipment): Promise<string>,
   getById(id: string): Promise<Equipment | undefined>;
   update(updatedEquipment: Equipment): Promise<void>;
