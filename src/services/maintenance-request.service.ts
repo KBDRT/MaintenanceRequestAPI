@@ -21,13 +21,12 @@ export const addRequest = async(maintenanceRequest: CreateMaintenanceRequest): P
   const newRequest = MaintenanceRequest.create(maintenanceRequest); 
   const id = await repository.add(newRequest);
 
-  console.log(newRequest);
   return id;
 };
 
 export const getRequests = async(request: GetMaintenanceRequestsRequest): Promise<MaintenanceRequest[]> => {
   // return await repository.get(request);
-  console.log(request);
+  // console.log(request);
   return [];
 };
 
@@ -63,5 +62,5 @@ export const updateRequest = async(id: string, updatedRequest: UpdateMaintenance
 
 
 export const updateRequestStatus = async(id: string, request: UpdateMaintenanceRequestStatusRequest): Promise<void> => {
-  console.log(request);
+  // console.log(request);
 }
