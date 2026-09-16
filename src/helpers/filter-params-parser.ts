@@ -29,5 +29,12 @@ export const parseFilterQuery = (query: getEquipmentsRequest): getEquipmentsRequ
     }
   }
 
+  if (newQuery.sort && newQuery.sortDirection) {
+    if (newQuery.sort?.length != newQuery.sortDirection?.length) {
+      throw new Error("Количество аргументов для сортировки и направления сортировки не одинаковое!");
+    }
+  }
+
+
   return newQuery;
 };

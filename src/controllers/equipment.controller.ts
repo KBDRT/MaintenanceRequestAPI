@@ -11,7 +11,7 @@ export const getEquipments = async (req: Request, res: Response): Promise<void> 
   // if (typeof(req.query) == "Get") {
 
   const validationResult = filterEquipmentSchema.safeParse(parsedQuery);
-  console.log(validationResult);
+  // console.log(validationResult);
 
     const result = await service.getEquipments(parsedQuery);
     res.status(200).json(result);
@@ -20,8 +20,8 @@ export const getEquipments = async (req: Request, res: Response): Promise<void> 
 
 export const createEquipment = async (req: Request, res: Response): Promise<void> => {
   // const { body } = req.body;
-  await service.addEquipment(req.body);
-  res.status(200).json({ ok: true });
+  const equipmentId = await service.addEquipment(req.body);
+  res.status(200).json({ id: equipmentId });
 };
 
 export const getEquipment = async (req: Request, res: Response): Promise<void> => {
@@ -56,5 +56,8 @@ export const getEquipmentRequests = async (req: Request, res: Response): Promise
 
 export const getEquipmentWeather = async (req: Request, res: Response): Promise<void> => {
   const { id } = req.params;
-  res.status(200).json({ ok: true });
+  if (typeof(id) == "string") {
+    const result = await service.getEquipmentWeather(id);
+    res.status(200).json(result);
+  }
 };

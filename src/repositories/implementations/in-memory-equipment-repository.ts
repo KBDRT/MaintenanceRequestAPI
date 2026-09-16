@@ -25,8 +25,23 @@ export class EquipmentRepositoryMemory implements IEquipmentRepository{
 
     if (request.sort && typeof request.sort != "string") {
       const sortRules = request.sort;
+      const sortDirections = request.sortDirection;
+      let index = 0;
       for (const fieldName of sortRules) {
-        filtered.sort((a, b) => String(a[fieldName]).localeCompare(String(b[fieldName])));
+        if (sortDirections && sortDirections[index]) {
+
+          if (sortDirections[index] == "DESC") {
+             filtered.sort((a, b) => String(b[fieldName]).localeCompare(String(a[fieldName])));
+          }
+          else {
+             filtered.sort((a, b) => String(a[fieldName]).localeCompare(String(b[fieldName])));
+          }
+
+        }
+        else {
+          filtered.sort((a, b) => String(a[fieldName]).localeCompare(String(b[fieldName])));
+        }
+        index++;
       }
     }
 
