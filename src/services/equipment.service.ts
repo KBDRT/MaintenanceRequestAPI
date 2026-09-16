@@ -4,21 +4,26 @@ import { getEquipmentsRequest } from "../dto/contracts/get-equipments.request.js
 import { UpdateEquipmentRequest } from "../dto/contracts/update-equipment.request.js";
 import { IEquipmentRepository } from "../repositories/abstractions/equipment-repository.interface.js";
 import { EquipmentRepositoryMemory } from "../repositories/implementations/in-memory-equipment-repository.js";
-import { randomUUID } from 'node:crypto';
 
 const repository: IEquipmentRepository = new EquipmentRepositoryMemory();
 
-export const addEquipment = async(equipmentInfo: CreateEquipmentRequest): Promise<void> => {
-  let newEquipment: Equipment = new Equipment();
-  newEquipment.id = randomUUID();
-  newEquipment.name = equipmentInfo.name;
-  newEquipment.type = equipmentInfo.type;
-  newEquipment.serialNumber = equipmentInfo.serialNumber;
-  newEquipment.location = equipmentInfo.location;
-  newEquipment.status = equipmentInfo.status;
-  newEquipment.installedAt = equipmentInfo.installedAt;
+//todo :rewrite errors
+export const addEquipment = async(equipmentInfo: CreateEquipmentRequest): Promise<string> => {
 
-  let result = await repository.add(newEquipment);
+  const installedDate = new Date(equipmentInfo.installedAt);
+  const currentDate = new Date();
+  if (installedDate > currentDate) {
+    throw new Error("Дата в будущем");
+  }
+
+  const existing = await repository.getBySerialNumber(equipmentInfo.serialNumber);
+  if (existing) {
+    throw new Error("Сериалномер уже есть");
+  }
+  
+  const equipment = Equipment.create(equipmentInfo);
+  await repository.add(equipment);
+  return equipment.id;
 };
 
 export const getEquipments = async(request: getEquipmentsRequest): Promise<Equipment[]> => {

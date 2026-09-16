@@ -51,4 +51,9 @@ export class EquipmentRepositoryMemory implements IEquipmentRepository{
     const newList = this.equipments.filter(n => n.id != id);
     this.equipments = newList;
   }
+
+  async getBySerialNumber(serialNumber: string): Promise<Equipment | undefined> {
+    return this.equipments.find(x => x.serialNumber == serialNumber);
+  }
+
 }
