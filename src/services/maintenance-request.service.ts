@@ -9,6 +9,9 @@ import { EquipmentRepositoryMemory } from "../repositories/implementations/in-me
 import { weatherSuitableSchema } from "../validators/schemas/equipment/weather-suitable.schema.js";
 import { getWeatherAsync } from "./weather.service.js";
 import { CreateMaintenanceRequest } from './../dto/contracts/maintenance-request/create-maintenance-request.request.js';
+import { UpdateMaintenanceRequestRequest } from "../dto/contracts/maintenance-request/update-maintenance-request.request.js";
+import { UpdateMaintenanceRequestStatusRequest } from "../dto/contracts/maintenance-request/update-status-maintenance-request.request.js";
+import { GetMaintenanceRequestsRequest } from './../dto/contracts/maintenance-request/get-maintenance-requests.request.js';
 
 // const repository: IEquipmentRepository = new EquipmentRepositoryMemory();
 
@@ -33,7 +36,7 @@ export const addEquipment = async(maintenanceRequest: CreateMaintenanceRequest):
   // return equipment.id;
 };
 
-export const getEquipments = async(request: getEquipmentsRequest): Promise<MaintenanceRequest[]> => {
+export const getEquipments = async(request: GetMaintenanceRequestsRequest): Promise<MaintenanceRequest[]> => {
   // return await repository.get(request);
   return [];
 };
@@ -57,7 +60,7 @@ export const getEquipment = async(id: string): Promise<MaintenanceRequest | unde
   return undefined;
 };
 
-export const updateEquipment = async(id: string, equipmentInfo: UpdateEquipmentRequest): Promise<void> => {
+export const updateEquipment = async(id: string, updatedRequest: UpdateMaintenanceRequestRequest): Promise<void> => {
   // const equipment = await repository.getById(id);
   // if (!equipment) {
   //   throw new Error("Не найден");
@@ -70,6 +73,6 @@ export const updateEquipment = async(id: string, equipmentInfo: UpdateEquipmentR
 };
 
 
-export const updateRequestStatus = async(id: string): Promise<void> => {
+export const updateRequestStatus = async(id: string, newStatus: UpdateMaintenanceRequestStatusRequest): Promise<void> => {
 
 }
