@@ -6,6 +6,5 @@ export interface UpdateMaintenanceRequestRequest {
   title: string;
   description: string;
   priority: MaintenanceRequestPriority;
-  status: MaintenanceRequestStatus;
   planntedAt: string;
 }

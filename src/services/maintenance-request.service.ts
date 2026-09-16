@@ -16,7 +16,7 @@ import { GetMaintenanceRequestsRequest } from './../dto/contracts/maintenance-re
 // const repository: IEquipmentRepository = new EquipmentRepositoryMemory();
 
 //todo :rewrite errors
-export const addEquipment = async(maintenanceRequest: CreateMaintenanceRequest): Promise<string> => {
+export const addRequest = async(maintenanceRequest: CreateMaintenanceRequest): Promise<string> => {
 
   console.log(maintenanceRequest);
   return "1";
@@ -36,12 +36,13 @@ export const addEquipment = async(maintenanceRequest: CreateMaintenanceRequest):
   // return equipment.id;
 };
 
-export const getEquipments = async(request: GetMaintenanceRequestsRequest): Promise<MaintenanceRequest[]> => {
+export const getRequests = async(request: GetMaintenanceRequestsRequest): Promise<MaintenanceRequest[]> => {
   // return await repository.get(request);
+  console.log(request);
   return [];
 };
 
-export const deleteEquipment = async(id: string): Promise<void> => {
+export const deleteRequest = async(id: string): Promise<void> => {
   // const existing = await repository.getById(id);
   // if (!existing) {
   //   throw new Error("Не найден");
@@ -50,7 +51,7 @@ export const deleteEquipment = async(id: string): Promise<void> => {
   // await repository.delete(id);
 };
 
-export const getEquipment = async(id: string): Promise<MaintenanceRequest | undefined> => {
+export const getRequest = async(id: string): Promise<MaintenanceRequest | undefined> => {
   // const existing = await repository.getById(id);
   // if (!existing) {
   //   throw new Error("Не найден");
@@ -60,7 +61,8 @@ export const getEquipment = async(id: string): Promise<MaintenanceRequest | unde
   return undefined;
 };
 
-export const updateEquipment = async(id: string, updatedRequest: UpdateMaintenanceRequestRequest): Promise<void> => {
+export const updateRequest = async(id: string, updatedRequest: UpdateMaintenanceRequestRequest): Promise<void> => {
+  console.log(updatedRequest);
   // const equipment = await repository.getById(id);
   // if (!equipment) {
   //   throw new Error("Не найден");
@@ -73,6 +75,6 @@ export const updateEquipment = async(id: string, updatedRequest: UpdateMaintenan
 };
 
 
-export const updateRequestStatus = async(id: string, newStatus: UpdateMaintenanceRequestStatusRequest): Promise<void> => {
-
+export const updateRequestStatus = async(id: string, request: UpdateMaintenanceRequestStatusRequest): Promise<void> => {
+  console.log(request);
 }
