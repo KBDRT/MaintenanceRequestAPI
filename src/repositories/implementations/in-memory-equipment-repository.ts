@@ -1,5 +1,5 @@
 import { Equipment } from '../../domains/entities/equipment.entity.js';
-import { getEquipmentsRequest } from '../../dto/contracts/get-equipments.request.js';
+import { getEquipmentsRequest } from '../../dto/contracts/equipment/get-equipments.request.js';
 import { IEquipmentRepository } from '../abstractions/equipment-repository.interface.js';
 
 export class EquipmentRepositoryMemory implements IEquipmentRepository{

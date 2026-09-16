@@ -1,4 +1,4 @@
-import { EquipmentLocation } from "../../domains/value-objects/equipment-location.vo.js";
+import { EquipmentLocation } from "../../../domains/value-objects/equipment-location.vo.js";
 import { DayWeather } from "../location-weather.js";
 import { WeatherRule } from "../weather-rule.js";
 

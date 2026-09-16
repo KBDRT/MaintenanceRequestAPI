@@ -1,5 +1,5 @@
 import { MaintenanceRequest } from "../../domains/entities/maintenance-request.entity.js";
-import { getEquipmentsRequest } from "../../dto/contracts/get-equipments.request.js";
+import { getEquipmentsRequest } from "../../dto/contracts/equipment/get-equipments.request.js";
 
 export interface IMaintenanceRequestRepository {
   get(request: getEquipmentsRequest): Promise<MaintenanceRequest[]>,

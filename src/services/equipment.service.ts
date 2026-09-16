@@ -1,8 +1,8 @@
 import { Equipment } from "../domains/entities/equipment.entity.js";
-import { CreateEquipmentRequest } from "../dto/contracts/create-equipment.request.js";
-import { GetEquipmentWeatherResponse } from "../dto/contracts/get-equipment-weather.response.js";
-import { getEquipmentsRequest } from "../dto/contracts/get-equipments.request.js";
-import { UpdateEquipmentRequest } from "../dto/contracts/update-equipment.request.js";
+import { CreateEquipmentRequest } from "../dto/contracts/equipment/create-equipment.request.js";
+import { GetEquipmentWeatherResponse } from "../dto/contracts/equipment/get-equipment-weather.response.js";
+import { getEquipmentsRequest } from "../dto/contracts/equipment/get-equipments.request.js";
+import { UpdateEquipmentRequest } from "../dto/contracts/equipment/update-equipment.request.js";
 import { WeatherRule } from "../dto/weather-rule.js";
 import { IEquipmentRepository } from "../repositories/abstractions/equipment-repository.interface.js";
 import { EquipmentRepositoryMemory } from "../repositories/implementations/in-memory-equipment-repository.js";

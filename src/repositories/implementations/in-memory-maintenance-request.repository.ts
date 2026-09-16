@@ -1,6 +1,6 @@
 import { Equipment } from '../../domains/entities/equipment.entity.js';
 import { MaintenanceRequest } from '../../domains/entities/maintenance-request.entity.js';
-import { getEquipmentsRequest } from '../../dto/contracts/get-equipments.request.js';
+import { getEquipmentsRequest } from '../../dto/contracts/equipment/get-equipments.request.js';
 import { IEquipmentRepository } from '../abstractions/equipment-repository.interface.js';
 import { IMaintenanceRequestRepository } from './../abstractions/maintenance-request.repository.interface.js';
 
