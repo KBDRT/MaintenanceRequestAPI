@@ -8,12 +8,14 @@ import { IEquipmentRepository } from "../repositories/abstractions/equipment-rep
 import { EquipmentRepositoryMemory } from "../repositories/implementations/in-memory-equipment-repository.js";
 import { weatherSuitableSchema } from "../validators/schemas/equipment/weather-suitable.schema.js";
 import { getWeatherAsync } from "./weather.service.js";
+import { CreateMaintenanceRequest } from './../dto/contracts/maintenance-request/create-maintenance-request.request.js';
 
 // const repository: IEquipmentRepository = new EquipmentRepositoryMemory();
 
 //todo :rewrite errors
-export const addEquipment = async(equipmentInfo: CreateEquipmentRequest): Promise<string> => {
+export const addEquipment = async(maintenanceRequest: CreateMaintenanceRequest): Promise<string> => {
 
+  console.log(maintenanceRequest);
   return "1";
   // const installedDate = new Date(equipmentInfo.installedAt);
   // const currentDate = new Date();

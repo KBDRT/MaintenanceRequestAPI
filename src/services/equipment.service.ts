@@ -3,7 +3,6 @@ import { CreateEquipmentRequest } from "../dto/contracts/equipment/create-equipm
 import { GetEquipmentWeatherResponse } from "../dto/contracts/equipment/get-equipment-weather.response.js";
 import { getEquipmentsRequest } from "../dto/contracts/equipment/get-equipments.request.js";
 import { UpdateEquipmentRequest } from "../dto/contracts/equipment/update-equipment.request.js";
-import { WeatherRule } from "../dto/weather-rule.js";
 import { IEquipmentRepository } from "../repositories/abstractions/equipment-repository.interface.js";
 import { EquipmentRepositoryMemory } from "../repositories/implementations/in-memory-equipment-repository.js";
 import { weatherSuitableSchema } from "../validators/schemas/equipment/weather-suitable.schema.js";

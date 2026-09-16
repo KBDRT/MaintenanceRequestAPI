@@ -1,5 +1,5 @@
 import weatherAPIConfig from "../config/config-weather-api.js";
-import { DayWeather } from "../dto/location-weather.js";
+import { DayWeather } from "../domains/value-objects/location-weather.js";
 
 
 export async function getWeatherAsync(latitude: number, longitude: number) : Promise<DayWeather[]> {
