@@ -9,16 +9,16 @@ export class MaintenanceRequest {
   id!: string;
   equipmentId!: string;
   title!: string;
-  description!: string;
+  description?: string = "";
   priority!: MaintenanceRequestPriority;
   status!: MaintenanceRequestStatus;
-  planntedAt!: string;
+  planntedAt?: string;
   createdAt?: string;
   updatedAt?: string;
 
-  static create(props: {equipmentId: string, title: string, description: string, priority: MaintenanceRequestPriority, status: MaintenanceRequestStatus, planntedAt: string}) : MaintenanceRequest {
+  static create(props: {equipmentId: string, title: string, description: string, priority: MaintenanceRequestPriority, planntedAt: string}) : MaintenanceRequest {
     let newRequest = new MaintenanceRequest();
-    newRequest = {...props, id: randomUUID(), createdAt: new Date().toISOString()};
+    newRequest = {...props, id: randomUUID(), createdAt: new Date().toISOString(), status: MaintenanceRequestStatus.new};
     
     return newRequest;
   }

@@ -14,14 +14,14 @@ export const getRequests = async (req: Request, res: Response): Promise<void> =>
   // // console.log(validationResult);
 
   const result = await service.getRequests(req.query);
-    res.status(200).json();
+  res.status(200).json(result);
   // }
 };
 
 export const createRequest = async (req: Request, res: Response): Promise<void> => {
   // const { body } = req.body;
-  const equipmentId = await service.addRequest(req.body);
-  // res.status(200).json({ id: equipmentId });
+  const requestId = await service.addRequest(req.body);
+  res.status(200).json({ id: requestId });
 };
 
 export const getRequest = async (req: Request, res: Response): Promise<void> => {

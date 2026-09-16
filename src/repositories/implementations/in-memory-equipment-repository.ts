@@ -4,11 +4,11 @@ import { IEquipmentRepository } from '../abstractions/equipment-repository.inter
 
 export class EquipmentRepositoryMemory implements IEquipmentRepository{
 
-  private equipments: Equipment[] = [];
+  private static equipments: Equipment[] = [];
 
   async get(request: getEquipmentsRequest): Promise<Equipment[]> {
 
-    let filtered = this.equipments.filter(x =>
+    let filtered = EquipmentRepositoryMemory.equipments.filter(x =>
       (!request.status?.length || request.status.includes(x.status)))
       .filter(x =>
         (!request.type?.length || request.type.includes(x.type)));
@@ -49,12 +49,12 @@ export class EquipmentRepositoryMemory implements IEquipmentRepository{
   }
 
   async add(newEquipment: Equipment): Promise<string> {
-    this.equipments.push(newEquipment);
-    return this.equipments.length.toString();
+    EquipmentRepositoryMemory.equipments.push(newEquipment);
+    return EquipmentRepositoryMemory.equipments.length.toString();
   }
 
   async getById(id: string): Promise<Equipment | undefined> {
-    return this.equipments.find(x => x.id == id);
+    return EquipmentRepositoryMemory.equipments.find(x => x.id == id);
   }
 
   async update(updatedEquipment: Equipment): Promise<void> {
@@ -63,12 +63,12 @@ export class EquipmentRepositoryMemory implements IEquipmentRepository{
   }
 
   async delete(id: string): Promise<void> {
-    const newList = this.equipments.filter(n => n.id != id);
-    this.equipments = newList;
+    const newList = EquipmentRepositoryMemory.equipments.filter(n => n.id != id);
+    EquipmentRepositoryMemory.equipments = newList;
   }
 
   async getBySerialNumber(serialNumber: string): Promise<Equipment | undefined> {
-    return this.equipments.find(x => x.serialNumber == serialNumber);
+    return EquipmentRepositoryMemory.equipments.find(x => x.serialNumber == serialNumber);
   }
 
 }

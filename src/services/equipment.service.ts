@@ -77,7 +77,6 @@ export const getEquipmentWeather = async(id: string): Promise<GetEquipmentWeathe
   const daysWeather = await getWeatherAsync(equipment.location.lat, equipment.location.lon);
   for (const weather of daysWeather) {
     const parsed = weatherSuitableSchema.safeParse(weather);
-    console.log(parsed);
     weather.suitable = parsed.success;
     response.weather?.push(weather);
   }

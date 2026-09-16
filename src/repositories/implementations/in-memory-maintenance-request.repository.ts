@@ -1,24 +1,32 @@
-import { Equipment } from '../../domains/entities/equipment.entity.js';
 import { MaintenanceRequest } from '../../domains/entities/maintenance-request.entity.js';
 import { getEquipmentsRequest } from '../../dto/contracts/equipment/get-equipments.request.js';
-import { IEquipmentRepository } from '../abstractions/equipment-repository.interface.js';
 import { IMaintenanceRequestRepository } from './../abstractions/maintenance-request.repository.interface.js';
 
 export class MaintenanceRequestRepository implements IMaintenanceRequestRepository{
-  get(request: getEquipmentsRequest): Promise<MaintenanceRequest[]> {
+
+  private static requests: MaintenanceRequest[] = [];
+
+  async get(request: getEquipmentsRequest): Promise<MaintenanceRequest[]> {
     throw new Error('Method not implemented.');
   }
-  add(newRequest: MaintenanceRequest): Promise<string> {
-    throw new Error('Method not implemented.');
+
+  async add(newRequest: MaintenanceRequest): Promise<string> {
+    MaintenanceRequestRepository.requests.push(newRequest);
+    return newRequest.id;
   }
-  getById(id: string): Promise<MaintenanceRequest | undefined> {
-    throw new Error('Method not implemented.');
+
+  async getById(id: string): Promise<MaintenanceRequest | undefined> {
+   return MaintenanceRequestRepository.requests.find(req => req.id == id);
   }
-  update(updatedRequest: MaintenanceRequest): Promise<void> {
-    throw new Error('Method not implemented.');
+
+  async update(updatedRequest: MaintenanceRequest): Promise<void> {
+    this.delete(updatedRequest.id);
+    this.add(updatedRequest);
   }
-  delete(id: string): Promise<void> {
-    throw new Error('Method not implemented.');
+
+  async delete(id: string): Promise<void> {
+    const newList = MaintenanceRequestRepository.requests.filter(req => req.id != id);
+    MaintenanceRequestRepository.requests = newList;
   }
 
   // private equipments: Equipment[] = [];
@@ -64,28 +72,4 @@ export class MaintenanceRequestRepository implements IMaintenanceRequestReposito
 
   //   return filtered;
   // }
-
-  // async add(newEquipment: Equipment): Promise<string> {
-  //   this.equipments.push(newEquipment);
-  //   return this.equipments.length.toString();
-  // }
-
-  // async getById(id: string): Promise<Equipment | undefined> {
-  //   return this.equipments.find(x => x.id == id);
-  // }
-
-  // async update(updatedEquipment: Equipment): Promise<void> {
-  //   this.delete(updatedEquipment.id);
-  //   this.add(updatedEquipment);
-  // }
-
-  // async delete(id: string): Promise<void> {
-  //   const newList = this.equipments.filter(n => n.id != id);
-  //   this.equipments = newList;
-  // }
-
-  // async getBySerialNumber(serialNumber: string): Promise<Equipment | undefined> {
-  //   return this.equipments.find(x => x.serialNumber == serialNumber);
-  // }
-
 }
