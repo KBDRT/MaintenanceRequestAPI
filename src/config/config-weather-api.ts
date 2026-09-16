@@ -1,5 +1,5 @@
 import dotenv from 'dotenv';
-import { envFileSchema } from '../validators/schemas/env-file.schema.js';
+import { envFileSchema } from '../validators/schemas/common/env-file.schema.js';
 dotenv.config({ quiet: true });
 
 function validateEnvFile() {

@@ -9,9 +9,9 @@ import {
   getEquipmentWeather
 } from '../controllers/equipment.controller.js';
 import { validate } from '../middlewares/validator.middleware.js';
-import { createEquipmentRequestSchema } from '../validators/schemas/create-equipment.schema.js';
-import { updateEquipmentRequestSchema } from '../validators/schemas/update-equipment.schema.js';
-import { idRequestSchema } from '../validators/schemas/id-request.schema.js';
+import { createEquipmentRequestSchema } from '../validators/schemas/equipment/create-equipment.schema.js';
+import { updateEquipmentRequestSchema } from '../validators/schemas/equipment/update-equipment.schema.js';
+import { idRequestSchema } from '../validators/schemas/common/id-request.schema.js';
 
 const router = Router();
 

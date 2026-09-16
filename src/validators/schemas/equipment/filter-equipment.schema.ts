@@ -1,7 +1,7 @@
 import * as z from 'zod';
-import { paginationSchema } from './pagination.schema.js';
-import { EquipmentType } from '../../domains/enums/equipment-type.enum.js';
-import { EquipmentStatus } from '../../domains/enums/equipment-status.enum.js';
+import { paginationSchema } from '../common/pagination.schema.js';
+import { EquipmentType } from '../../../domains/enums/equipment-type.enum.js';
+import { EquipmentStatus } from '../../../domains/enums/equipment-status.enum.js';
 
 export const filterEquipmentSchema = z.object({
   sort: z.array(z.string()).optional(),

@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import weatherRulesConfig from '../../config/weather-rule.config.js';
+import weatherRulesConfig from '../../../config/weather-rule.config.js';
 
 export const weatherSuitableSchema = z.object({
   minTemperature: z.number().gte(weatherRulesConfig.minTemperature),

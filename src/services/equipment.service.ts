@@ -1,12 +1,11 @@
 import { Equipment } from "../domains/entities/equipment.entity.js";
-import { CreateEquipmentRequest } from "../dto/contracts/create-equipment.request.js";
-import { GetEquipmentWeatherResponse } from "../dto/contracts/get-equipment-weather.response.js";
-import { getEquipmentsRequest } from "../dto/contracts/get-equipments.request.js";
-import { UpdateEquipmentRequest } from "../dto/contracts/update-equipment.request.js";
-import { WeatherRule } from "../dto/weather-rule.js";
+import { CreateEquipmentRequest } from "../dto/contracts/equipment/create-equipment.request.js";
+import { GetEquipmentWeatherResponse } from "../dto/contracts/equipment/get-equipment-weather.response.js";
+import { getEquipmentsRequest } from "../dto/contracts/equipment/get-equipments.request.js";
+import { UpdateEquipmentRequest } from "../dto/contracts/equipment/update-equipment.request.js";
 import { IEquipmentRepository } from "../repositories/abstractions/equipment-repository.interface.js";
 import { EquipmentRepositoryMemory } from "../repositories/implementations/in-memory-equipment-repository.js";
-import { weatherSuitableSchema } from "../validators/schemas/weather-suitable.schema.js";
+import { weatherSuitableSchema } from "../validators/schemas/equipment/weather-suitable.schema.js";
 import { getWeatherAsync } from "./weather.service.js";
 
 const repository: IEquipmentRepository = new EquipmentRepositoryMemory();
@@ -78,7 +77,6 @@ export const getEquipmentWeather = async(id: string): Promise<GetEquipmentWeathe
   const daysWeather = await getWeatherAsync(equipment.location.lat, equipment.location.lon);
   for (const weather of daysWeather) {
     const parsed = weatherSuitableSchema.safeParse(weather);
-    console.log(parsed);
     weather.suitable = parsed.success;
     response.weather?.push(weather);
   }

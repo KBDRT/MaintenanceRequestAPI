@@ -1,4 +1,4 @@
-import weatherRulesConfig from "../config/weather-rule.config.js";
+import weatherRulesConfig from "../../config/weather-rule.config.js";
 
 export class WeatherRule {
   readonly minAllowedTemperature: number = weatherRulesConfig.minTemperature;
