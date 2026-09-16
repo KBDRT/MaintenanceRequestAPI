@@ -7,6 +7,7 @@ import { IMaintenanceRequestRepository } from "../repositories/abstractions/main
 import { MaintenanceRequestRepository } from "../repositories/implementations/in-memory-maintenance-request.repository.js";
 import { IEquipmentRepository } from "../repositories/abstractions/equipment-repository.interface.js";
 import { EquipmentRepositoryMemory } from "../repositories/implementations/in-memory-equipment-repository.js";
+import requestAllowStatusChange from "../config/request-allow-status-change.js";
 
 const repository: IMaintenanceRequestRepository = new MaintenanceRequestRepository();
 const equipmentRepostitory: IEquipmentRepository = new EquipmentRepositoryMemory();
@@ -25,9 +26,7 @@ export const addRequest = async(maintenanceRequest: CreateMaintenanceRequest): P
 };
 
 export const getRequests = async(request: GetMaintenanceRequestsRequest): Promise<MaintenanceRequest[]> => {
-  // return await repository.get(request);
-  // console.log(request);
-  return [];
+  return await repository.get(request);
 };
 
 export const deleteRequest = async(id: string): Promise<void> => {
@@ -62,5 +61,21 @@ export const updateRequest = async(id: string, updatedRequest: UpdateMaintenance
 
 
 export const updateRequestStatus = async(id: string, request: UpdateMaintenanceRequestStatusRequest): Promise<void> => {
-  // console.log(request);
+  const savedRequest = await repository.getById(id);
+  console.log(id, savedRequest);
+  if (!savedRequest) {
+    throw new Error("Не найден");
+  }
+
+  const validNextStatuses = requestAllowStatusChange[savedRequest.status];
+  if (!validNextStatuses) {
+    throw new Error("Таблица перехода статусов не найдена");
+  }
+
+  if (!validNextStatuses.includes(request.newStatus)) {
+    throw new Error("Ошибка со статусом, нельзя так переходить");
+  }
+
+  const updated = { ...savedRequest, status: request.newStatus };
+  await repository.update(updated);
 }

@@ -1,23 +1,12 @@
 import { Request, Response } from 'express';
 import * as service from './../services/maintenance-request.service.js';
-import { parseFilterQuery } from '../utils/filter-params-parser.js';
-import { filterEquipmentSchema } from '../validators/schemas/equipment/filter-equipment.schema.js';
 
 export const getRequests = async (req: Request, res: Response): Promise<void> => {
-  // const parsedQuery = parseFilterQuery(req.query);
-
-  // // if (typeof(req.query) == "Get") {
-
-  // const validationResult = filterEquipmentSchema.safeParse(parsedQuery);
-  // // console.log(validationResult);
-
-  const result = await service.getRequests(req.query);
+  const result = await service.getRequests(res.locals.cleanQuery);
   res.status(200).json(result);
-  // }
 };
 
 export const createRequest = async (req: Request, res: Response): Promise<void> => {
-  // const { body } = req.body;
   const requestId = await service.addRequest(req.body);
   res.status(200).json({ id: requestId });
 };

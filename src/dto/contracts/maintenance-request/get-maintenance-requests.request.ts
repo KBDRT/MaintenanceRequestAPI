@@ -17,5 +17,6 @@ export class GetMaintenanceRequestsRequest {
   dateFrom?: string;
   dateTo?: string;
 
-  pagination?: Pagination;
+  page?: number;
+  limit?: number;
 }
