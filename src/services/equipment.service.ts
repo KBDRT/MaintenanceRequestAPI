@@ -6,7 +6,7 @@ import { UpdateEquipmentRequest } from "../dto/contracts/update-equipment.reques
 import { WeatherRule } from "../dto/weather-rule.js";
 import { IEquipmentRepository } from "../repositories/abstractions/equipment-repository.interface.js";
 import { EquipmentRepositoryMemory } from "../repositories/implementations/in-memory-equipment-repository.js";
-import { weatherSuitableSchema } from "../validators/schemas/weather-suitable.schema.js";
+import { weatherSuitableSchema } from "../validators/schemas/equipment/weather-suitable.schema.js";
 import { getWeatherAsync } from "./weather.service.js";
 
 const repository: IEquipmentRepository = new EquipmentRepositoryMemory();

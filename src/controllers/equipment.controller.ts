@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 import * as service from './../services/equipment.service.js';
 import { parseFilterQuery } from '../helpers/filter-params-parser.js';
-import { filterEquipmentSchema } from '../validators/schemas/filter-equipment.schema.js';
+import { filterEquipmentSchema } from '../validators/schemas/equipment/filter-equipment.schema.js';
 
 export const getEquipments = async (req: Request, res: Response): Promise<void> => {
   // console.log(req.query);
