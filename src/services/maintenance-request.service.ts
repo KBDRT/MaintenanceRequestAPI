@@ -48,13 +48,13 @@ export const getRequest = async(id: string): Promise<MaintenanceRequest | undefi
 };
 
 export const updateRequest = async(id: string, updatedRequest: UpdateMaintenanceRequestRequest): Promise<void> => {
-  const equipment = await repository.getById(id);
-  if (!equipment) {
+  const savedRequest = await repository.getById(id);
+  if (!savedRequest) {
     throw new Error("Не найден");
   }
 
-  if (equipment) {
-    const updated = { ...equipment, ...updatedRequest };
+  if (savedRequest) {
+    const updated = { ...savedRequest, ...updatedRequest, updatedAt: new Date().toISOString()};
     await repository.update(updated);
   }
 };
@@ -76,6 +76,6 @@ export const updateRequestStatus = async(id: string, request: UpdateMaintenanceR
     throw new Error("Ошибка со статусом, нельзя так переходить");
   }
 
-  const updated = { ...savedRequest, status: request.newStatus };
+  const updated = { ...savedRequest, status: request.newStatus};
   await repository.update(updated);
 }

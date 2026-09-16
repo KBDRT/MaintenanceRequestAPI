@@ -1,9 +1,9 @@
 import { MaintenanceRequest } from '../../domains/entities/maintenance-request.entity.js';
+import { MaintenanceRequestStatus } from '../../domains/enums/maintenance-request-status.enum.js';
 import { GetMaintenanceRequestsRequest } from '../../dto/contracts/maintenance-request/get-maintenance-requests.request.js';
 import { IMaintenanceRequestRepository } from './../abstractions/maintenance-request.repository.interface.js';
 
 export class MaintenanceRequestRepository implements IMaintenanceRequestRepository{
-
   private static requests: MaintenanceRequest[] = [];
 
   async get(request: GetMaintenanceRequestsRequest): Promise<MaintenanceRequest[]> {
@@ -72,5 +72,9 @@ export class MaintenanceRequestRepository implements IMaintenanceRequestReposito
   async delete(id: string): Promise<void> {
     const newList = MaintenanceRequestRepository.requests.filter(req => req.id != id);
     MaintenanceRequestRepository.requests = newList;
+  }
+
+  async existWithStatuses(equipmentId: string, statuses: MaintenanceRequestStatus[]): Promise<boolean> {
+    return MaintenanceRequestRepository.requests.some(req => req.id == equipmentId && statuses.includes(req.status));
   }
 }
