@@ -1,6 +1,6 @@
 import dotenv from 'dotenv';
-import { envFileSchema } from '../validators/schemas/common/env-file.schema.js';
 dotenv.config({ quiet: true });
+import { envFileSchema } from '../validators/schemas/common/env-file.schema.js';
 
 const parsed = envFileSchema.safeParse(process.env);
 if (!parsed.success) {
@@ -10,6 +10,7 @@ if (!parsed.success) {
 
 const appConfig = {
   port: process.env.PORT,
+  jsonLimit: process.env.BODY_JSON_LIMIT
 };
 
 export default appConfig;

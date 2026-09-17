@@ -33,7 +33,6 @@ export function errorHandler(err: unknown, req: Request, res: Response, next: Ne
       
   }
 
-
   // const isOperational = err.isOperational === true || status < 500;
 
   // // const log = req.log ?? logger;
@@ -49,5 +48,4 @@ export function errorHandler(err: unknown, req: Request, res: Response, next: Ne
   // };
 
   // // if (err.details) body.errors = err.details;
-
 }
