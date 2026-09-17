@@ -1,5 +1,4 @@
 import * as z from 'zod';
-import { paginationSchema } from '../common/pagination.schema.js';
 import { EquipmentType } from '../../../domains/enums/equipment-type.enum.js';
 import { EquipmentStatus } from '../../../domains/enums/equipment-status.enum.js';
 
@@ -10,6 +9,19 @@ export const filterEquipmentSchema = z.object({
   type: z.array(z.enum(EquipmentType)).optional(),
   dateFrom: z.iso.date().optional(),
   dateTo: z.iso.date().optional(),
-  pagination: paginationSchema.optional()
-});
+  page: z.coerce.number().int().min(1).default(1),
+  limit: z.coerce.number().int().max(1000).default(20),
+})
+  .refine((data) => {
+    if (data.sort && data.sortDirection) {
+      return data.sort.length === data.sortDirection.length;
+    }
+    return true;
+  },
+  {
+    message: "Количество аргументов для сортировки и направления сортировки не одинаковое!",
+    path: ['sort'], 
+  }
+);
+
 

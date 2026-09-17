@@ -1,6 +1,6 @@
 import { MaintenanceRequest } from '../../domains/entities/maintenance-request.entity.js';
 import { MaintenanceRequestStatus } from '../../domains/enums/maintenance-request-status.enum.js';
-import { GetMaintenanceRequestsRequest } from '../../dto/contracts/maintenance-request/get-maintenance-requests.request.js';
+import { GetMaintenanceRequestsRequest } from '../../dto/maintenance-request/get-maintenance-requests.request.js';
 import { IMaintenanceRequestRepository } from './../abstractions/maintenance-request.repository.interface.js';
 
 export class MaintenanceRequestRepository implements IMaintenanceRequestRepository{

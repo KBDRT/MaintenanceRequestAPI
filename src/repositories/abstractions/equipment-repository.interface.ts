@@ -1,5 +1,5 @@
 import { Equipment } from "../../domains/entities/equipment.entity.js";
-import { getEquipmentsRequest } from "../../dto/contracts/equipment/get-equipments.request.js";
+import { getEquipmentsRequest } from "../../dto/equipment/get-equipments.request.js";
 
 export interface IEquipmentRepository {
   get(request: getEquipmentsRequest): Promise<Equipment[]>,

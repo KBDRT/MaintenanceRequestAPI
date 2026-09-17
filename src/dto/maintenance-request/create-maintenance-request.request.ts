@@ -1,4 +1,4 @@
-import { MaintenanceRequestPriority } from "../../../domains/enums/maintenance-request-priotiry.enum.js";
+import { MaintenanceRequestPriority } from "../../domains/enums/maintenance-request-priotiry.enum.js";
 
 export interface CreateMaintenanceRequest {
   equipmentId: string;

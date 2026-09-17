@@ -1,5 +1,5 @@
 import { Equipment } from '../../domains/entities/equipment.entity.js';
-import { getEquipmentsRequest } from '../../dto/contracts/equipment/get-equipments.request.js';
+import { getEquipmentsRequest } from '../../dto/equipment/get-equipments.request.js';
 import { IEquipmentRepository } from '../abstractions/equipment-repository.interface.js';
 
 export class EquipmentRepositoryMemory implements IEquipmentRepository{
@@ -8,19 +8,19 @@ export class EquipmentRepositoryMemory implements IEquipmentRepository{
 
   async get(request: getEquipmentsRequest): Promise<Equipment[]> {
 
-    let filtered = EquipmentRepositoryMemory.equipments.filter(x =>
-      (!request.status?.length || request.status.includes(x.status)))
-      .filter(x =>
-        (!request.type?.length || request.type.includes(x.type)));
+     let filtered = EquipmentRepositoryMemory.equipments.filter(req =>
+      (!request.status?.length || request.status.includes(req.status)))
+      .filter(req =>
+        (!request.type?.length || request.type.includes(req.type)));
 
     if (request.dateFrom) {
       const dateFrom = request.dateFrom;
-      filtered = filtered.filter(x => x.installedAt >= dateFrom);
+      filtered = filtered.filter(req => !req.installedAt || req.installedAt >= dateFrom);
     }
 
     if (request.dateTo) {
       const dateTo = request.dateTo;
-      filtered = filtered.filter(x => x.installedAt <= dateTo);
+      filtered = filtered.filter(req => !req.installedAt || req.installedAt <= dateTo);
     }
 
     if (request.sort && typeof request.sort != "string") {
@@ -45,6 +45,12 @@ export class EquipmentRepositoryMemory implements IEquipmentRepository{
       }
     }
 
+    if (request.page && request.limit) {
+      const start = (request.page - 1) * request.limit;
+      const end = start + request.limit;
+      return filtered.slice(start, end);
+    }
+    
     return filtered;
   }
 
