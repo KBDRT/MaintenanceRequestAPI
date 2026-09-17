@@ -1,10 +1,13 @@
 import { Request, Response } from 'express';
 import * as service from './../services/equipment.service.js';
+import { getEquipmentsRequest } from '../dto/equipment/get-equipments.request.js';
 
 export const getEquipments = async (req: Request, res: Response): Promise<void> => {
-  const query = res.locals.cleanQuery;
+  const query: getEquipmentsRequest = res.locals.cleanQuery;
   const result = await service.getEquipments(query);
-  res.status(200).json(result);
+  
+  res.status(200)
+     .json({data: result.equipments, meta: {total: result.total, page: query.page, limit: query.limit}});
 };
 
 export const createEquipment = async (req: Request, res: Response): Promise<void> => {

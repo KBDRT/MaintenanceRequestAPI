@@ -12,6 +12,7 @@ import { weatherSuitableSchema } from "../validators/schemas/equipment/weather-s
 import { getWeatherAsync } from "./weather.service.js";
 import { MaintenanceRequestRepository } from './../repositories/implementations/in-memory-maintenance-request.repository.js';
 import { MaintenanceRequestStatus } from "../domains/enums/maintenance-request-status.enum.js";
+import { GetEquipmentsResult } from "../dto/equipment/get-equipments.result.js";
 
 const repository: IEquipmentRepository = new EquipmentRepositoryMemory();
 const requestsRepository: IMaintenanceRequestRepository = new MaintenanceRequestRepository();
@@ -27,8 +28,13 @@ export const addEquipment = async(equipmentInfo: CreateEquipmentRequest): Promis
   return equipment.id;
 };
 
-export const getEquipments = async(request: getEquipmentsRequest): Promise<Equipment[]> => {
-  return await repository.get(request);
+export const getEquipments = async(request: getEquipmentsRequest): Promise<GetEquipmentsResult> => {
+  const result = new GetEquipmentsResult();
+
+  result.equipments = await repository.get(request);
+  result.total = await repository.getCount();
+
+  return result;
 };
 
 export const deleteEquipment = async(id: string): Promise<void> => {

@@ -8,4 +8,5 @@ export interface IEquipmentRepository {
   update(updatedEquipment: Equipment): Promise<void>;
   delete(id: string): Promise<void>;
   getBySerialNumber(serialNumber: string): Promise<Equipment | undefined>;
+  getCount(): Promise<number>;
 }

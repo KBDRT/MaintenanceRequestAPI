@@ -3,8 +3,11 @@ import { getEquipmentsRequest } from '../../dto/equipment/get-equipments.request
 import { IEquipmentRepository } from '../abstractions/equipment-repository.interface.js';
 
 export class EquipmentRepositoryMemory implements IEquipmentRepository{
-
   private static equipments: Equipment[] = [];
+
+  async getCount(): Promise<number> {
+    return EquipmentRepositoryMemory.equipments.length;
+  }
 
   async get(request: getEquipmentsRequest): Promise<Equipment[]> {
 
