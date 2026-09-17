@@ -1,26 +1,25 @@
 import { Equipment } from '../../domains/entities/equipment.entity.js';
-import { getEquipmentsRequest } from '../../dto/contracts/equipment/get-equipments.request.js';
+import { getEquipmentsRequest } from '../../dto/equipment/get-equipments.request.js';
+import { GetEquipments } from '../../dto/types/get-equipments.type.js';
 import { IEquipmentRepository } from '../abstractions/equipment-repository.interface.js';
 
 export class EquipmentRepositoryMemory implements IEquipmentRepository{
-
   private static equipments: Equipment[] = [];
 
-  async get(request: getEquipmentsRequest): Promise<Equipment[]> {
-
-    let filtered = EquipmentRepositoryMemory.equipments.filter(x =>
-      (!request.status?.length || request.status.includes(x.status)))
-      .filter(x =>
-        (!request.type?.length || request.type.includes(x.type)));
+  async get(request: getEquipmentsRequest): Promise<GetEquipments> {
+     let filtered = EquipmentRepositoryMemory.equipments.filter(req =>
+      (!request.status?.length || request.status.includes(req.status)))
+      .filter(req =>
+        (!request.type?.length || request.type.includes(req.type)));
 
     if (request.dateFrom) {
       const dateFrom = request.dateFrom;
-      filtered = filtered.filter(x => x.installedAt >= dateFrom);
+      filtered = filtered.filter(req => !req.installedAt || req.installedAt >= dateFrom);
     }
 
     if (request.dateTo) {
       const dateTo = request.dateTo;
-      filtered = filtered.filter(x => x.installedAt <= dateTo);
+      filtered = filtered.filter(req => !req.installedAt || req.installedAt <= dateTo);
     }
 
     if (request.sort && typeof request.sort != "string") {
@@ -45,7 +44,14 @@ export class EquipmentRepositoryMemory implements IEquipmentRepository{
       }
     }
 
-    return filtered;
+    if (request.page && request.limit) {
+      const start = (request.page - 1) * request.limit;
+      const end = start + request.limit;
+      const total = filtered.length;
+      return {equipments: filtered.slice(start, end), total: total};
+    }
+    
+    return {equipments: filtered, total: filtered.length};
   }
 
   async add(newEquipment: Equipment): Promise<string> {

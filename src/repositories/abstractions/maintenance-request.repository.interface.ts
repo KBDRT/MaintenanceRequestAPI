@@ -1,7 +1,7 @@
 import { MaintenanceRequest } from "../../domains/entities/maintenance-request.entity.js";
 import { MaintenanceRequestStatus } from "../../domains/enums/maintenance-request-status.enum.js";
-import { getEquipmentsRequest } from "../../dto/contracts/equipment/get-equipments.request.js";
-import { GetMaintenanceRequestsRequest } from "../../dto/contracts/maintenance-request/get-maintenance-requests.request.js";
+import { getEquipmentsRequest } from "../../dto/equipment/get-equipments.request.js";
+import { GetMaintenanceRequestsRequest } from "../../dto/maintenance-request/get-maintenance-requests.request.js";
 
 export interface IMaintenanceRequestRepository {
   get(request: GetMaintenanceRequestsRequest): Promise<MaintenanceRequest[]>,

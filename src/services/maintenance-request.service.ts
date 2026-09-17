@@ -1,13 +1,13 @@
 import { MaintenanceRequest } from "../domains/entities/maintenance-request.entity.js";
-import { CreateMaintenanceRequest } from './../dto/contracts/maintenance-request/create-maintenance-request.request.js';
-import { UpdateMaintenanceRequestRequest } from "../dto/contracts/maintenance-request/update-maintenance-request.request.js";
-import { UpdateMaintenanceRequestStatusRequest } from "../dto/contracts/maintenance-request/update-status-maintenance-request.request.js";
-import { GetMaintenanceRequestsRequest } from './../dto/contracts/maintenance-request/get-maintenance-requests.request.js';
 import { IMaintenanceRequestRepository } from "../repositories/abstractions/maintenance-request.repository.interface.js";
 import { MaintenanceRequestRepository } from "../repositories/implementations/in-memory-maintenance-request.repository.js";
 import { IEquipmentRepository } from "../repositories/abstractions/equipment-repository.interface.js";
 import { EquipmentRepositoryMemory } from "../repositories/implementations/in-memory-equipment-repository.js";
 import requestAllowStatusChange from "../config/request-allow-status-change.js";
+import { CreateMaintenanceRequest } from "../dto/maintenance-request/create-maintenance-request.request.js";
+import { GetMaintenanceRequestsRequest } from "../dto/maintenance-request/get-maintenance-requests.request.js";
+import { UpdateMaintenanceRequestRequest } from "../dto/maintenance-request/update-maintenance-request.request.js";
+import { UpdateMaintenanceRequestStatusRequest } from "../dto/maintenance-request/update-status-maintenance-request.request.js";
 
 const repository: IMaintenanceRequestRepository = new MaintenanceRequestRepository();
 const equipmentRepostitory: IEquipmentRepository = new EquipmentRepositoryMemory();
