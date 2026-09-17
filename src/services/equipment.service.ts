@@ -16,11 +16,12 @@ import { GetEquipmentsResult } from "../dto/equipment/get-equipments.result.js";
 import { getRequests } from "./maintenance-request.service.js";
 import { GetEquipmentsRequests } from "../dto/equipment/get-equipment-requests.request.js";
 import { MaintenanceRequest } from "../domains/entities/maintenance-request.entity.js";
+import { GetRequetsResult } from "../dto/maintenance-request/get-requests.result.js";
 
 const repository: IEquipmentRepository = new EquipmentRepositoryMemory();
 const requestsRepository: IMaintenanceRequestRepository = new MaintenanceRequestRepository();
 
-export const addEquipment = async(equipmentInfo: CreateEquipmentRequest): Promise<string> => {
+export const addEquipment = async(equipmentInfo: CreateEquipmentRequest): Promise<Equipment> => {
   const existing = await repository.getBySerialNumber(equipmentInfo.serialNumber);
   if (existing) {
     throw new ConflictError("Оборудование с указанным серийным номером уже существует!", [{field: "serialNumber", message: "Неуникальный серийный номер"}]);
@@ -28,7 +29,8 @@ export const addEquipment = async(equipmentInfo: CreateEquipmentRequest): Promis
   
   const equipment = Equipment.create(equipmentInfo);
   await repository.add(equipment);
-  return equipment.id;
+  
+  return equipment;
 };
 
 export const getEquipments = async(request: getEquipmentsRequest): Promise<GetEquipmentsResult> => {
@@ -99,7 +101,7 @@ export const getEquipmentWeather = async(id: string): Promise<GetEquipmentWeathe
   return response;
 }
 
-export const getEquipmentsMaintenanceRequests = async(id: string, request: GetEquipmentsRequests): Promise<MaintenanceRequest[]> => {
+export const getEquipmentsMaintenanceRequests = async(id: string, request: GetEquipmentsRequests): Promise<GetRequetsResult> => {
   const equipment = await repository.getById(id);
   if (!equipment) {
      throw new NotFoundError("Оборудование не найдено!", [{field: "id", message: `Оборудования с id = ${id} не существует`}]);

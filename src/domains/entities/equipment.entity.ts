@@ -14,7 +14,7 @@ export class Equipment {
 
   static create(props: {name: string, type: EquipmentType, serialNumber: string, location: EquipmentLocation, status: EquipmentStatus, installedAt: string}):Equipment {
     let newEquipment = new Equipment();
-    newEquipment = {...props, id: randomUUID()};
+    newEquipment = {id: randomUUID(), ...props};
     
     return newEquipment;
   }

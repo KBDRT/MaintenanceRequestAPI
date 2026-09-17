@@ -10,24 +10,31 @@ import { UpdateMaintenanceRequestRequest } from "../dto/maintenance-request/upda
 import { UpdateMaintenanceRequestStatusRequest } from "../dto/maintenance-request/update-status-maintenance-request.request.js";
 import { NotFoundError } from "../errors/not-found.error.js";
 import { ConflictError } from "../errors/conflicts.error.js";
+import { GetRequetsResult } from "../dto/maintenance-request/get-requests.result.js";
 
 const repository: IMaintenanceRequestRepository = new MaintenanceRequestRepository();
 const equipmentRepostitory: IEquipmentRepository = new EquipmentRepositoryMemory();
 
-export const addRequest = async(maintenanceRequest: CreateMaintenanceRequest): Promise<string> => {
+export const addRequest = async(maintenanceRequest: CreateMaintenanceRequest): Promise<MaintenanceRequest> => {
   const existingEquipment = await equipmentRepostitory.getById(maintenanceRequest.equipmentId);
   if (!existingEquipment) {
     throw new NotFoundError("Оборудование не найдено", [{field: "equipmentId", message: `Оборудования с id = ${maintenanceRequest.equipmentId} не существует`}]);
   }
 
   const newRequest = MaintenanceRequest.create(maintenanceRequest); 
-  const id = await repository.add(newRequest);
-
-  return id;
+  await repository.add(newRequest);
+  
+  return newRequest;
 };
 
-export const getRequests = async(request: GetMaintenanceRequestsRequest): Promise<MaintenanceRequest[]> => {
-  return await repository.get(request);
+export const getRequests = async(request: GetMaintenanceRequestsRequest): Promise<GetRequetsResult> => {
+ const serviceResult = new GetRequetsResult();
+
+  const result = await repository.get(request);
+  serviceResult.requests = result.requests;
+  serviceResult.total = result.total;
+
+  return serviceResult;
 };
 
 export const deleteRequest = async(id: string): Promise<void> => {
