@@ -17,11 +17,16 @@ import { getRequests } from "./maintenance-request.service.js";
 import { GetEquipmentsRequests } from "../dto/equipment/get-equipment-requests.request.js";
 import { MaintenanceRequest } from "../domains/entities/maintenance-request.entity.js";
 import { GetRequetsResult } from "../dto/maintenance-request/get-requests.result.js";
+import { BusinessRuleError } from "../errors/business-rule.error.js";
 
 const repository: IEquipmentRepository = new EquipmentRepositoryMemory();
 const requestsRepository: IMaintenanceRequestRepository = new MaintenanceRequestRepository();
 
 export const addEquipment = async(equipmentInfo: CreateEquipmentRequest): Promise<Equipment> => {
+  if (new Date(equipmentInfo.installedAt) > new Date()) {
+    throw new BusinessRuleError("Дата установки оборудования неккоретна", [{field: "installedAt", message: "Дата установки оборудования не может быть в будущем"}])
+  }
+
   const existing = await repository.getBySerialNumber(equipmentInfo.serialNumber);
   if (existing) {
     throw new ConflictError("Оборудование с указанным серийным номером уже существует!", [{field: "serialNumber", message: "Неуникальный серийный номер"}]);
