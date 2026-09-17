@@ -11,6 +11,7 @@ import { UpdateMaintenanceRequestStatusRequest } from "../dto/maintenance-reques
 import { NotFoundError } from "../errors/not-found.error.js";
 import { ConflictError } from "../errors/conflicts.error.js";
 import { GetRequetsResult } from "../dto/maintenance-request/get-requests.result.js";
+import { BusinessRuleError } from "../errors/business-rule.error.js";
 
 const repository: IMaintenanceRequestRepository = new MaintenanceRequestRepository();
 const equipmentRepostitory: IEquipmentRepository = new EquipmentRepositoryMemory();
@@ -23,7 +24,7 @@ export const addRequest = async(maintenanceRequest: CreateMaintenanceRequest): P
 
   const newRequest = MaintenanceRequest.create(maintenanceRequest); 
   await repository.add(newRequest);
-  
+
   return newRequest;
 };
 
@@ -75,7 +76,7 @@ export const updateRequestStatus = async(id: string, request: UpdateMaintenanceR
 
   const validNextStatuses = requestAllowStatusChange[savedRequest.status];
   if (!validNextStatuses.includes(request.newStatus)) {
-    throw new ConflictError("Изменение статуса запрещено", [{field: "newStatus", message: `Текущий статус ${savedRequest.status} не может быть изменен на ${request.newStatus}`}]);
+    throw new BusinessRuleError("Изменение статуса запрещено", [{field: "newStatus", message: `Текущий статус ${savedRequest.status} не может быть изменен на ${request.newStatus}`}]);
   }
 
   const updated = { ...savedRequest, status: request.newStatus};
