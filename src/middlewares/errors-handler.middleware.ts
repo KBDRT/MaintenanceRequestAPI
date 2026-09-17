@@ -17,7 +17,8 @@ export function errorHandler(err: unknown, req: Request, res: Response, next: Ne
 
     const body = {
       error: {
-        message: err.message
+        message: err.message,
+        requestId: req.id,
       }
     }
     

@@ -21,7 +21,7 @@ maintenanceRequestRouter.route('/:id')
   .delete(validate({params: idRequestSchema}), deleteRequest);
 
 maintenanceRequestRouter.route('/:id/status')
-  .patch(validate({params: idRequestSchema, body: updateRequestStatusSchema}),updateRequestStatus);
+  .patch(validate({params: idRequestSchema, body: updateRequestStatusSchema}), updateRequestStatus);
 
 export default maintenanceRequestRouter;
 

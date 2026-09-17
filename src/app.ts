@@ -4,9 +4,11 @@ import maintenanceRequestRouter from './routes/maintenance-request.route.js';
 import { errorHandler } from './middlewares/errors-handler.middleware.js';
 import { setRequestId } from './middlewares/request-id.middleware.js';
 import appConfig from './config/app.config.js';
+import { httpLogger } from './middlewares/pino-log.middleware.js';
 
 const app: Express = express();
 
+app.use(httpLogger);
 
 app.use(express.json({limit: appConfig.jsonLimit}));    
 
@@ -17,5 +19,6 @@ app.use('/api/equipments', equipmentRouter);
 app.use('/api/requests', maintenanceRequestRouter);
 
 app.use(errorHandler);
+
 
 export default app;

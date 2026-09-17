@@ -6,7 +6,7 @@ import { GetEquipmentsRequests } from '../dto/equipment/get-equipment-requests.r
 export const getEquipments = async (req: Request, res: Response): Promise<void> => {
   const query: getEquipmentsRequest = res.locals.cleanQuery;
   const result = await service.getEquipments(query);
-  
+  // req.log.info({ event: 'request_created', id: "" }, 'created');
   res.status(200)
      .json({data: result.equipments, meta: {total: result.total, page: query.page, limit: query.limit}});
 };
