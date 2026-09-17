@@ -9,5 +9,9 @@ export const createEquipmentRequestSchema = z.object({
   serialNumber: z.string(),
   location: equipmentLocationSchema,
   status: z.enum(EquipmentStatus),
-  installedAt: z.iso.date(),
-});
+  installedAt: z.iso.date().refine(
+    (val) => new Date(val) <= new Date(),
+    { message: 'Дата не может быть в будущем' }
+  ),
+})
+

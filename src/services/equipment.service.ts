@@ -3,25 +3,23 @@ import { CreateEquipmentRequest } from "../dto/contracts/equipment/create-equipm
 import { GetEquipmentWeatherResponse } from "../dto/contracts/equipment/get-equipment-weather.response.js";
 import { getEquipmentsRequest } from "../dto/contracts/equipment/get-equipments.request.js";
 import { UpdateEquipmentRequest } from "../dto/contracts/equipment/update-equipment.request.js";
+import { ConflictError } from "../errors/conflicts.error.js";
+import { NotFoundError } from "../errors/not-found.error.js";
 import { IEquipmentRepository } from "../repositories/abstractions/equipment-repository.interface.js";
+import { IMaintenanceRequestRepository } from "../repositories/abstractions/maintenance-request.repository.interface.js";
 import { EquipmentRepositoryMemory } from "../repositories/implementations/in-memory-equipment-repository.js";
 import { weatherSuitableSchema } from "../validators/schemas/equipment/weather-suitable.schema.js";
 import { getWeatherAsync } from "./weather.service.js";
+import { MaintenanceRequestRepository } from './../repositories/implementations/in-memory-maintenance-request.repository.js';
+import { MaintenanceRequestStatus } from "../domains/enums/maintenance-request-status.enum.js";
 
 const repository: IEquipmentRepository = new EquipmentRepositoryMemory();
+const requestsRepository: IMaintenanceRequestRepository = new MaintenanceRequestRepository();
 
-//todo :rewrite errors
 export const addEquipment = async(equipmentInfo: CreateEquipmentRequest): Promise<string> => {
-
-  const installedDate = new Date(equipmentInfo.installedAt);
-  const currentDate = new Date();
-  if (installedDate > currentDate) {
-    throw new Error("Дата в будущем");
-  }
-
   const existing = await repository.getBySerialNumber(equipmentInfo.serialNumber);
   if (existing) {
-    throw new Error("Сериал номер уже есть");
+    throw new ConflictError("Оборудование с указанным серийным номером уже существует!", [{field: "serialNumber", message: "Неуникальный серийный номер"}]);
   }
   
   const equipment = Equipment.create(equipmentInfo);
@@ -36,7 +34,12 @@ export const getEquipments = async(request: getEquipmentsRequest): Promise<Equip
 export const deleteEquipment = async(id: string): Promise<void> => {
   const existing = await repository.getById(id);
   if (!existing) {
-    throw new Error("Не найден");
+    throw new NotFoundError("Оборудование не найдено!", [{field: "id", message: `Оборудования с id = ${id} не существует`}]);
+  }
+
+  const hasUnfinishedRequests = await requestsRepository.existWithStatuses(id, [MaintenanceRequestStatus.new, MaintenanceRequestStatus.in_progress]);
+  if (hasUnfinishedRequests) {
+    throw new ConflictError("Для данного оборудования есть незавершенные заявки", [{field: "id", message: `Оборудования с id = ${id} имеет открытыие заявки`}]);
   }
 
   await repository.delete(id);
@@ -45,7 +48,7 @@ export const deleteEquipment = async(id: string): Promise<void> => {
 export const getEquipment = async(id: string): Promise<Equipment | undefined> => {
   const existing = await repository.getById(id);
   if (!existing) {
-    throw new Error("Не найден");
+    throw new NotFoundError("Оборудование не найдено!", [{field: "id", message: `Оборудования с id = ${id} не существует`}]);
   }
 
   return await repository.getById(id);
@@ -54,7 +57,7 @@ export const getEquipment = async(id: string): Promise<Equipment | undefined> =>
 export const updateEquipment = async(id: string, equipmentInfo: UpdateEquipmentRequest): Promise<void> => {
   const equipment = await repository.getById(id);
   if (!equipment) {
-    throw new Error("Не найден");
+     throw new NotFoundError("Оборудование не найдено!", [{field: "id", message: `Оборудования с id = ${id} не существует`}]);
   }
 
   if (equipment) {
@@ -68,7 +71,7 @@ export const getEquipmentWeather = async(id: string): Promise<GetEquipmentWeathe
   const response = new GetEquipmentWeatherResponse();
   const equipment = await repository.getById(id);
   if (!equipment) {
-    throw new Error("Не найден");
+     throw new NotFoundError("Оборудование не найдено!", [{field: "id", message: `Оборудования с id = ${id} не существует`}]);
   }
 
   response.equipmentId = id;

@@ -75,6 +75,6 @@ export class MaintenanceRequestRepository implements IMaintenanceRequestReposito
   }
 
   async existWithStatuses(equipmentId: string, statuses: MaintenanceRequestStatus[]): Promise<boolean> {
-    return MaintenanceRequestRepository.requests.some(req => req.id == equipmentId && statuses.includes(req.status));
+    return MaintenanceRequestRepository.requests.some(req => req.equipmentId == equipmentId && statuses.includes(req.status));
   }
 }
