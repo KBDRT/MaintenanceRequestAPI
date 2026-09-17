@@ -15,11 +15,12 @@ import { idRequestSchema } from '../validators/schemas/common/id-request.schema.
 import { parseFilterQuery } from '../middlewares/params-parser.middleware.js';
 import { filterEquipmentSchema } from '../validators/schemas/equipment/filter-equipment.schema.js';
 import { validateCleanQuery } from '../middlewares/clean-query-validator.middleware.js';
+import { getEquipmentRequestsSchema } from '../validators/schemas/equipment/get-equipment-requests.schema.js';
 
 const equipmentRouter = Router();
 
 equipmentRouter.route('/')
-      .get(parseFilterQuery, validateCleanQuery(filterEquipmentSchema),getEquipments)
+      .get(parseFilterQuery, validateCleanQuery(filterEquipmentSchema), getEquipments)
       .post(validate({body: createEquipmentRequestSchema}), createEquipment);
 
 equipmentRouter.route('/:id')
@@ -28,7 +29,7 @@ equipmentRouter.route('/:id')
       .delete(validate({params: idRequestSchema}), deleteEquipment);
 
 equipmentRouter.route('/:id/requests')
-      .get(validate({params: idRequestSchema}), getEquipmentRequests);
+      .get(validate({params: idRequestSchema}), parseFilterQuery, validateCleanQuery(getEquipmentRequestsSchema), getEquipmentRequests);
 
 equipmentRouter.route('/:id/weather')
       .get(validate({params: idRequestSchema}), getEquipmentWeather);

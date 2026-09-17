@@ -11,45 +11,37 @@ export const getEquipments = async (req: Request, res: Response): Promise<void> 
 };
 
 export const createEquipment = async (req: Request, res: Response): Promise<void> => {
-  // const { body } = req.body;
   const equipmentId = await service.addEquipment(req.body);
   res.status(200).json({ id: equipmentId });
 };
 
 export const getEquipment = async (req: Request, res: Response): Promise<void> => {
   const { id } = req.params;
-  if (typeof(id) == "string") {
-    const result = await service.getEquipment(id);
-    res.status(200).json(result);
-  }
+  const result = await service.getEquipment(id as string);
+  res.status(200).json(result);
 };
 
 export const updateEquipment = async (req: Request, res: Response): Promise<void> => {
   const { id } = req.params;
-  if (typeof(id) == "string") {
-    await service.updateEquipment(id, req.body);
-  }
+  await service.updateEquipment(id as string, req.body);
   res.status(200).json({ ok: true });
 };
 
 export const deleteEquipment = async (req: Request, res: Response): Promise<void> => {
   const { id } = req.params;
-  if (typeof(id) == "string") {
-    await service.deleteEquipment(id);
-  }
-  
+  await service.deleteEquipment(id as string);
+
   res.status(200).json({ ok: true });
 };
 
 export const getEquipmentRequests = async (req: Request, res: Response): Promise<void> => {
   const { id } = req.params;
-  res.status(200).json({ ok: true });
+  const result = await service.getEquipmentsMaintenanceRequests(id as string, res.locals.cleanQuery);
+  res.status(200).json({ data: result });
 };
 
 export const getEquipmentWeather = async (req: Request, res: Response): Promise<void> => {
   const { id } = req.params;
-  if (typeof(id) == "string") {
-    const result = await service.getEquipmentWeather(id);
-    res.status(200).json(result);
-  }
+  const result = await service.getEquipmentWeather(id as string);
+  res.status(200).json(result);
 };

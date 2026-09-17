@@ -13,6 +13,9 @@ import { getWeatherAsync } from "./weather.service.js";
 import { MaintenanceRequestRepository } from './../repositories/implementations/in-memory-maintenance-request.repository.js';
 import { MaintenanceRequestStatus } from "../domains/enums/maintenance-request-status.enum.js";
 import { GetEquipmentsResult } from "../dto/equipment/get-equipments.result.js";
+import { getRequests } from "./maintenance-request.service.js";
+import { GetEquipmentsRequests } from "../dto/equipment/get-equipment-requests.request.js";
+import { MaintenanceRequest } from "../domains/entities/maintenance-request.entity.js";
 
 const repository: IEquipmentRepository = new EquipmentRepositoryMemory();
 const requestsRepository: IMaintenanceRequestRepository = new MaintenanceRequestRepository();
@@ -29,12 +32,13 @@ export const addEquipment = async(equipmentInfo: CreateEquipmentRequest): Promis
 };
 
 export const getEquipments = async(request: getEquipmentsRequest): Promise<GetEquipmentsResult> => {
-  const result = new GetEquipmentsResult();
+  const serviceResult = new GetEquipmentsResult();
 
-  result.equipments = await repository.get(request);
-  result.total = await repository.getCount();
+  const result = await repository.get(request);
+  serviceResult.equipments = result.equipments;
+  serviceResult.total = result.total;
 
-  return result;
+  return serviceResult;
 };
 
 export const deleteEquipment = async(id: string): Promise<void> => {
@@ -93,4 +97,14 @@ export const getEquipmentWeather = async(id: string): Promise<GetEquipmentWeathe
   response.isWeatherWindowSuitable = response.weather.every(x => x.suitable);
 
   return response;
+}
+
+export const getEquipmentsMaintenanceRequests = async(id: string, request: GetEquipmentsRequests): Promise<MaintenanceRequest[]> => {
+  const equipment = await repository.getById(id);
+  if (!equipment) {
+     throw new NotFoundError("Оборудование не найдено!", [{field: "id", message: `Оборудования с id = ${id} не существует`}]);
+  }
+
+  let maintenanceRequest = {...request, equipmentsId: [id]};
+  return await getRequests(maintenanceRequest);
 }

@@ -1,16 +1,12 @@
 import { Equipment } from '../../domains/entities/equipment.entity.js';
 import { getEquipmentsRequest } from '../../dto/equipment/get-equipments.request.js';
+import { GetEquipments } from '../../dto/types/get-equipments.type.js';
 import { IEquipmentRepository } from '../abstractions/equipment-repository.interface.js';
 
 export class EquipmentRepositoryMemory implements IEquipmentRepository{
   private static equipments: Equipment[] = [];
 
-  async getCount(): Promise<number> {
-    return EquipmentRepositoryMemory.equipments.length;
-  }
-
-  async get(request: getEquipmentsRequest): Promise<Equipment[]> {
-
+  async get(request: getEquipmentsRequest): Promise<GetEquipments> {
      let filtered = EquipmentRepositoryMemory.equipments.filter(req =>
       (!request.status?.length || request.status.includes(req.status)))
       .filter(req =>
@@ -51,10 +47,11 @@ export class EquipmentRepositoryMemory implements IEquipmentRepository{
     if (request.page && request.limit) {
       const start = (request.page - 1) * request.limit;
       const end = start + request.limit;
-      return filtered.slice(start, end);
+      const total = filtered.length;
+      return {equipments: filtered.slice(start, end), total: total};
     }
     
-    return filtered;
+    return {equipments: filtered, total: filtered.length};
   }
 
   async add(newEquipment: Equipment): Promise<string> {
