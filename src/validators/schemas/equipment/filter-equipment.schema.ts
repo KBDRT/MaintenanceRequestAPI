@@ -4,9 +4,9 @@ import { EquipmentStatus } from '../../../domains/enums/equipment-status.enum.js
 
 export const filterEquipmentSchema = z.object({
   sort: z.array(z.string()).optional(),
-  sortDirection: z.array(z.enum(['ASC', 'DESC'])).optional(),
-  status: z.array(z.enum(EquipmentStatus)).optional(),
-  type: z.array(z.enum(EquipmentType)).optional(),
+  sortDirection: z.array(z.enum(['ASC', 'DESC'], "Допустимые значения направления сортировки: ASC или DESC")).optional(),
+  status: z.array(z.enum(EquipmentStatus, "Допустимые значения статуса: operational, maintenance, fault, decommissioned")).optional(),
+  type: z.array(z.enum(EquipmentType, "Допустимые значения типа: turbine, inverter, sensor, substation")).optional(),
   dateFrom: z.iso.date().optional(),
   dateTo: z.iso.date().optional(),
   page: z.coerce.number().int().min(1).default(1),
