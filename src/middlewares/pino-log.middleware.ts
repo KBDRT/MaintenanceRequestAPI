@@ -1,11 +1,11 @@
-import { NextFunction, Request, Response } from "express";
+import { Request, Response } from "express";
 import { randomUUID } from 'node:crypto';
 import { logger } from "../lib/pino.js";
 import { pinoHttp } from "pino-http";
 
 export const httpLogger = pinoHttp({
   logger,
-   serializers: {
+  serializers: {
     req: (req) => ({
       method: req.method,
       path: req.url,
