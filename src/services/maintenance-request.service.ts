@@ -8,31 +8,40 @@ import { CreateMaintenanceRequest } from "../dto/maintenance-request/create-main
 import { GetMaintenanceRequestsRequest } from "../dto/maintenance-request/get-maintenance-requests.request.js";
 import { UpdateMaintenanceRequestRequest } from "../dto/maintenance-request/update-maintenance-request.request.js";
 import { UpdateMaintenanceRequestStatusRequest } from "../dto/maintenance-request/update-status-maintenance-request.request.js";
+import { NotFoundError } from "../errors/not-found.error.js";
+import { ConflictError } from "../errors/conflicts.error.js";
+import { GetRequetsResult } from "../dto/maintenance-request/get-requests.result.js";
+import { BusinessRuleError } from "../errors/business-rule.error.js";
 
 const repository: IMaintenanceRequestRepository = new MaintenanceRequestRepository();
 const equipmentRepostitory: IEquipmentRepository = new EquipmentRepositoryMemory();
 
-//todo :rewrite errors
-export const addRequest = async(maintenanceRequest: CreateMaintenanceRequest): Promise<string> => {
+export const addRequest = async(maintenanceRequest: CreateMaintenanceRequest): Promise<MaintenanceRequest> => {
   const existingEquipment = await equipmentRepostitory.getById(maintenanceRequest.equipmentId);
   if (!existingEquipment) {
-    throw new Error("NOT FOUND EQUIPMENT");
+    throw new NotFoundError("Оборудование не найдено", [{field: "equipmentId", message: `Оборудования с id = ${maintenanceRequest.equipmentId} не существует`}]);
   }
 
   const newRequest = MaintenanceRequest.create(maintenanceRequest); 
-  const id = await repository.add(newRequest);
+  await repository.add(newRequest);
 
-  return id;
+  return newRequest;
 };
 
-export const getRequests = async(request: GetMaintenanceRequestsRequest): Promise<MaintenanceRequest[]> => {
-  return await repository.get(request);
+export const getRequests = async(request: GetMaintenanceRequestsRequest): Promise<GetRequetsResult> => {
+ const serviceResult = new GetRequetsResult();
+
+  const result = await repository.get(request);
+  serviceResult.requests = result.requests;
+  serviceResult.total = result.total;
+
+  return serviceResult;
 };
 
 export const deleteRequest = async(id: string): Promise<void> => {
   const existing = await repository.getById(id);
   if (!existing) {
-    throw new Error("Не найден");
+    throw new NotFoundError("Заявки не найдено", [{field: "id", message: `Заявки с id = ${id} не существует`}]);
   }
 
   await repository.delete(id);
@@ -41,7 +50,7 @@ export const deleteRequest = async(id: string): Promise<void> => {
 export const getRequest = async(id: string): Promise<MaintenanceRequest | undefined> => {
   const existing = await repository.getById(id);
   if (!existing) {
-    throw new Error("Не найден");
+    throw new NotFoundError("Заявки не найдено", [{field: "id", message: `Заявки с id = ${id} не существует`}]);
   }
 
   return await repository.getById(id);
@@ -50,7 +59,7 @@ export const getRequest = async(id: string): Promise<MaintenanceRequest | undefi
 export const updateRequest = async(id: string, updatedRequest: UpdateMaintenanceRequestRequest): Promise<void> => {
   const savedRequest = await repository.getById(id);
   if (!savedRequest) {
-    throw new Error("Не найден");
+    throw new NotFoundError("Заявки не найдено", [{field: "id", message: `Заявки с id = ${id} не существует`}]);
   }
 
   if (savedRequest) {
@@ -59,21 +68,15 @@ export const updateRequest = async(id: string, updatedRequest: UpdateMaintenance
   }
 };
 
-
 export const updateRequestStatus = async(id: string, request: UpdateMaintenanceRequestStatusRequest): Promise<void> => {
   const savedRequest = await repository.getById(id);
-  console.log(id, savedRequest);
   if (!savedRequest) {
-    throw new Error("Не найден");
+    throw new NotFoundError("Заявки не найдено", [{field: "id", message: `Заявки с id = ${id} не существует`}]);
   }
 
   const validNextStatuses = requestAllowStatusChange[savedRequest.status];
-  if (!validNextStatuses) {
-    throw new Error("Таблица перехода статусов не найдена");
-  }
-
   if (!validNextStatuses.includes(request.newStatus)) {
-    throw new Error("Ошибка со статусом, нельзя так переходить");
+    throw new BusinessRuleError("Изменение статуса запрещено", [{field: "newStatus", message: `Текущий статус ${savedRequest.status} не может быть изменен на ${request.newStatus}`}]);
   }
 
   const updated = { ...savedRequest, status: request.newStatus};
