@@ -16,7 +16,7 @@ app.use(express.json({limit: appConfig.jsonLimit}));
 
 app.use(setRequestId);
 
-app.use(`/`, rootRouter);
+app.use('/api', rootRouter);
 app.use('/api/equipments', equipmentRouter);
 app.use('/api/requests', maintenanceRequestRouter);
 
