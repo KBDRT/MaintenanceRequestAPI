@@ -13,7 +13,7 @@ export const getEquipments = async (req: Request, res: Response): Promise<void> 
 
 export const createEquipment = async (req: Request, res: Response): Promise<void> => {
   const newEquipment = await service.addEquipment(req.body);
-  res.status(200)
+  res.status(201)
     .location(`/api/equipments/${newEquipment.id}`)
     .json(newEquipment);
 };
@@ -40,7 +40,7 @@ export const getEquipmentRequests = async (req: Request, res: Response): Promise
   const query: GetEquipmentsRequests = res.locals.cleanQuery;
   const { id } = req.params;
   const result = await service.getEquipmentsMaintenanceRequests(id as string, res.locals.cleanQuery);
-  res.status(200).json({ data: result, meta: {total: result.total, page: query.page, limit: query.limit} });
+  res.status(200).json({ data: result.requests, meta: {total: result.total, page: query.page, limit: query.limit} });
 };
 
 export const getEquipmentWeather = async (req: Request, res: Response): Promise<void> => {

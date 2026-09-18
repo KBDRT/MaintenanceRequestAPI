@@ -76,7 +76,7 @@ export const updateRequestStatus = async(id: string, request: UpdateMaintenanceR
 
   const validNextStatuses = requestAllowStatusChange[savedRequest.status];
   if (!validNextStatuses.includes(request.newStatus)) {
-    throw new BusinessRuleError("Изменение статуса запрещено", [{field: "newStatus", message: `Текущий статус ${savedRequest.status} не может быть изменен на ${request.newStatus}`}]);
+    throw new ConflictError("Изменение статуса запрещено", [{field: "newStatus", message: `Текущий статус ${savedRequest.status} не может быть изменен на ${request.newStatus}`}]);
   }
 
   const updated = { ...savedRequest, status: request.newStatus};

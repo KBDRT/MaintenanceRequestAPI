@@ -10,4 +10,8 @@ export const updateEquipmentRequestSchema = z.object({
   location: equipmentLocationSchema.optional(),
   status: z.enum(EquipmentStatus, "Допустимые значения статуса: operational, maintenance, fault, decommissioned").optional(),
   installedAt: z.iso.date().optional(),
-});
+})
+  .refine(
+    (data) => Object.keys(data).length > 0,
+    { message: 'Хотя бы одно поле должно быть заполнено!' }
+);
