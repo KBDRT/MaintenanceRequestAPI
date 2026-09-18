@@ -1,10 +1,11 @@
 import dotenv from 'dotenv';
+import { parsed } from './app.config.js';
 dotenv.config({ quiet: true });
 
 const weatherAPIConfig = {
-  baseURL: process.env.WEATHER_API_URL || "",
-  timeOut: Number(process.env.WEATHER_API_TIMEOUT),
-  days: process.env.WEATHER_API_DAYS || "3",
+  baseURL: parsed.data?.WEATHER_API_URL,
+  timeOut: parsed.data?.WEATHER_API_TIMEOUT,
+  days: parsed.data?.WEATHER_API_DAYS,
 };
 
 export default weatherAPIConfig;
