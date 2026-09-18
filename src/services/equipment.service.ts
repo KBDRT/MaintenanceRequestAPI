@@ -95,10 +95,12 @@ export const getEquipmentWeather = async(id: string): Promise<GetEquipmentWeathe
   response.location = equipment.location;
 
   const daysWeather = await getWeatherAsync(equipment.location.lat, equipment.location.lon);
-  for (const weather of daysWeather) {
-    const parsed = weatherSuitableSchema.safeParse(weather);
-    weather.suitable = parsed.success;
-    response.weather?.push(weather);
+  if (Array.isArray(daysWeather)) {
+    for (const weather of daysWeather) {
+      const parsed = weatherSuitableSchema.safeParse(weather);
+      weather.suitable = parsed.success;
+      response.weather?.push(weather);
+    }
   }
 
   response.isWeatherWindowSuitable = response.weather.every(x => x.suitable);

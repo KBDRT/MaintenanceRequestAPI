@@ -11,15 +11,18 @@ export class ErrorResponse {
     const instanse = new ErrorResponse();
     instanse.code = errorInfo.code;
     instanse.message = errorInfo.message;
-    instanse.details = [];
     
-    errorInfo.details.map((info) => 
-    {
-      instanse.details?.push({
-        field: info.field,
-        message: info.message
-      })
-    });
+    if (errorInfo.details.length > 0) {
+      instanse.details = [];
+      
+      errorInfo.details.map((info) => 
+      {
+        instanse.details?.push({
+          field: info.field,
+          message: info.message
+        })
+      });
+    }
 
     return instanse;
   }
