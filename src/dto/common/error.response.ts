@@ -1,9 +1,5 @@
+import { ErrorDetails } from '../../errors/types/error-details.js';
 import { AppError } from './../../errors/app.error.js';
-
-export interface ErrorDetails {
-  field?: string;
-  message: string;
-}
 
 export class ErrorResponse {
   code?: string;

@@ -3,7 +3,7 @@ import { MaintenanceRequest } from "../../domains/entities/maintenance-request.e
 export type SortField = keyof MaintenanceRequest;
 export type SortDirection = 'ASC' | 'DESC';
 
-export class GetEquipmentsRequests {
+export class GetEquipmentRequestsDto {
   sort?: string | SortField[];
   sortDirection?: string | SortDirection[];
 

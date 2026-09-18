@@ -1,12 +1,12 @@
 import { Equipment } from '../../domains/entities/equipment.entity.js';
-import { getEquipmentsRequest } from '../../dto/equipment/get-equipments.request.js';
+import { GetEquipmentsFilteredDto } from '../../dto/equipment/get-equipments-filtered.dto.js';
 import { GetEquipments } from '../../dto/types/get-equipments.type.js';
 import { IEquipmentRepository } from '../abstractions/equipment-repository.interface.js';
 
 export class EquipmentRepositoryMemory implements IEquipmentRepository{
   private static equipments: Equipment[] = [];
 
-  async get(request: getEquipmentsRequest): Promise<GetEquipments> {
+  async get(request: GetEquipmentsFilteredDto): Promise<GetEquipments> {
      let filtered = EquipmentRepositoryMemory.equipments.filter(req =>
       (!request.status?.length || request.status.includes(req.status)))
       .filter(req =>

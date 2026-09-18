@@ -27,7 +27,7 @@ function getWeatherURL(latitude: number, longitude: number): URL {
     'daily',
     'temperature_2m_max,temperature_2m_min,precipitation_sum'
   );
-  url.searchParams.append('forecast_days', weatherAPIConfig.days);
+  url.searchParams.append('forecast_days', String(weatherAPIConfig.days));
   url.searchParams.append('timezone', 'auto');
 
   return url;

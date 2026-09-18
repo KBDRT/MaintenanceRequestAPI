@@ -1,12 +1,11 @@
 import { Request, Response } from 'express';
 import * as service from './../services/equipment.service.js';
-import { getEquipmentsRequest } from '../dto/equipment/get-equipments.request.js';
-import { GetEquipmentsRequests } from '../dto/equipment/get-equipment-requests.request.js';
+import { GetEquipmentsFilteredDto } from '../dto/equipment/get-equipments-filtered.dto.js';
+import { GetEquipmentRequestsDto } from '../dto/equipment/get-equipment-requests.dto.js';
 
 export const getEquipments = async (req: Request, res: Response): Promise<void> => {
-  const query: getEquipmentsRequest = res.locals.cleanQuery;
+  const query: GetEquipmentsFilteredDto = res.locals.cleanQuery;
   const result = await service.getEquipments(query);
-  // req.log.info({ event: 'request_created', id: "" }, 'created');
   res.status(200)
      .json({data: result.equipments, meta: {total: result.total, page: query.page, limit: query.limit}});
 };
@@ -37,7 +36,7 @@ export const deleteEquipment = async (req: Request, res: Response): Promise<void
 };
 
 export const getEquipmentRequests = async (req: Request, res: Response): Promise<void> => {
-  const query: GetEquipmentsRequests = res.locals.cleanQuery;
+  const query: GetEquipmentRequestsDto = res.locals.cleanQuery;
   const { id } = req.params;
   const result = await service.getEquipmentsMaintenanceRequests(id as string, res.locals.cleanQuery);
   res.status(200).json({ data: result.requests, meta: {total: result.total, page: query.page, limit: query.limit} });

@@ -5,7 +5,7 @@ export const updateRequestSchema = z.object({
   equipmentId: z.uuid().optional(),
   title: z.string().min(5).max(120).optional(),
   description: z.string().max(2000).optional(),
-  priority: z.enum(MaintenanceRequestPriority, "Допустимые значения приоритета заявки: low, medium, high, critical"),
+  priority: z.enum(MaintenanceRequestPriority, "Допустимые значения приоритета заявки: low, medium, high, critical").optional(),
   plannedAt: z.iso.datetime().optional(),
 })
 .refine(

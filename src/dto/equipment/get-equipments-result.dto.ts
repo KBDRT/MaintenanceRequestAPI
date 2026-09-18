@@ -1,6 +1,6 @@
 import { Equipment } from "../../domains/entities/equipment.entity.js";
 
-export class GetEquipmentsResult{
+export class GetEquipmentsResultDto{
   equipments?: Equipment[];
   total?: number;
 }
