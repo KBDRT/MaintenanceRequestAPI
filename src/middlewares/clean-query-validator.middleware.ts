@@ -1,6 +1,5 @@
-import { NextFunction } from "express";
 import { ZodType } from "zod/v4";
-import { Request, Response } from 'express';
+import { Request, Response, NextFunction } from 'express';
 import { ValidationError } from "../errors/validation.error.js";
 
 export function validateCleanQuery(schemas: ZodType) {

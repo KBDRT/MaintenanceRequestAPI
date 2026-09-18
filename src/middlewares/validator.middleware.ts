@@ -17,13 +17,7 @@ export function validate(schemas: RequestValidatorSchemas) {
 
       const result = schema.safeParse(req[part]);
       if (!result.success) {
-        // const messages = [];
-        // for (const error of result.error.issues)
-        // {
-        //   messages.push({field: error.path[0] ?? "", message: error.message});
-        // }
         return next(new ValidationError(result.error));
-        // return res.status(400).json({ message: messages }); // генерировать ошибку через return next(new ValidationError(result.error));
       }
       // начиная с express5, query только сеттер
       if (part == "query") {
