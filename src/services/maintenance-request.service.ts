@@ -1,5 +1,5 @@
 import { MaintenanceRequest } from "../domains/entities/maintenance-request.entity.js";
-import { IMaintenanceRequestRepository } from "../repositories/abstractions/maintenance-request.repository.interface.js";
+import { IMaintenanceRequestRepository } from "../repositories/abstractions/maintenance-request-repository.interface.js";
 import { MaintenanceRequestRepository } from "../repositories/implementations/in-memory-maintenance-request.repository.js";
 import { IEquipmentRepository } from "../repositories/abstractions/equipment-repository.interface.js";
 import { EquipmentRepositoryMemory } from "../repositories/implementations/in-memory-equipment-repository.js";

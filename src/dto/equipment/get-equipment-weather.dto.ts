@@ -1,6 +1,6 @@
-import { EquipmentLocation } from "../../domains/value-objects/equipment-location.vo.js";
-import { DayWeather } from "../../domains/value-objects/location-weather.js";
-import { WeatherRule } from "../../domains/value-objects/weather-rule.js";
+import { EquipmentLocation } from "../../domains/values/equipment-location.value.js";
+import { DayWeather } from "../../domains/values/location-weather.value.js";
+import { WeatherRule } from "../../domains/values/weather-rule.value.js";
 
 export class GetEquipmentWeatherDto {
   equipmentId?: string;
