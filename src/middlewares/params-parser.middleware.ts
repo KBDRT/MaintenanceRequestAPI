@@ -1,5 +1,4 @@
-import { NextFunction } from "express";
-import { Request, Response } from 'express';
+import { NextFunction, Request, Response } from "express";
 import { MaintenanceRequest } from "../domains/entities/maintenance-request.entity.js";
 import { Equipment } from "../domains/entities/equipment.entity.js";
 

@@ -1,7 +1,7 @@
 import { AppError } from './../../errors/app.error.js';
 
 export interface ErrorDetails {
-  field: string;
+  field?: string;
   message: string;
 }
 

@@ -1,13 +1,17 @@
-import { NextFunction } from "express";
-import { Request, Response, ErrorRequestHandler } from 'express';
+import { NextFunction, Request, Response, ErrorRequestHandler } from 'express';
 import { AppError } from "../errors/app.error.js";
 import { ErrorResponse } from "../dto/common/error.response.js";
+import { logger } from "../lib/pino.js";
 
 export function errorHandler(err: unknown, req: Request, res: Response, next: NextFunction) {
   if (res.headersSent) return next(err);
 
+  const log = req.log ?? logger;
+
   if (err instanceof AppError) {
     const errorResponse = ErrorResponse.create(err);
+
+    log[err.status >= 500 ? 'error' : 'warn']({error: err}, 'request failed');
 
     res.status(err.status)
        .type('application/problem+json')
@@ -17,7 +21,8 @@ export function errorHandler(err: unknown, req: Request, res: Response, next: Ne
 
     const body = {
       error: {
-        message: err.message
+        message: err.message,
+        requestId: req.id,
       }
     }
     
@@ -32,22 +37,4 @@ export function errorHandler(err: unknown, req: Request, res: Response, next: Ne
       .json({error: "Неизвестная ошибка"});
       
   }
-
-
-  // const isOperational = err.isOperational === true || status < 500;
-
-  // // const log = req.log ?? logger;
-  // // log[status >= 500 ? 'error' : 'warn']({ err, status }, 'request failed');
-
-  // const body = {
-  //   type: `https://example.com/problems/${err.code ?? 'internal-error'}`,
-  //   title: isOperational ? err.message : 'Внутренняя ошибка сервера',
-  //   status,
-  //   instance: req.originalUrl,
-  //   details: err.details
-  //   // requestId: req.id,
-  // };
-
-  // // if (err.details) body.errors = err.details;
-
 }
