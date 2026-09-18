@@ -1,5 +1,4 @@
 import app from "./app.js";
+import appConfig from "./config/app.config.js";
 
-const PORT = process.env.PORT ?? 3000;
-
-app.listen(PORT);
+app.listen(appConfig.port);

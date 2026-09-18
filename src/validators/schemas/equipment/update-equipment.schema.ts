@@ -5,9 +5,9 @@ import { EquipmentStatus } from '../../../domains/enums/equipment-status.enum.js
 
 export const updateEquipmentRequestSchema = z.object({
   name: z.string().min(3).max(100).optional(),
-  type: z.enum(EquipmentType).optional(),
+  type: z.enum(EquipmentType, "Допустимые значения типа: turbine, inverter, sensor, substation").optional(),
   serialNumber: z.string().optional(),
   location: equipmentLocationSchema.optional(),
-  status: z.enum(EquipmentStatus).optional(),
+  status: z.enum(EquipmentStatus, "Допустимые значения статуса: operational, maintenance, fault, decommissioned").optional(),
   installedAt: z.iso.date().optional(),
 });
