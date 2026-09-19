@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Заявки на обслуживание</title>
+    <link rel="stylesheet" href="styles.css">
+    <script async src="scripts.js"></script>
+</head>
+<body>
+    <h1 class="reportHeader">Список заявок на обслуживание</h1>
+
+    <fieldset>
+        <legend>Получение списка</legend>
+        <form name="filterForm" class="flex-form">
+            <p>
+                <label for="filter_equipmentId">Id оборудования</label>
+                <input id="filter_equipmentId" name="filter_equipmentId" type="text">
+            </p>
+            <p>
+                <label for="filter_priority">Приоритет</label>
+                <input id="filter_priority" name="filter_priority" type="text">
+            </p>
+            <p>
+                <label for="filter_status">Статус</label>
+                <input id="filter_status" name="filter_status" type="text">
+            </p>
+            <p class="form-actions">
+                <button type="submit" id="getRequestBtn">Получить</button>
+            </p>
+            <p class="form-actions">
+                <button type="submit" id="clearBtn">Очистить</button>
+            </p>
+        </form>
+    </fieldset>
+
+    <fieldset class="new_request_fieldset">
+        <legend>Новая заявка</legend>
+        <form name="requestForm" class="flex-form">
+            <p>
+                <label for="equipmentId">Id оборудования</label>
+                <input id="equipmentId" name="equipmentId" type="text">
+            </p>
+            <p>
+                <label for="title">Название</label>
+                <input id="title" name="title" type="text">
+            </p>
+            <p>
+                <label for="description">Описание</label>
+                <input id="description" name="description" type="text">
+            </p>
+            <p>
+                <label for="priority">Приоритет</label>
+                <input id="priority" name="priority" type="text">
+            </p>
+            <p>
+                <label for="plannedAt">Запланированная дата</label>
+                <input id="plannedAt" name="plannedAt" type="date">
+            </p>
+            <p class="form-actions">
+                <button type="submit">Добавить</button>
+            </p>
+        </form>
+    </fieldset>
+</body>
+</html>
