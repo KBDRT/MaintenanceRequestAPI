@@ -8,6 +8,7 @@ import { updateRequestStatusSchema } from '../validators/schemas/maintenance-req
 import { parseFilterQuery } from '../middlewares/params-parser.middleware.js';
 import { validateCleanQuery } from '../middlewares/clean-query-validator.middleware.js';
 import { filterRequestSchema } from '../validators/schemas/maintenance-request/filter-request.schema.js';
+import { massImportRequestsSchema } from '../validators/schemas/maintenance-request/mass-import-requests.schema.js';
 
 const maintenanceRequestRouter = Router();
 
@@ -24,7 +25,7 @@ maintenanceRequestRouter.route('/:id/status')
   .patch(validate({params: idRequestSchema, body: updateRequestStatusSchema}), updateRequestStatus);
 
 maintenanceRequestRouter.route('/import')
-  .post(createRequestMass);
+  .post(validate({body: massImportRequestsSchema}),createRequestMass);
 
 export default maintenanceRequestRouter;
 
