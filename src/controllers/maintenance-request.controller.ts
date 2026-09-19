@@ -39,3 +39,11 @@ export const updateRequestStatus = async (req: Request, res: Response): Promise<
   await service.updateRequestStatus(id as string, req.body);
   res.status(204).send();
 };
+
+export const createRequestMass = async (req: Request, res: Response): Promise<void> => {
+  const result = await service.createRequestsMass(req.body);
+  const status = result.totalError === 0 ? 200 : 207;
+
+  res.status(status)
+    .json({data: result.imports, meta: {requestId: req.id, totalSuccess: result.totalSuccess, totalErrors: result.totalError }});
+};

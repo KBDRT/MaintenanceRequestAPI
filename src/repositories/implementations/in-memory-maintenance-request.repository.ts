@@ -5,6 +5,7 @@ import { GetRequests } from '../../dto/types/get-requests.type.js';
 import { IMaintenanceRequestRepository } from '../abstractions/maintenance-request-repository.interface.js';
 
 export class MaintenanceRequestRepository implements IMaintenanceRequestRepository{
+
   private static requests: MaintenanceRequest[] = [];
 
   async get(request: GetMaintenanceRequestsFilteredDto): Promise<GetRequests> {
@@ -13,7 +14,9 @@ export class MaintenanceRequestRepository implements IMaintenanceRequestReposito
       .filter(req =>
         (!request.priority?.length || request.priority.includes(req.priority)))
       .filter(req =>
-        (!request.equipmentIds?.length || request.equipmentIds.includes(req.equipmentId)));
+        (!request.equipmentIds?.length || request.equipmentIds.includes(req.equipmentId)))
+      .filter(req =>
+        (!request.id?.length || request.id.includes(req.id)));
 
     if (request.dateFrom) {
       const dateFrom = request.dateFrom;
@@ -61,6 +64,11 @@ export class MaintenanceRequestRepository implements IMaintenanceRequestReposito
     MaintenanceRequestRepository.requests.push(newRequest);
     return newRequest.id;
   }
+
+  async addMass(newRequest: MaintenanceRequest[]): Promise<void> {
+    MaintenanceRequestRepository.requests.push(...newRequest);
+  }
+
 
   async getById(id: string): Promise<MaintenanceRequest | undefined> {
     return MaintenanceRequestRepository.requests.find(req => req.id == id);

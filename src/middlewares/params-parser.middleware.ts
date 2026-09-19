@@ -5,7 +5,7 @@ import { Equipment } from "../domains/entities/equipment.entity.js";
 export function parseFilterQuery(req: Request, res: Response, next: NextFunction) {
   const newQuery = {...req.query};
 
-  for (const parameterName of ['sort', 'status', 'type', "sortDirection", "priority", "equipmentsIds"] as const) {
+  for (const parameterName of ['sort', 'status', 'type', "sortDirection", "priority", "equipmentsIds", "id"] as const) {
     if (newQuery[parameterName] && typeof newQuery[parameterName] == "string") {
       const stringCopy = newQuery[parameterName];
       newQuery[parameterName] = [];

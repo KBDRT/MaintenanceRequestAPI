@@ -10,4 +10,5 @@ export interface IMaintenanceRequestRepository {
   update(updatedRequest: MaintenanceRequest): Promise<void>;
   delete(id: string): Promise<void>;
   existWithStatuses(equipmentId: string, statuses: MaintenanceRequestStatus[]): Promise<boolean>;
+  addMass(newRequest: MaintenanceRequest[]): Promise<void>,
 }

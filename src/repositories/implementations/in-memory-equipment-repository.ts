@@ -10,7 +10,9 @@ export class EquipmentRepositoryMemory implements IEquipmentRepository{
      let filtered = EquipmentRepositoryMemory.equipments.filter(req =>
       (!request.status?.length || request.status.includes(req.status)))
       .filter(req =>
-        (!request.type?.length || request.type.includes(req.type)));
+        (!request.type?.length || request.type.includes(req.type)))
+      .filter(req =>
+        (!request.id?.length || request.id.includes(req.id)));
 
     if (request.dateFrom) {
       const dateFrom = request.dateFrom;

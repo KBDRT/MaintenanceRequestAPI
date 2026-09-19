@@ -8,6 +8,7 @@ export class GetMaintenanceRequestsFilteredDto {
   sortDirection?: string | SortDirection[];
 
   equipmentIds?: string | string[];
+  id?: string | string[];
 
   priority?: string | string[];
   status?: string | string[];
