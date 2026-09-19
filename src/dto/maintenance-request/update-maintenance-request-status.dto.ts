@@ -1,5 +1,5 @@
 import { MaintenanceRequestStatus } from "../../domains/enums/maintenance-request-status.enum.js";
 
-export interface UpdateMaintenanceRequestStatusRequest {
+export interface UpdateMaintenanceRequestStatusDto {
   newStatus: MaintenanceRequestStatus;
 }

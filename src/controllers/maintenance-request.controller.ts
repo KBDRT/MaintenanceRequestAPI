@@ -1,9 +1,9 @@
 import { Request, Response } from 'express';
 import * as service from './../services/maintenance-request.service.js';
-import { GetMaintenanceRequestsRequest } from '../dto/maintenance-request/get-maintenance-requests.request.js';
+import { GetMaintenanceRequestsFilteredDto } from '../dto/maintenance-request/get-maintenance-requests-filtered.dto.js';
 
 export const getRequests = async (req: Request, res: Response): Promise<void> => {
-  const query: GetMaintenanceRequestsRequest = res.locals.cleanQuery;
+  const query: GetMaintenanceRequestsFilteredDto = res.locals.cleanQuery;
   const result = await service.getRequests(query);
   res.status(200)
     .json({data: result.requests, meta: {total: result.total, page: query.page, limit: query.limit}});

@@ -7,7 +7,7 @@ export class ValidationError extends AppError {
       status: 400,
       code: 'VALIDATION_ERROR',
       details: zodError.issues.map((i) => ({
-        field: i.path.join('.') || '(корень)',
+        field: i.path.join('.') || '()',
         code: i.code,
         message: i.message,
       })),

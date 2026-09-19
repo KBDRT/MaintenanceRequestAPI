@@ -1,28 +1,28 @@
 import { Equipment } from "../domains/entities/equipment.entity.js";
-import { CreateEquipmentRequest } from "../dto/equipment/create-equipment.request.js";
-import { GetEquipmentWeatherResponse } from "../dto/equipment/get-equipment-weather.response.js";
-import { getEquipmentsRequest } from "../dto/equipment/get-equipments.request.js";
-import { UpdateEquipmentRequest } from "../dto/equipment/update-equipment.request.js";
+import { CreateEquipmentDto } from "../dto/equipment/create-equipment.dto.js";
+import { GetEquipmentWeatherDto } from "../dto/equipment/get-equipment-weather.dto.js";
+import { GetEquipmentsFilteredDto } from "../dto/equipment/get-equipments-filtered.dto.js";
 import { ConflictError } from "../errors/conflicts.error.js";
 import { NotFoundError } from "../errors/not-found.error.js";
 import { IEquipmentRepository } from "../repositories/abstractions/equipment-repository.interface.js";
-import { IMaintenanceRequestRepository } from "../repositories/abstractions/maintenance-request.repository.interface.js";
+import { IMaintenanceRequestRepository } from "../repositories/abstractions/maintenance-request-repository.interface.js";
 import { EquipmentRepositoryMemory } from "../repositories/implementations/in-memory-equipment-repository.js";
 import { weatherSuitableSchema } from "../validators/schemas/equipment/weather-suitable.schema.js";
 import { getWeatherAsync } from "./weather.service.js";
 import { MaintenanceRequestRepository } from './../repositories/implementations/in-memory-maintenance-request.repository.js';
 import { MaintenanceRequestStatus } from "../domains/enums/maintenance-request-status.enum.js";
-import { GetEquipmentsResult } from "../dto/equipment/get-equipments.result.js";
 import { getRequests } from "./maintenance-request.service.js";
-import { GetEquipmentsRequests } from "../dto/equipment/get-equipment-requests.request.js";
+import { GetEquipmentRequestsDto } from "../dto/equipment/get-equipment-requests.dto.js";
 import { MaintenanceRequest } from "../domains/entities/maintenance-request.entity.js";
-import { GetRequetsResult } from "../dto/maintenance-request/get-requests.result.js";
+import { GetMaintenanceRequestsDto } from "../dto/maintenance-request/get-maintenance-requests-result.dto.js";
 import { BusinessRuleError } from "../errors/business-rule.error.js";
+import { GetEquipmentsResultDto } from "../dto/equipment/get-equipments-result.dto.js";
+import { UpdateEquipmentDto } from "../dto/equipment/update-equipment.dto.js";
 
 const repository: IEquipmentRepository = new EquipmentRepositoryMemory();
 const requestsRepository: IMaintenanceRequestRepository = new MaintenanceRequestRepository();
 
-export const addEquipment = async(equipmentInfo: CreateEquipmentRequest): Promise<Equipment> => {
+export const addEquipment = async(equipmentInfo: CreateEquipmentDto): Promise<Equipment> => {
   if (new Date(equipmentInfo.installedAt) > new Date()) {
     throw new BusinessRuleError("Дата установки оборудования неккоретна", [{field: "installedAt", message: "Дата установки оборудования не может быть в будущем"}])
   }
@@ -38,8 +38,8 @@ export const addEquipment = async(equipmentInfo: CreateEquipmentRequest): Promis
   return equipment;
 };
 
-export const getEquipments = async(request: getEquipmentsRequest): Promise<GetEquipmentsResult> => {
-  const serviceResult = new GetEquipmentsResult();
+export const getEquipments = async(request: GetEquipmentsFilteredDto): Promise<GetEquipmentsResultDto> => {
+  const serviceResult = new GetEquipmentsResultDto();
 
   const result = await repository.get(request);
   serviceResult.equipments = result.equipments;
@@ -71,7 +71,7 @@ export const getEquipment = async(id: string): Promise<Equipment | undefined> =>
   return await repository.getById(id);
 };
 
-export const updateEquipment = async(id: string, equipmentInfo: UpdateEquipmentRequest): Promise<void> => {
+export const updateEquipment = async(id: string, equipmentInfo: UpdateEquipmentDto): Promise<void> => {
   const equipment = await repository.getById(id);
   if (!equipment) {
      throw new NotFoundError("Оборудование не найдено!", [{field: "id", message: `Оборудования с id = ${id} не существует`}]);
@@ -84,8 +84,8 @@ export const updateEquipment = async(id: string, equipmentInfo: UpdateEquipmentR
 };
 
 
-export const getEquipmentWeather = async(id: string): Promise<GetEquipmentWeatherResponse> => {
-  const response = new GetEquipmentWeatherResponse();
+export const getEquipmentWeather = async(id: string): Promise<GetEquipmentWeatherDto> => {
+  const response = new GetEquipmentWeatherDto();
   const equipment = await repository.getById(id);
   if (!equipment) {
      throw new NotFoundError("Оборудование не найдено!", [{field: "id", message: `Оборудования с id = ${id} не существует`}]);
@@ -95,10 +95,12 @@ export const getEquipmentWeather = async(id: string): Promise<GetEquipmentWeathe
   response.location = equipment.location;
 
   const daysWeather = await getWeatherAsync(equipment.location.lat, equipment.location.lon);
-  for (const weather of daysWeather) {
-    const parsed = weatherSuitableSchema.safeParse(weather);
-    weather.suitable = parsed.success;
-    response.weather?.push(weather);
+  if (Array.isArray(daysWeather)) {
+    for (const weather of daysWeather) {
+      const parsed = weatherSuitableSchema.safeParse(weather);
+      weather.suitable = parsed.success;
+      response.weather?.push(weather);
+    }
   }
 
   response.isWeatherWindowSuitable = response.weather.every(x => x.suitable);
@@ -106,7 +108,7 @@ export const getEquipmentWeather = async(id: string): Promise<GetEquipmentWeathe
   return response;
 }
 
-export const getEquipmentsMaintenanceRequests = async(id: string, request: GetEquipmentsRequests): Promise<GetRequetsResult> => {
+export const getEquipmentsMaintenanceRequests = async(id: string, request: GetEquipmentRequestsDto): Promise<GetMaintenanceRequestsDto> => {
   const equipment = await repository.getById(id);
   if (!equipment) {
      throw new NotFoundError("Оборудование не найдено!", [{field: "id", message: `Оборудования с id = ${id} не существует`}]);

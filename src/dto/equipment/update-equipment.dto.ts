@@ -1,9 +1,8 @@
-
 import { EquipmentStatus } from "../../domains/enums/equipment-status.enum.js";
 import { EquipmentType } from "../../domains/enums/equipment-type.enum.js";
-import { EquipmentLocation } from '../../domains/value-objects/equipment-location.vo.js';
+import { EquipmentLocation } from '../../domains/values/equipment-location.value.js';
 
-export interface UpdateEquipmentRequest {
+export interface UpdateEquipmentDto {
   name?: string;
   type?: EquipmentType;
   serialNumber?: string;

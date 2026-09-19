@@ -1,13 +1,13 @@
 import { MaintenanceRequest } from '../../domains/entities/maintenance-request.entity.js';
 import { MaintenanceRequestStatus } from '../../domains/enums/maintenance-request-status.enum.js';
-import { GetMaintenanceRequestsRequest } from '../../dto/maintenance-request/get-maintenance-requests.request.js';
+import { GetMaintenanceRequestsFilteredDto } from '../../dto/maintenance-request/get-maintenance-requests-filtered.dto.js';
 import { GetRequests } from '../../dto/types/get-requests.type.js';
-import { IMaintenanceRequestRepository } from './../abstractions/maintenance-request.repository.interface.js';
+import { IMaintenanceRequestRepository } from '../abstractions/maintenance-request-repository.interface.js';
 
 export class MaintenanceRequestRepository implements IMaintenanceRequestRepository{
   private static requests: MaintenanceRequest[] = [];
 
-  async get(request: GetMaintenanceRequestsRequest): Promise<GetRequests> {
+  async get(request: GetMaintenanceRequestsFilteredDto): Promise<GetRequests> {
      let filtered = MaintenanceRequestRepository.requests.filter(req =>
       (!request.status?.length || request.status.includes(req.status)))
       .filter(req =>

@@ -9,7 +9,6 @@ interface StoreInfo{
   log: BaseLogger
 }
 
-
 export const store = new AsyncLocalStorage<StoreInfo>();
 
 export const contextMiddleware = (req: Request, res: Response, next: NextFunction) => {
