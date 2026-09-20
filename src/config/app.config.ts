@@ -18,6 +18,7 @@ const appConfig = {
   },
   origin: parsed.data.CORS_ORIGINS,
   nodeEnv: parsed.data.NODE_ENV,
+  logLevel: parsed.data.LOG_LEVEL
 };
 
 export default appConfig;
