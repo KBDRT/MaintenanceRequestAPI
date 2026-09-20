@@ -1,4 +1,4 @@
-import { NextFunction, Request, Response, ErrorRequestHandler } from 'express';
+import { NextFunction, Request, Response } from 'express';
 import { AppError } from "../errors/app.error.js";
 import { ErrorResponse } from "../dto/common/error.response.js";
 import { logger } from "../lib/pino.js";

@@ -1,9 +1,9 @@
 import { Request, Response } from 'express';
 import jwt from "jsonwebtoken";
-import authConfig from '../config/auth.config';
-import NODE_ENV_VALUES from '../config/node_env.enum';
-import { AuthenticationError } from '../errors/authentication.error';
-import appConfig from '../config/app.config';
+import authConfig from '../config/auth.config.js';
+import NODE_ENV_VALUES from '../config/node_env.enum.js';
+import { AuthenticationError } from '../errors/authentication.error.js';
+import appConfig from '../config/app.config.js';
 
 export const login = async (req: Request, res: Response): Promise<void> => {
   const token = jwt.sign(

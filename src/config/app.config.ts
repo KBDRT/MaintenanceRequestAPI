@@ -1,11 +1,12 @@
 import dotenv from 'dotenv';
 dotenv.config({ quiet: true });
 import { envFileSchema } from '../validators/schemas/common/env-file.schema.js';
+import { getLog } from '../lib/context.js';
 
 export const parsed = envFileSchema.safeParse(process.env);
 if (!parsed.success) {
-  console.log("Ошибка .env файла");
-  console.log(parsed.error.message);
+  getLog().fatal("env file validation error");
+  getLog().error(parsed.error);
   process.exit(1);
 }
 
@@ -18,7 +19,6 @@ const appConfig = {
   },
   origin: parsed.data.CORS_ORIGINS,
   nodeEnv: parsed.data.NODE_ENV,
-  logLevel: parsed.data.LOG_LEVEL
 };
 
 export default appConfig;

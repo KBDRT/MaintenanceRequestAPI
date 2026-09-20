@@ -13,7 +13,6 @@ import { MaintenanceRequestRepository } from './../repositories/implementations/
 import { MaintenanceRequestStatus } from "../domains/enums/maintenance-request-status.enum.js";
 import { getRequests } from "./maintenance-request.service.js";
 import { GetEquipmentRequestsDto } from "../dto/equipment/get-equipment-requests.dto.js";
-import { MaintenanceRequest } from "../domains/entities/maintenance-request.entity.js";
 import { GetMaintenanceRequestsDto } from "../dto/maintenance-request/get-maintenance-requests-result.dto.js";
 import { BusinessRuleError } from "../errors/business-rule.error.js";
 import { GetEquipmentsResultDto } from "../dto/equipment/get-equipments-result.dto.js";

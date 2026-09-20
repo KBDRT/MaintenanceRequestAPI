@@ -1,9 +1,9 @@
 import { Request, Response, NextFunction } from 'express';
 import jwt from "jsonwebtoken";
-import authConfig from '../config/auth.config';
-import { AuthenticationError } from '../errors/authentication.error';
-import appConfig from '../config/app.config';
-import NODE_ENV_VALUES from '../config/node_env.enum';
+import authConfig from '../config/auth.config.js';
+import { AuthenticationError } from '../errors/authentication.error.js';
+import appConfig from '../config/app.config.js';
+import NODE_ENV_VALUES from '../config/node_env.enum.js';
 
 export function authenticate(req: Request, res: Response, next: NextFunction) {
 

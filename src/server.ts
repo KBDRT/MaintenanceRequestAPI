@@ -2,7 +2,11 @@ import appConfig from "./config/app.config.js";
 import app from "./app.js";
 import { getLog } from "./lib/context.js";
 
-const server = app.listen(appConfig.port);
+const server = app.listen(appConfig.port, () => {
+  getLog().info(`SERVER STARTS ON PORT: ${appConfig.port}.`);
+  getLog().info(`MODE: ${appConfig.nodeEnv}`);
+  getLog().info(`API: /api`);
+});
 
 function shutdown(reason: string, err: unknown) {
   getLog().fatal({ err, reason }, 'shutting down');
