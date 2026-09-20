@@ -9,6 +9,7 @@ export class GetEquipmentsFilteredDto {
 
   status?: string | string[];
   type?: string | string[];
+  id?: string | string[];
 
   dateFrom?: string;
   dateTo?: string;

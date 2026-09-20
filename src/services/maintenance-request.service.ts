@@ -12,6 +12,13 @@ import { ConflictError } from "../errors/conflicts.error.js";
 import { GetMaintenanceRequestsDto } from "../dto/maintenance-request/get-maintenance-requests-result.dto.js";
 import { BusinessRuleError } from "../errors/business-rule.error.js";
 import requestAllowStatusChange from "../config/request-allow-status-change.config.js";
+import { createRequestSchema } from "../validators/schemas/maintenance-request/create-request.schema.js";
+import { GetEquipmentsFilteredDto } from "../dto/equipment/get-equipments-filtered.dto.js";
+import { success } from "zod";
+import { CreateMaintenanceRequestMassDto } from "../dto/maintenance-request/create-maintenance-request-mass.dto.js";
+import { ValidationError } from "../errors/validation.error.js";
+import { ErrorResponse } from "../dto/common/error.response.js";
+import { MassImportRequestsResult } from "../dto/types/mass-import-requests-result.type.js";
 
 const repository: IMaintenanceRequestRepository = new MaintenanceRequestRepository();
 const equipmentRepostitory: IEquipmentRepository = new EquipmentRepositoryMemory();
@@ -82,3 +89,56 @@ export const updateRequestStatus = async(id: string, request: UpdateMaintenanceR
   const updated = { ...savedRequest, status: request.newStatus};
   await repository.update(updated);
 }
+
+export const createRequestsMass = async(requests: CreateMaintenanceRequestDto[]): Promise<MassImportRequestsResult> => {
+  let importsResult: CreateMaintenanceRequestMassDto[] = [];
+  let totalError = 0;
+  let totalSuccess = 0;
+
+  // валидация
+  let uniqueEquipmentsId: string[] = [];
+  for (let requestInfo of requests) {
+    let importResult = new CreateMaintenanceRequestMassDto();
+    importResult.importData = {...requestInfo};
+
+    const validateResult = createRequestSchema.safeParse(requestInfo);
+
+    if (validateResult.success) {
+      if (!uniqueEquipmentsId.includes(requestInfo.equipmentId)) {
+        uniqueEquipmentsId.push(requestInfo.equipmentId);
+      }
+      importResult.success = true;
+    }
+    else {
+      importResult.success = false;
+      importResult.error = ErrorResponse.create(new ValidationError(validateResult.error));
+      totalError++;
+    }
+
+    importsResult.push(importResult);
+  }
+
+  // проверка по оборудованию
+  let equipmentFilter = new GetEquipmentsFilteredDto();
+  equipmentFilter.id = uniqueEquipmentsId;
+  const repositoryResult = await equipmentRepostitory.get(equipmentFilter);
+
+  const newRequests: MaintenanceRequest[] = [];
+  for (let requestInfo of importsResult.filter(x => x.success)) {
+    if (repositoryResult.equipments.some(x => x.id == requestInfo.importData?.equipmentId) && requestInfo.importData) {
+      let newRequest = MaintenanceRequest.create(requestInfo.importData)
+      newRequests.push(newRequest);
+      requestInfo.resultData = newRequest;
+      totalSuccess++;
+    } 
+    else {
+      requestInfo.success = false;
+      totalError++;
+      requestInfo.error = ErrorResponse.create(new NotFoundError("Оборудование не найдено", [{field: "equipmentId", message: `Оборудования с id = ${requestInfo.importData?.equipmentId} не существует`}]));
+    }
+  }
+
+  // добавление валидных
+  await repository.addMass(newRequests);
+  return {imports: importsResult, totalError: totalError, totalSuccess: totalSuccess};
+};
