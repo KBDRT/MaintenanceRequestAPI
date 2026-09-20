@@ -14,7 +14,7 @@ export const envFileSchema = z.object({
   RATE_LIMIT_MAX_REQUESTS: z.coerce.number().default(100),
   JWT_SECRET_KEY: z.string().min(5).default("SECRET"),
   JWT_MAX_AGE_MS: z.coerce.number().min(60).default(60 * 60 * 1000),
-  LOG_LEVEL: z.enum(["fatal", "error", "warn", "info", "debug", "trace"]).default('info'),
+  LOG_LEVEL: z.enum(["fatal", "error", "warn", "info", "debug", "trace", "silent"]).default('info'),
   CORS_ORIGINS: z.string()
     .transform((s) => s.split(',').map((o) => o.trim()).filter(Boolean))
     .pipe(z.array(z.string().url())),
