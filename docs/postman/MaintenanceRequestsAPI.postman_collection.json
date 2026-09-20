@@ -1,0 +1,2701 @@
+{
+  "info": {
+    "_postman_id": "7e9a23ca-44a5-451f-afb5-6bb59a1dfb56",
+    "name": "MaintenanceRequestsAPI",
+    "description": "Проверка запросов к API.\n\nСозданы простые запросы для каждого запроса (проверка тела запроса, статуса ответа и тела ответа).\n\nЗапросы с зависиющими данными вынесены в папки (в которых перед основным запросом отправляются дополнительные): Для запуска ПКМ по папке -> RUN",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "43795581"
+  },
+  "item": [
+    {
+      "name": "Технические",
+      "item": [
+        {
+          "name": "Проверка доступности сервера",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Тело запроса пустое', () => {\r\n    const hasBody = !!(pm.request.body && pm.request.body.raw && pm.request.body.raw.trim() !== '');\r\n    \r\n    pm.expect(hasBody).to.be.false;\r\n});\r\n"
+                ]
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Статус ответа 200', () => pm.response.to.have.status(200));\r\n\r\npm.test('Тело ответа содержит все поля', () => {\r\n    const json = pm.response.json();\r\n    pm.expect(json).to.have.property('status');\r\n    pm.expect(json).to.have.property('timestamp');\r\n    pm.expect(json).to.have.property('uptime');\r\n});\r\n"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseURL}}/health",
+              "host": [
+                "{{baseURL}}"
+              ],
+              "path": [
+                "health"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Несуществующий эндпоинт",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Тело запроса пустое', () => {\r\n    const hasBody = !!(pm.request.body && pm.request.body.raw && pm.request.body.raw.trim() !== '');\r\n    \r\n    pm.expect(hasBody).to.be.false;\r\n});\r\n"
+                ]
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Статус ответа 404', () => pm.response.to.have.status(404));\r\n\r\npm.test('Тело ответа содержит все поля', () => {\r\n    const json = pm.response.json();\r\n    pm.expect(json).to.have.property('error');\r\n    pm.expect(json.error).to.have.property('code');\r\n    pm.expect(json.error).to.have.property('message');\r\n});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseURL}}/test",
+              "host": [
+                "{{baseURL}}"
+              ],
+              "path": [
+                "test"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "ЛОГИН (АУТЕНТИФИКАЦИЯ: JWT куки)",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{baseURL}}/auth/login",
+              "host": [
+                "{{baseURL}}"
+              ],
+              "path": [
+                "auth",
+                "login"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "ВЫХОД (АУТЕНТИФИКАЦИЯ: JWT куки)",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{baseURL}}/auth/logout",
+              "host": [
+                "{{baseURL}}"
+              ],
+              "path": [
+                "auth",
+                "logout"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "ЧАСТОТА ЗАПРОСОВ (429) - Скрипт массовой отправки",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const total = pm.response.headers.get(\"Ratelimit-Limit\") + 10;     \r\nlet counter = 0;\r\n\r\nfunction send() {\r\n    pm.sendRequest({\r\n        url: pm.request.url.toString(),\r\n        method: pm.request.method,\r\n    }, (err, res) => {\r\n\r\n        counter++;\r\n\r\n        if (res.code === 429) {\r\n            console.log(\"429 пойман\");\r\n            console.log(\"Ratelimit-Reset:\", res.headers.get(\"Ratelimit-Reset\"));\r\n            console.log(\"Ratelimit-Policy:\", res.headers.get(\"Ratelimit-Policy\"));\r\n            console.log(\"Ratelimit-Limit:\", res.headers.get(\"Ratelimit-Limit\"));\r\n            return; \r\n        }\r\n        if (counter < total) send();  \r\n    });\r\n}\r\n\r\nsend();"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "[\r\n    {\r\n        \"equipmentId\": \"{{testsEquipmentId}}\",\r\n        \"priority\": \"low\",\r\n        \"title\": \"Заявка1\"\r\n    },\r\n    {\r\n        \"equipmentId\": \"123123\",\r\n        \"priority\": \"medium\",\r\n        \"title\": \"Заявка2\"\r\n    },\r\n    {\r\n        \"equipmentId\": \"a0baa275-e139-4af1-88b6-0b5f3839dfb2\",\r\n        \"priority\": \"low\",\r\n        \"description\": \"описание заявки\",\r\n        \"title\": \"Заявка2\"\r\n    }\r\n]",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseURL}}/health",
+              "host": [
+                "{{baseURL}}"
+              ],
+              "path": [
+                "health"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Оборудование",
+      "item": [
+        {
+          "name": "ОДНО (CRUD)",
+          "item": [
+            {
+              "name": "Успешное создание (200)",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('Статус ответа 201', () => pm.response.to.have.status(201));\r\n\r\npm.test('Тело ответа содержит все поля', () => {\r\n    const json = pm.response.json();\r\n    pm.expect(json).to.have.property('id');\r\n    pm.expect(json).to.have.property('name');\r\n    pm.expect(json).to.have.property('serialNumber');\r\n    pm.expect(json).to.have.property('location');\r\n    pm.expect(json.location).to.have.property('lat');\r\n    pm.expect(json.location).to.have.property('lon');\r\n    pm.expect(json).to.have.property('status');\r\n    pm.expect(json).to.have.property('installedAt');\r\n});\r\n\r\nconst body = pm.response.json();\r\npm.collectionVariables.set('testsEquipmentId', body.id);"
+                    ]
+                  }
+                },
+                {
+                  "listen": "prerequest",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "const uniq = Date.now() + '-' + Math.floor(Math.random() * 1000);\r\n\r\npm.collectionVariables.set('testsSerialNumber', `SN-${uniq}`);\r\n\r\npm.test('Тело запроса содержит все поля', () => {\r\n    const json = JSON.parse(pm.request.body.raw);\r\n    pm.expect(json).to.have.property('name');\r\n    pm.expect(json).to.have.property('type');\r\n    pm.expect(json).to.have.property('serialNumber');\r\n    pm.expect(json).to.have.property('location');\r\n    pm.expect(json).to.have.property('status');\r\n    pm.expect(json).to.have.property('installedAt');\r\n});\r\n"
+                    ]
+                  }
+                }
+              ],
+              "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"name\": \"Ветряк\",\r\n    \"type\": \"turbine\",\r\n    \"serialNumber\": \"{{testsSerialNumber}}\",\r\n    \"location\": {\r\n        \"lat\": 50,\r\n        \"lon\": 52\r\n    },\r\n    \"status\": \"fault\",\r\n    \"installedAt\": \"2025-12-12\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{baseURL}}/{{equipmenstBaseRoute}}/",
+                  "host": [
+                    "{{baseURL}}"
+                  ],
+                  "path": [
+                    "{{equipmenstBaseRoute}}",
+                    ""
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Успешное получение карточки (200)",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('Статус ответа 200', () => pm.response.to.have.status(200));\r\n\r\npm.test('Тело ответа содержит все поля', () => {\r\n    const json = pm.response.json();\r\n    pm.expect(json).to.have.property('id');\r\n    pm.expect(json).to.have.property('name');\r\n    pm.expect(json).to.have.property('serialNumber');\r\n    pm.expect(json).to.have.property('location');\r\n    pm.expect(json).to.have.property('status');\r\n    pm.expect(json).to.have.property('installedAt');\r\n});"
+                    ]
+                  }
+                },
+                {
+                  "listen": "prerequest",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('Тело запроса пустое', () => {\r\n    const hasBody = !!(pm.request.body && pm.request.body.raw && pm.request.body.raw.trim() !== '');\r\n    \r\n    pm.expect(hasBody).to.be.false;\r\n});\r\n"
+                    ]
+                  }
+                }
+              ],
+              "protocolProfileBehavior": {
+                "disableBodyPruning": true
+              },
+              "request": {
+                "method": "GET",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{baseURL}}/{{equipmenstBaseRoute}}/{{testsEquipmentId}}",
+                  "host": [
+                    "{{baseURL}}"
+                  ],
+                  "path": [
+                    "{{equipmenstBaseRoute}}",
+                    "{{testsEquipmentId}}"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Получение погоды (внешнее API)",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "// pm.test('Статус ответа 200', () => pm.response.to.have.status(200));\r\n\r\n// pm.test('Тело ответа содержит все поля', () => {\r\n//     const json = pm.response.json();\r\n//     pm.expect(json).to.have.property('equipmentId');\r\n//     pm.expect(json).to.have.property('location');\r\n//     pm.expect(json).to.have.property('rules');\r\n//     pm.expect(json).to.have.property('isWeatherWindowSuitable');\r\n//     pm.expect(json).to.have.property('weather');\r\n// });"
+                    ]
+                  }
+                },
+                {
+                  "listen": "prerequest",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('Тело запроса пустое', () => {\r\n    const hasBody = !!(pm.request.body && pm.request.body.raw && pm.request.body.raw.trim() !== '');\r\n    \r\n    pm.expect(hasBody).to.be.false;\r\n});\r\n"
+                    ]
+                  }
+                }
+              ],
+              "protocolProfileBehavior": {
+                "disableBodyPruning": true
+              },
+              "request": {
+                "method": "GET",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{baseURL}}/{{equipmenstBaseRoute}}/{{testsEquipmentId}}/weather",
+                  "host": [
+                    "{{baseURL}}"
+                  ],
+                  "path": [
+                    "{{equipmenstBaseRoute}}",
+                    "{{testsEquipmentId}}",
+                    "weather"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Получение заявок по оборудованию (поддержка пагинации, фильтрации и сортировки)",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('Статус ответа 200', () => pm.response.to.have.status(200));\r\n\r\npm.test('Тело ответа содержит все поля', () => {\r\n    const json = pm.response.json();\r\n    pm.expect(json).to.have.property('data');\r\n    pm.expect(json).to.have.property('meta');\r\n    pm.expect(json.meta).to.have.property('total');\r\n    pm.expect(json.meta).to.have.property('page');\r\n    pm.expect(json.meta).to.have.property('limit');\r\n});"
+                    ]
+                  }
+                },
+                {
+                  "listen": "prerequest",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('Тело запроса пустое', () => {\r\n    const hasBody = !!(pm.request.body && pm.request.body.raw && pm.request.body.raw.trim() !== '');\r\n    \r\n    pm.expect(hasBody).to.be.false;\r\n});\r\n"
+                    ]
+                  }
+                }
+              ],
+              "protocolProfileBehavior": {
+                "disableBodyPruning": true
+              },
+              "request": {
+                "method": "GET",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{baseURL}}/{{equipmenstBaseRoute}}/{{testsEquipmentId}}/requests",
+                  "host": [
+                    "{{baseURL}}"
+                  ],
+                  "path": [
+                    "{{equipmenstBaseRoute}}",
+                    "{{testsEquipmentId}}",
+                    "requests"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Успешное обновление (200) - обновление серийного номера",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('Статус ответа 204', () => pm.response.to.have.status(204));\n\npm.test('Тело ответа пустое', () => {\n    pm.expect(pm.response.text()).to.be.empty;\n});"
+                    ]
+                  }
+                },
+                {
+                  "listen": "prerequest",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "const uniq = Date.now() + '-' + Math.floor(Math.random() * 1000);\r\npm.collectionVariables.set('testsSerialNumber', `SN-${uniq}`);\r\n\r\nconst date = new Date().toISOString().slice(0, 10);\r\npm.collectionVariables.set('testsInstalledAt', `${date}`);\r\n\r\npm.test('Тело запроса содержит все поля', () => {\r\n    const json = JSON.parse(pm.request.body.raw);\r\n    pm.expect(json).to.have.property('serialNumber');\r\n});\r\n"
+                    ]
+                  }
+                }
+              ],
+              "request": {
+                "method": "PATCH",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"serialNumber\": \"{{testsSerialNumber}}\",\r\n    \"installedAt\": \"{{testsInstalledAt}}\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{baseURL}}/{{equipmenstBaseRoute}}/{{testsEquipmentId}}",
+                  "host": [
+                    "{{baseURL}}"
+                  ],
+                  "path": [
+                    "{{equipmenstBaseRoute}}",
+                    "{{testsEquipmentId}}"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Успешное удаление (200)",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('Статус ответа 204', () => pm.response.to.have.status(204));\n\npm.test('Тело ответа пустое', () => {\n    pm.expect(pm.response.text()).to.be.empty;\n});\n\n// pm.collectionVariables.set('testsEquipmentId', ``);"
+                    ]
+                  }
+                },
+                {
+                  "listen": "prerequest",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('Тело запроса пустое', () => {\r\n     const hasBody = !!(pm.request.body && pm.request.body.raw && pm.request.body.raw.trim() !== '');\r\n    \r\n    pm.expect(hasBody).to.be.false;\r\n});\r\n"
+                    ]
+                  }
+                }
+              ],
+              "request": {
+                "method": "DELETE",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{baseURL}}/{{equipmenstBaseRoute}}/{{testsEquipmentId}}",
+                  "host": [
+                    "{{baseURL}}"
+                  ],
+                  "path": [
+                    "{{equipmenstBaseRoute}}",
+                    "{{testsEquipmentId}}"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "СПИСОК (GET)",
+          "item": [
+            {
+              "name": "Список оборудований (200), пагинация",
+              "event": [
+                {
+                  "listen": "prerequest",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('Тело запроса пустое', () => {\r\n    const hasBody = !!(pm.request.body && pm.request.body.raw && pm.request.body.raw.trim() !== '');\r\n    \r\n    pm.expect(hasBody).to.be.false;\r\n});\r\n"
+                    ]
+                  }
+                },
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('Статус ответа 200', () => pm.response.to.have.status(200));\r\n\r\npm.test('Тело ответа содержит все поля', () => {\r\n    const json = pm.response.json();\r\n    pm.expect(json).to.have.property('data');\r\n    pm.expect(json).to.have.property('meta');\r\n    pm.expect(json.meta).to.have.property('total');\r\n    pm.expect(json.meta).to.have.property('page');\r\n    pm.expect(json.meta).to.have.property('limit');\r\n});"
+                    ]
+                  }
+                }
+              ],
+              "protocolProfileBehavior": {
+                "disableBodyPruning": true
+              },
+              "request": {
+                "method": "GET",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "",
+                  "options": {
+                    "raw": {
+                      "language": "text"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{baseURL}}/{{equipmenstBaseRoute}}?page=1&limit=1",
+                  "host": [
+                    "{{baseURL}}"
+                  ],
+                  "path": [
+                    "{{equipmenstBaseRoute}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "page",
+                      "value": "1"
+                    },
+                    {
+                      "key": "limit",
+                      "value": "1"
+                    }
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Список оборудований (200), фильтрация",
+              "event": [
+                {
+                  "listen": "prerequest",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('Тело запроса пустое', () => {\r\n    const hasBody = !!(pm.request.body && pm.request.body.raw && pm.request.body.raw.trim() !== '');\r\n    \r\n    pm.expect(hasBody).to.be.false;\r\n});\r\n"
+                    ]
+                  }
+                },
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('Статус ответа 200', () => pm.response.to.have.status(200));\r\n\r\npm.test('Тело ответа содержит все поля', () => {\r\n    const json = pm.response.json();\r\n    pm.expect(json).to.have.property('data');\r\n    pm.expect(json).to.have.property('meta');\r\n    pm.expect(json.meta).to.have.property('total');\r\n    pm.expect(json.meta).to.have.property('page');\r\n    pm.expect(json.meta).to.have.property('limit');\r\n});"
+                    ]
+                  }
+                }
+              ],
+              "protocolProfileBehavior": {
+                "disableBodyPruning": true
+              },
+              "request": {
+                "method": "GET",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "",
+                  "options": {
+                    "raw": {
+                      "language": "text"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{baseURL}}/{{equipmenstBaseRoute}}?status=fault, operational",
+                  "host": [
+                    "{{baseURL}}"
+                  ],
+                  "path": [
+                    "{{equipmenstBaseRoute}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "status",
+                      "value": "fault, operational"
+                    }
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Список оборудований (200), сортировка",
+              "event": [
+                {
+                  "listen": "prerequest",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('Тело запроса пустое', () => {\r\n    const hasBody = !!(pm.request.body && pm.request.body.raw && pm.request.body.raw.trim() !== '');\r\n    \r\n    pm.expect(hasBody).to.be.false;\r\n});\r\n"
+                    ]
+                  }
+                },
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('Статус ответа 200', () => pm.response.to.have.status(200));\r\n\r\npm.test('Тело ответа содержит все поля', () => {\r\n    const json = pm.response.json();\r\n    pm.expect(json).to.have.property('data');\r\n    pm.expect(json).to.have.property('meta');\r\n    pm.expect(json.meta).to.have.property('total');\r\n    pm.expect(json.meta).to.have.property('page');\r\n    pm.expect(json.meta).to.have.property('limit');\r\n});"
+                    ]
+                  }
+                }
+              ],
+              "protocolProfileBehavior": {
+                "disableBodyPruning": true
+              },
+              "request": {
+                "method": "GET",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "",
+                  "options": {
+                    "raw": {
+                      "language": "text"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{baseURL}}/{{equipmenstBaseRoute}}?sort=status&sortDirection=desc",
+                  "host": [
+                    "{{baseURL}}"
+                  ],
+                  "path": [
+                    "{{equipmenstBaseRoute}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "sort",
+                      "value": "status"
+                    },
+                    {
+                      "key": "sortDirection",
+                      "value": "desc"
+                    }
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Список оборудований  (200), сортировка + пагинация + фильтрация",
+              "event": [
+                {
+                  "listen": "prerequest",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('Тело запроса пустое', () => {\r\n    const hasBody = !!(pm.request.body && pm.request.body.raw && pm.request.body.raw.trim() !== '');\r\n    \r\n    pm.expect(hasBody).to.be.false;\r\n});\r\n"
+                    ]
+                  }
+                },
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('Статус ответа 200', () => pm.response.to.have.status(200));\r\n\r\npm.test('Тело ответа содержит все поля', () => {\r\n    const json = pm.response.json();\r\n    pm.expect(json).to.have.property('data');\r\n    pm.expect(json).to.have.property('meta');\r\n    pm.expect(json.meta).to.have.property('total');\r\n    pm.expect(json.meta).to.have.property('page');\r\n    pm.expect(json.meta).to.have.property('limit');\r\n});"
+                    ]
+                  }
+                }
+              ],
+              "protocolProfileBehavior": {
+                "disableBodyPruning": true
+              },
+              "request": {
+                "method": "GET",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "",
+                  "options": {
+                    "raw": {
+                      "language": "text"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{baseURL}}/{{equipmenstBaseRoute}}?sort=status&sortDirection=desc&priority=low&page=1&limit=1&dateFrom=2025-01-01&dateTo=2025-12-12",
+                  "host": [
+                    "{{baseURL}}"
+                  ],
+                  "path": [
+                    "{{equipmenstBaseRoute}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "sort",
+                      "value": "status"
+                    },
+                    {
+                      "key": "sortDirection",
+                      "value": "desc"
+                    },
+                    {
+                      "key": "priority",
+                      "value": "low"
+                    },
+                    {
+                      "key": "page",
+                      "value": "1"
+                    },
+                    {
+                      "key": "limit",
+                      "value": "1"
+                    },
+                    {
+                      "key": "dateFrom",
+                      "value": "2025-01-01"
+                    },
+                    {
+                      "key": "dateTo",
+                      "value": "2025-12-12"
+                    }
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "НЕГАТИВНЫЕ",
+          "item": [
+            {
+              "name": "Неуникальный серийный номер (409), цепочка запросов",
+              "item": [
+                {
+                  "name": "Создание оборудования",
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "type": "text/javascript",
+                        "exec": [
+                          "pm.test('Статус ответа 201', () => pm.response.to.have.status(201));\r\n\r\npm.test('Тело ответа содержит все поля', () => {\r\n    const json = pm.response.json();\r\n    pm.expect(json).to.have.property('id');\r\n    pm.expect(json).to.have.property('name');\r\n    pm.expect(json).to.have.property('serialNumber');\r\n    pm.expect(json).to.have.property('location');\r\n    pm.expect(json.location).to.have.property('lat');\r\n    pm.expect(json.location).to.have.property('lon');\r\n    pm.expect(json).to.have.property('status');\r\n    pm.expect(json).to.have.property('installedAt');\r\n});\r\n\r\nconst body = pm.response.json();\r\npm.collectionVariables.set('testsEquipmentId', body.id);"
+                        ]
+                      }
+                    },
+                    {
+                      "listen": "prerequest",
+                      "script": {
+                        "type": "text/javascript",
+                        "exec": [
+                          "const uniq = Date.now() + '-' + Math.floor(Math.random() * 1000);\r\n\r\npm.collectionVariables.set('testsSerialNumber', `SN-${uniq}`);\r\n\r\npm.test('Тело запроса содержит все поля', () => {\r\n    const json = JSON.parse(pm.request.body.raw);\r\n    pm.expect(json).to.have.property('name');\r\n    pm.expect(json).to.have.property('type');\r\n    pm.expect(json).to.have.property('serialNumber');\r\n    pm.expect(json).to.have.property('location');\r\n    pm.expect(json).to.have.property('status');\r\n    pm.expect(json).to.have.property('installedAt');\r\n});\r\n"
+                        ]
+                      }
+                    }
+                  ],
+                  "request": {
+                    "method": "POST",
+                    "header": [],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\r\n    \"name\": \"Ветряк\",\r\n    \"type\": \"turbine\",\r\n    \"serialNumber\": \"{{testsSerialNumber}}\",\r\n    \"location\": {\r\n        \"lat\": 50,\r\n        \"lon\": 52\r\n    },\r\n    \"status\": \"fault\",\r\n    \"installedAt\": \"2025-12-12\"\r\n}",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "{{baseURL}}/{{equipmenstBaseRoute}}/",
+                      "host": [
+                        "{{baseURL}}"
+                      ],
+                      "path": [
+                        "{{equipmenstBaseRoute}}",
+                        ""
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "Неуникальный серийный номер (409)",
+                  "event": [
+                    {
+                      "listen": "prerequest",
+                      "script": {
+                        "type": "text/javascript",
+                        "exec": [
+                          "pm.test('Тело запроса содержит все поля', () => {\r\n    const json = JSON.parse(pm.request.body.raw);\r\n    pm.expect(json).to.have.property('name');\r\n    pm.expect(json).to.have.property('type');\r\n    pm.expect(json).to.have.property('location');\r\n    pm.expect(json).to.have.property('status');\r\n    pm.expect(json).to.have.property('installedAt');\r\n});\r\n"
+                        ]
+                      }
+                    },
+                    {
+                      "listen": "test",
+                      "script": {
+                        "type": "text/javascript",
+                        "exec": [
+                          "pm.test('Статус ответа 409', () => pm.response.to.have.status(409));\r\n\r\npm.test('Тело ответа содержит все поля', () => {\r\n    const json = pm.response.json();\r\n    pm.expect(json).to.have.property('error');\r\n    pm.expect(json.error).to.have.property('code');\r\n    pm.expect(json.error).to.have.property('message');\r\n});"
+                        ]
+                      }
+                    }
+                  ],
+                  "request": {
+                    "method": "POST",
+                    "header": [],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\r\n    \"name\": \"Ветряк\",\r\n    \"type\": \"turbine\",\r\n    \"serialNumber\": \"{{testsSerialNumber}}\",\r\n    \"location\": {\r\n        \"lat\": 50,\r\n        \"lon\": 52\r\n    },\r\n    \"status\": \"fault\",\r\n    \"installedAt\": \"2025-12-12\"\r\n}",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "{{baseURL}}/{{equipmenstBaseRoute}}",
+                      "host": [
+                        "{{baseURL}}"
+                      ],
+                      "path": [
+                        "{{equipmenstBaseRoute}}"
+                      ]
+                    }
+                  },
+                  "response": []
+                }
+              ]
+            },
+            {
+              "name": "Тип оборудования некорректный (400)",
+              "event": [
+                {
+                  "listen": "prerequest",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "const uniq = Date.now() + '-' + Math.floor(Math.random() * 1000);\r\n\r\npm.collectionVariables.set('testsSerialNumber', `SN-${uniq}`);\r\n\r\npm.test('Тело запроса содержит все поля', () => {\r\n    const json = JSON.parse(pm.request.body.raw);\r\n    pm.expect(json).to.have.property('name');\r\n    pm.expect(json).to.have.property('type');\r\n    pm.expect(json).to.have.property('serialNumber');\r\n    pm.expect(json).to.have.property('location');\r\n    pm.expect(json).to.have.property('status');\r\n    pm.expect(json).to.have.property('installedAt');\r\n});\r\n"
+                    ]
+                  }
+                },
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('Статус ответа 400', () => pm.response.to.have.status(400));\r\n\r\npm.test('Тело ответа содержит все поля', () => {\r\n    const json = pm.response.json();\r\n    pm.expect(json).to.have.property('error');\r\n    pm.expect(json.error).to.have.property('code');\r\n    pm.expect(json.error).to.have.property('message');\r\n});"
+                    ]
+                  }
+                }
+              ],
+              "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"name\": \"Ветряк\",\r\n    \"type\": \"turbine1\",\r\n    \"serialNumber\": \"123\",\r\n    \"location\": {\r\n        \"lat\": 50,\r\n        \"lon\": 52\r\n    },\r\n    \"status\": \"fault\",\r\n    \"installedAt\": \"2025-12-12\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{baseURL}}/{{equipmenstBaseRoute}}/",
+                  "host": [
+                    "{{baseURL}}"
+                  ],
+                  "path": [
+                    "{{equipmenstBaseRoute}}",
+                    ""
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Отсутствует обязательное поле серийного номера (400)",
+              "event": [
+                {
+                  "listen": "prerequest",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('Тело запроса содержит все поля', () => {\r\n    const json = JSON.parse(pm.request.body.raw);\r\n    pm.expect(json).to.have.property('name');\r\n    pm.expect(json).to.have.property('type');\r\n    pm.expect(json).to.have.property('location');\r\n    pm.expect(json).to.have.property('status');\r\n    pm.expect(json).to.have.property('installedAt');\r\n});\r\n"
+                    ]
+                  }
+                },
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('Статус ответа 400', () => pm.response.to.have.status(400));\r\n\r\npm.test('Тело ответа содержит все поля', () => {\r\n    const json = pm.response.json();\r\n    pm.expect(json).to.have.property('error');\r\n    pm.expect(json.error).to.have.property('code');\r\n    pm.expect(json.error).to.have.property('message');\r\n});"
+                    ]
+                  }
+                }
+              ],
+              "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"name\": \"Ветряк\",\r\n    \"type\": \"turbine\",\r\n    \"location\": {\r\n        \"lat\": 50,\r\n        \"lon\": 52\r\n    },\r\n    \"status\": \"fault\",\r\n    \"installedAt\": \"2022-12-12\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{baseURL}}/equipments/",
+                  "host": [
+                    "{{baseURL}}"
+                  ],
+                  "path": [
+                    "equipments",
+                    ""
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Дата установки не может быть в будущем (422)",
+              "event": [
+                {
+                  "listen": "prerequest",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('Тело запроса содержит все поля', () => {\r\n    const json = JSON.parse(pm.request.body.raw);\r\n    pm.expect(json).to.have.property('name');\r\n    pm.expect(json).to.have.property('type');\r\n    pm.expect(json).to.have.property('location');\r\n    pm.expect(json).to.have.property('status');\r\n    pm.expect(json).to.have.property('installedAt');\r\n});\r\n"
+                    ]
+                  }
+                },
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('Статус ответа 422', () => pm.response.to.have.status(422));\r\n\r\npm.test('Тело ответа содержит все поля', () => {\r\n    const json = pm.response.json();\r\n    pm.expect(json).to.have.property('error');\r\n    pm.expect(json.error).to.have.property('code');\r\n    pm.expect(json.error).to.have.property('message');\r\n});"
+                    ]
+                  }
+                }
+              ],
+              "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"name\": \"Ветряк\",\r\n    \"type\": \"turbine\",\r\n    \"serialNumber\": \"123\",\r\n    \"location\": {\r\n        \"lat\": 50,\r\n        \"lon\": 52\r\n    },\r\n    \"status\": \"fault\",\r\n    \"installedAt\": \"2030-12-12\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{baseURL}}/{{equipmenstBaseRoute}}",
+                  "host": [
+                    "{{baseURL}}"
+                  ],
+                  "path": [
+                    "{{equipmenstBaseRoute}}"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Фильтрация по несуществующему статусу (400)",
+              "event": [
+                {
+                  "listen": "prerequest",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('Тело запроса пустое', () => {\r\n    const hasBody = !!(pm.request.body && pm.request.body.raw && pm.request.body.raw.trim() !== '');\r\n    \r\n    pm.expect(hasBody).to.be.false;\r\n});\r\n"
+                    ]
+                  }
+                },
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('Статус ответа 400', () => pm.response.to.have.status(400));\r\n\r\npm.test('Тело ответа содержит все поля', () => {\r\n    const json = pm.response.json();\r\n    pm.expect(json).to.have.property('error');\r\n    pm.expect(json.error).to.have.property('code');\r\n    pm.expect(json.error).to.have.property('message');\r\n});"
+                    ]
+                  }
+                }
+              ],
+              "protocolProfileBehavior": {
+                "disableBodyPruning": true
+              },
+              "request": {
+                "method": "GET",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "",
+                  "options": {
+                    "raw": {
+                      "language": "text"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{baseURL}}/{{equipmenstBaseRoute}}?status=created",
+                  "host": [
+                    "{{baseURL}}"
+                  ],
+                  "path": [
+                    "{{equipmenstBaseRoute}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "status",
+                      "value": "created"
+                    }
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Кол-во полей сортировки и направления сортировки не совпадает (400)",
+              "event": [
+                {
+                  "listen": "prerequest",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('Тело запроса пустое', () => {\r\n    const hasBody = !!(pm.request.body && pm.request.body.raw && pm.request.body.raw.trim() !== '');\r\n    \r\n    pm.expect(hasBody).to.be.false;\r\n});\r\n"
+                    ]
+                  }
+                },
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('Статус ответа 400', () => pm.response.to.have.status(400));\r\n\r\npm.test('Тело ответа содержит все поля', () => {\r\n    const json = pm.response.json();\r\n    pm.expect(json).to.have.property('error');\r\n    pm.expect(json.error).to.have.property('code');\r\n    pm.expect(json.error).to.have.property('message');\r\n});"
+                    ]
+                  }
+                }
+              ],
+              "protocolProfileBehavior": {
+                "disableBodyPruning": true
+              },
+              "request": {
+                "method": "GET",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "",
+                  "options": {
+                    "raw": {
+                      "language": "text"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{baseURL}}/{{equipmenstBaseRoute}}?sort=type&sortDirection=asc,desc",
+                  "host": [
+                    "{{baseURL}}"
+                  ],
+                  "path": [
+                    "{{equipmenstBaseRoute}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "sort",
+                      "value": "type"
+                    },
+                    {
+                      "key": "sortDirection",
+                      "value": "asc,desc"
+                    }
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Фильтрация заявок по несуществующему статусу (400)",
+              "event": [
+                {
+                  "listen": "prerequest",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('Тело запроса пустое', () => {\r\n    const hasBody = !!(pm.request.body && pm.request.body.raw && pm.request.body.raw.trim() !== '');\r\n    \r\n    pm.expect(hasBody).to.be.false;\r\n});\r\n"
+                    ]
+                  }
+                },
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('Статус ответа 400', () => pm.response.to.have.status(400));\r\n\r\npm.test('Тело ответа содержит все поля', () => {\r\n    const json = pm.response.json();\r\n    pm.expect(json).to.have.property('error');\r\n    pm.expect(json.error).to.have.property('code');\r\n    pm.expect(json.error).to.have.property('message');\r\n});"
+                    ]
+                  }
+                }
+              ],
+              "protocolProfileBehavior": {
+                "disableBodyPruning": true
+              },
+              "request": {
+                "method": "GET",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "",
+                  "options": {
+                    "raw": {
+                      "language": "text"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{baseURL}}/equipments/{{equipmentId}}/requests?status=work",
+                  "host": [
+                    "{{baseURL}}"
+                  ],
+                  "path": [
+                    "equipments",
+                    "{{equipmentId}}",
+                    "requests"
+                  ],
+                  "query": [
+                    {
+                      "key": "status",
+                      "value": "work"
+                    }
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Неправильный тип ID (400)",
+              "event": [
+                {
+                  "listen": "prerequest",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('Тело запроса пустое', () => {\r\n    const hasBody = !!(pm.request.body && pm.request.body.raw && pm.request.body.raw.trim() !== '');\r\n    \r\n    pm.expect(hasBody).to.be.false;\r\n});\r\n"
+                    ]
+                  }
+                },
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('Статус ответа 400', () => pm.response.to.have.status(400));\r\n\r\npm.test('Тело ответа содержит все поля', () => {\r\n    const json = pm.response.json();\r\n    pm.expect(json).to.have.property('error');\r\n    pm.expect(json.error).to.have.property('code');\r\n    pm.expect(json.error).to.have.property('message');\r\n});"
+                    ]
+                  }
+                }
+              ],
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseURL}}/equipments/123",
+                  "host": [
+                    "{{baseURL}}"
+                  ],
+                  "path": [
+                    "equipments",
+                    "123"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Несуществующее оборудование (404)",
+              "event": [
+                {
+                  "listen": "prerequest",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('Тело запроса пустое', () => {\r\n    const hasBody = !!(pm.request.body && pm.request.body.raw && pm.request.body.raw.trim() !== '');\r\n    \r\n    pm.expect(hasBody).to.be.false;\r\n});\r\n"
+                    ]
+                  }
+                },
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('Статус ответа 404', () => pm.response.to.have.status(404));\r\n\r\npm.test('Тело ответа содержит все поля', () => {\r\n    const json = pm.response.json();\r\n    pm.expect(json).to.have.property('error');\r\n    pm.expect(json.error).to.have.property('code');\r\n    pm.expect(json.error).to.have.property('message');\r\n});"
+                    ]
+                  }
+                }
+              ],
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseURL}}/{{equipmenstBaseRoute}}/f965dd79-973b-489c-ab92-472b7cde721c",
+                  "host": [
+                    "{{baseURL}}"
+                  ],
+                  "path": [
+                    "{{equipmenstBaseRoute}}",
+                    "f965dd79-973b-489c-ab92-472b7cde721c"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Нет тела запроса (400)",
+              "event": [
+                {
+                  "listen": "prerequest",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('Тело запроса пустое', () => {\r\n    const hasBody = !!(pm.request.body && pm.request.body.raw && pm.request.body.raw.trim() !== '');\r\n    \r\n    pm.expect(hasBody).to.be.false;\r\n});\r\n"
+                    ]
+                  }
+                },
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('Статус ответа 400', () => pm.response.to.have.status(400));\r\n\r\npm.test('Тело ответа содержит все поля', () => {\r\n    const json = pm.response.json();\r\n    pm.expect(json).to.have.property('error');\r\n    pm.expect(json.error).to.have.property('code');\r\n    pm.expect(json.error).to.have.property('message');\r\n});"
+                    ]
+                  }
+                }
+              ],
+              "request": {
+                "method": "PATCH",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{baseURL}}/equipments/{{testsEquipmentId}}",
+                  "host": [
+                    "{{baseURL}}"
+                  ],
+                  "path": [
+                    "equipments",
+                    "{{testsEquipmentId}}"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Оборудование не найдено (404)",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('Статус ответа 404', () => pm.response.to.have.status(404));\r\n\r\npm.test('Тело ответа содержит все поля', () => {\r\n    const json = pm.response.json();\r\n    pm.expect(json).to.have.property('error');\r\n    pm.expect(json.error).to.have.property('code');\r\n    pm.expect(json.error).to.have.property('message');\r\n});"
+                    ]
+                  }
+                }
+              ],
+              "request": {
+                "method": "PATCH",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"name\": \"Ветряк\",\r\n    \"type\": \"turbine\",\r\n    \"serialNumber\": \"1234\",\r\n    \"location\": {\r\n        \"lat\": 50,\r\n        \"lon\": 52\r\n    },\r\n    \"status\": \"fault\",\r\n    \"installedAt\": \"2025-12-12\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{baseURL}}/equipments/f965dd79-973b-489c-ab92-472b7cde725c",
+                  "host": [
+                    "{{baseURL}}"
+                  ],
+                  "path": [
+                    "equipments",
+                    "f965dd79-973b-489c-ab92-472b7cde725c"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Неправильный тип ID (400)",
+              "event": [
+                {
+                  "listen": "prerequest",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('Тело запроса пустое', () => {\r\n    const hasBody = !!(pm.request.body && pm.request.body.raw && pm.request.body.raw.trim() !== '');\r\n    \r\n    pm.expect(hasBody).to.be.false;\r\n});\r\n"
+                    ]
+                  }
+                },
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('Статус ответа 400', () => pm.response.to.have.status(400));\r\n\r\npm.test('Тело ответа содержит все поля', () => {\r\n    const json = pm.response.json();\r\n    pm.expect(json).to.have.property('error');\r\n    pm.expect(json.error).to.have.property('code');\r\n    pm.expect(json.error).to.have.property('message');\r\n});"
+                    ]
+                  }
+                }
+              ],
+              "request": {
+                "method": "DELETE",
+                "header": [],
+                "url": {
+                  "raw": "{{baseURL}}/equipments/123",
+                  "host": [
+                    "{{baseURL}}"
+                  ],
+                  "path": [
+                    "equipments",
+                    "123"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Оборудование не найдено (404)",
+              "event": [
+                {
+                  "listen": "prerequest",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('Тело запроса пустое', () => {\r\n    const hasBody = !!(pm.request.body && pm.request.body.raw && pm.request.body.raw.trim() !== '');\r\n    \r\n    pm.expect(hasBody).to.be.false;\r\n});\r\n"
+                    ]
+                  }
+                },
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('Статус ответа 404', () => pm.response.to.have.status(404));\r\n\r\npm.test('Тело ответа содержит все поля', () => {\r\n    const json = pm.response.json();\r\n    pm.expect(json).to.have.property('error');\r\n    pm.expect(json.error).to.have.property('code');\r\n    pm.expect(json.error).to.have.property('message');\r\n});"
+                    ]
+                  }
+                }
+              ],
+              "request": {
+                "method": "DELETE",
+                "header": [],
+                "url": {
+                  "raw": "{{baseURL}}/{{equipmenstBaseRoute}}/f965dd79-973b-489c-ab92-472b7cde725c",
+                  "host": [
+                    "{{baseURL}}"
+                  ],
+                  "path": [
+                    "{{equipmenstBaseRoute}}",
+                    "f965dd79-973b-489c-ab92-472b7cde725c"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Заявки на обслуживание",
+      "item": [
+        {
+          "name": "ОДНО (CRUD)",
+          "item": [
+            {
+              "name": "Создание заявки (200), цепочка запросов",
+              "item": [
+                {
+                  "name": "Создание оборудования",
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "type": "text/javascript",
+                        "exec": [
+                          "pm.test('Статус ответа 201', () => pm.response.to.have.status(201));\r\n\r\npm.test('Тело ответа содержит все поля', () => {\r\n    const json = pm.response.json();\r\n    pm.expect(json).to.have.property('id');\r\n    pm.expect(json).to.have.property('name');\r\n    pm.expect(json).to.have.property('serialNumber');\r\n    pm.expect(json).to.have.property('location');\r\n    pm.expect(json.location).to.have.property('lat');\r\n    pm.expect(json.location).to.have.property('lon');\r\n    pm.expect(json).to.have.property('status');\r\n    pm.expect(json).to.have.property('installedAt');\r\n});\r\n\r\nconst body = pm.response.json();\r\npm.collectionVariables.set('testsEquipmentId', body.id);"
+                        ]
+                      }
+                    },
+                    {
+                      "listen": "prerequest",
+                      "script": {
+                        "type": "text/javascript",
+                        "exec": [
+                          "const uniq = Date.now() + '-' + Math.floor(Math.random() * 1000);\r\n\r\npm.collectionVariables.set('testsSerialNumber', `SN-${uniq}`);\r\n\r\npm.test('Тело запроса содержит все поля', () => {\r\n    const json = JSON.parse(pm.request.body.raw);\r\n    pm.expect(json).to.have.property('name');\r\n    pm.expect(json).to.have.property('type');\r\n    pm.expect(json).to.have.property('serialNumber');\r\n    pm.expect(json).to.have.property('location');\r\n    pm.expect(json).to.have.property('status');\r\n    pm.expect(json).to.have.property('installedAt');\r\n});\r\n"
+                        ]
+                      }
+                    }
+                  ],
+                  "request": {
+                    "method": "POST",
+                    "header": [],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\r\n    \"name\": \"Ветряк\",\r\n    \"type\": \"turbine\",\r\n    \"serialNumber\": \"{{testsSerialNumber}}\",\r\n    \"location\": {\r\n        \"lat\": 50,\r\n        \"lon\": 52\r\n    },\r\n    \"status\": \"fault\",\r\n    \"installedAt\": \"2025-12-12\"\r\n}",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "{{baseURL}}/{{equipmenstBaseRoute}}/",
+                      "host": [
+                        "{{baseURL}}"
+                      ],
+                      "path": [
+                        "{{equipmenstBaseRoute}}",
+                        ""
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "Успешное создание (200)",
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "type": "text/javascript",
+                        "exec": [
+                          "pm.test('Статус ответа 201', () => pm.response.to.have.status(201));\r\n\r\npm.test('Тело ответа содержит все поля', () => {\r\n    const json = pm.response.json();\r\n    pm.expect(json).to.have.property('id');\r\n    pm.expect(json).to.have.property('createdAt');\r\n    pm.expect(json).to.have.property('status');\r\n    pm.expect(json).to.have.property('equipmentId');\r\n    pm.expect(json).to.have.property('title');\r\n    pm.expect(json).to.have.property('priority');\r\n});\r\n\r\nconst body = pm.response.json();\r\npm.collectionVariables.set('testsRequestId', body.id);"
+                        ]
+                      }
+                    },
+                    {
+                      "listen": "prerequest",
+                      "script": {
+                        "type": "text/javascript",
+                        "exec": [
+                          "pm.test('Тело запроса содержит все поля', () => {\r\n    const json = JSON.parse(pm.request.body.raw);\r\n    pm.expect(json).to.have.property('equipmentId');\r\n    pm.expect(json).to.have.property('title');\r\n    pm.expect(json).to.have.property('priority');\r\n});\r\n"
+                        ]
+                      }
+                    }
+                  ],
+                  "request": {
+                    "method": "POST",
+                    "header": [],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\r\n    \"equipmentId\": \"{{testsEquipmentId}}\",\r\n    \"title\": \"Срочно\",\r\n    \"priority\": \"critical\"\r\n}",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "{{baseURL}}/{{requestsBaseRoute}}",
+                      "host": [
+                        "{{baseURL}}"
+                      ],
+                      "path": [
+                        "{{requestsBaseRoute}}"
+                      ]
+                    }
+                  },
+                  "response": []
+                }
+              ]
+            },
+            {
+              "name": "Получение заявки (200)",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('Статус ответа 200', () => pm.response.to.have.status(200));\r\n\r\npm.test('Тело ответа содержит все поля', () => {\r\n    const json = pm.response.json();\r\n    pm.expect(json).to.have.property('id');\r\n    pm.expect(json).to.have.property('createdAt');\r\n    pm.expect(json).to.have.property('status');\r\n    pm.expect(json).to.have.property('equipmentId');\r\n    pm.expect(json).to.have.property('title');\r\n    pm.expect(json).to.have.property('priority');\r\n});"
+                    ]
+                  }
+                },
+                {
+                  "listen": "prerequest",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('Тело запроса пустое', () => {\r\n    const hasBody = !!(pm.request.body && pm.request.body.raw && pm.request.body.raw.trim() !== '');\r\n    \r\n    pm.expect(hasBody).to.be.false;\r\n});\r\n"
+                    ]
+                  }
+                }
+              ],
+              "protocolProfileBehavior": {
+                "disableBodyPruning": true
+              },
+              "request": {
+                "method": "GET",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{baseURL}}/{{requestsBaseRoute}}/{{testsRequestId}}",
+                  "host": [
+                    "{{baseURL}}"
+                  ],
+                  "path": [
+                    "{{requestsBaseRoute}}",
+                    "{{testsRequestId}}"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Обновление приоритета заявки (200)",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('Статус ответа 204', () => pm.response.to.have.status(204));\n\npm.test('Тело ответа пустое', () => {\n    pm.expect(pm.response.text()).to.be.empty;\n});"
+                    ]
+                  }
+                },
+                {
+                  "listen": "prerequest",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('Тело запроса содержит все поля', () => {\r\n    const json = JSON.parse(pm.request.body.raw);\r\n    pm.expect(json).to.have.property('priority');\r\n});\r\n"
+                    ]
+                  }
+                }
+              ],
+              "request": {
+                "method": "PATCH",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"priority\": \"low\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{baseURL}}/{{requestsBaseRoute}}/{{testsRequestId}}",
+                  "host": [
+                    "{{baseURL}}"
+                  ],
+                  "path": [
+                    "{{requestsBaseRoute}}",
+                    "{{testsRequestId}}"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Обновление статуса (200)",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('Статус ответа 204', () => pm.response.to.have.status(204));\n\npm.test('Тело ответа пустое', () => {\n    pm.expect(pm.response.text()).to.be.empty;\n});"
+                    ]
+                  }
+                },
+                {
+                  "listen": "prerequest",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('Тело запроса содержит все поля', () => {\r\n    const json = JSON.parse(pm.request.body.raw);\r\n    pm.expect(json).to.have.property('newStatus');\r\n});\r\n"
+                    ]
+                  }
+                }
+              ],
+              "request": {
+                "method": "PATCH",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"newStatus\": \"rejected\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{baseURL}}/{{requestsBaseRoute}}/{{testsRequestId}}/status",
+                  "host": [
+                    "{{baseURL}}"
+                  ],
+                  "path": [
+                    "{{requestsBaseRoute}}",
+                    "{{testsRequestId}}",
+                    "status"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Успешное удаление (200)",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('Статус ответа 204', () => pm.response.to.have.status(204));\n\npm.test('Тело ответа пустое', () => {\n    pm.expect(pm.response.text()).to.be.empty;\n});\n\n// pm.collectionVariables.set('testsEquipmentId', ``);"
+                    ]
+                  }
+                },
+                {
+                  "listen": "prerequest",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('Тело запроса пустое', () => {\r\n     const hasBody = !!(pm.request.body && pm.request.body.raw && pm.request.body.raw.trim() !== '');\r\n    \r\n    pm.expect(hasBody).to.be.false;\r\n});\r\n"
+                    ]
+                  }
+                }
+              ],
+              "request": {
+                "method": "DELETE",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{baseURL}}/{{requestsBaseRoute}}/{{testsRequestId}}",
+                  "host": [
+                    "{{baseURL}}"
+                  ],
+                  "path": [
+                    "{{requestsBaseRoute}}",
+                    "{{testsRequestId}}"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "СПИСОК (GET)",
+          "item": [
+            {
+              "name": "Список заявок (200), пагинация",
+              "event": [
+                {
+                  "listen": "prerequest",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('Тело запроса пустое', () => {\r\n    const hasBody = !!(pm.request.body && pm.request.body.raw && pm.request.body.raw.trim() !== '');\r\n    \r\n    pm.expect(hasBody).to.be.false;\r\n});\r\n"
+                    ]
+                  }
+                },
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('Статус ответа 200', () => pm.response.to.have.status(200));\r\n\r\npm.test('Тело ответа содержит все поля', () => {\r\n    const json = pm.response.json();\r\n    pm.expect(json).to.have.property('data');\r\n    pm.expect(json).to.have.property('meta');\r\n    pm.expect(json.meta).to.have.property('total');\r\n    pm.expect(json.meta).to.have.property('page');\r\n    pm.expect(json.meta).to.have.property('limit');\r\n});"
+                    ]
+                  }
+                }
+              ],
+              "protocolProfileBehavior": {
+                "disableBodyPruning": true
+              },
+              "request": {
+                "method": "GET",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "",
+                  "options": {
+                    "raw": {
+                      "language": "text"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{baseURL}}/{{requestsBaseRoute}}?page=1&limit=1",
+                  "host": [
+                    "{{baseURL}}"
+                  ],
+                  "path": [
+                    "{{requestsBaseRoute}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "page",
+                      "value": "1"
+                    },
+                    {
+                      "key": "limit",
+                      "value": "1"
+                    }
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Список заявок (200), фильтрация",
+              "event": [
+                {
+                  "listen": "prerequest",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('Тело запроса пустое', () => {\r\n    const hasBody = !!(pm.request.body && pm.request.body.raw && pm.request.body.raw.trim() !== '');\r\n    \r\n    pm.expect(hasBody).to.be.false;\r\n});\r\n"
+                    ]
+                  }
+                },
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('Статус ответа 200', () => pm.response.to.have.status(200));\r\n\r\npm.test('Тело ответа содержит все поля', () => {\r\n    const json = pm.response.json();\r\n    pm.expect(json).to.have.property('data');\r\n    pm.expect(json).to.have.property('meta');\r\n    pm.expect(json.meta).to.have.property('total');\r\n    pm.expect(json.meta).to.have.property('page');\r\n    pm.expect(json.meta).to.have.property('limit');\r\n});"
+                    ]
+                  }
+                }
+              ],
+              "protocolProfileBehavior": {
+                "disableBodyPruning": true
+              },
+              "request": {
+                "method": "GET",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "",
+                  "options": {
+                    "raw": {
+                      "language": "text"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{baseURL}}/{{requestsBaseRoute}}?status=new,in_progress",
+                  "host": [
+                    "{{baseURL}}"
+                  ],
+                  "path": [
+                    "{{requestsBaseRoute}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "status",
+                      "value": "new,in_progress"
+                    }
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Список заявок (200), сортировка",
+              "event": [
+                {
+                  "listen": "prerequest",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('Тело запроса пустое', () => {\r\n    const hasBody = !!(pm.request.body && pm.request.body.raw && pm.request.body.raw.trim() !== '');\r\n    \r\n    pm.expect(hasBody).to.be.false;\r\n});\r\n"
+                    ]
+                  }
+                },
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('Статус ответа 200', () => pm.response.to.have.status(200));\r\n\r\npm.test('Тело ответа содержит все поля', () => {\r\n    const json = pm.response.json();\r\n    pm.expect(json).to.have.property('data');\r\n    pm.expect(json).to.have.property('meta');\r\n    pm.expect(json.meta).to.have.property('total');\r\n    pm.expect(json.meta).to.have.property('page');\r\n    pm.expect(json.meta).to.have.property('limit');\r\n});"
+                    ]
+                  }
+                }
+              ],
+              "protocolProfileBehavior": {
+                "disableBodyPruning": true
+              },
+              "request": {
+                "method": "GET",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "",
+                  "options": {
+                    "raw": {
+                      "language": "text"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{baseURL}}/{{requestsBaseRoute}}?sort=status&sortDirection=desc",
+                  "host": [
+                    "{{baseURL}}"
+                  ],
+                  "path": [
+                    "{{requestsBaseRoute}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "sort",
+                      "value": "status"
+                    },
+                    {
+                      "key": "sortDirection",
+                      "value": "desc"
+                    }
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Список заявок (200), сортировка + пагинация + фильтрация",
+              "event": [
+                {
+                  "listen": "prerequest",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('Тело запроса пустое', () => {\r\n    const hasBody = !!(pm.request.body && pm.request.body.raw && pm.request.body.raw.trim() !== '');\r\n    \r\n    pm.expect(hasBody).to.be.false;\r\n});\r\n"
+                    ]
+                  }
+                },
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('Статус ответа 200', () => pm.response.to.have.status(200));\r\n\r\npm.test('Тело ответа содержит все поля', () => {\r\n    const json = pm.response.json();\r\n    pm.expect(json).to.have.property('data');\r\n    pm.expect(json).to.have.property('meta');\r\n    pm.expect(json.meta).to.have.property('total');\r\n    pm.expect(json.meta).to.have.property('page');\r\n    pm.expect(json.meta).to.have.property('limit');\r\n});"
+                    ]
+                  }
+                }
+              ],
+              "protocolProfileBehavior": {
+                "disableBodyPruning": true
+              },
+              "request": {
+                "method": "GET",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "",
+                  "options": {
+                    "raw": {
+                      "language": "text"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{baseURL}}/{{requestsBaseRoute}}?sort=status&sortDirection=desc&priority=low&page=1&limit=1&dateFrom=2025-01-01&dateTo=2025-12-12",
+                  "host": [
+                    "{{baseURL}}"
+                  ],
+                  "path": [
+                    "{{requestsBaseRoute}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "sort",
+                      "value": "status"
+                    },
+                    {
+                      "key": "sortDirection",
+                      "value": "desc"
+                    },
+                    {
+                      "key": "priority",
+                      "value": "low"
+                    },
+                    {
+                      "key": "page",
+                      "value": "1"
+                    },
+                    {
+                      "key": "limit",
+                      "value": "1"
+                    },
+                    {
+                      "key": "dateFrom",
+                      "value": "2025-01-01"
+                    },
+                    {
+                      "key": "dateTo",
+                      "value": "2025-12-12"
+                    }
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "НЕГАТИВНЫЕ",
+          "item": [
+            {
+              "name": "Запрещенный переход статуса",
+              "item": [
+                {
+                  "name": "Создание заявки (+ оборудование)",
+                  "item": [
+                    {
+                      "name": "Создание оборудования",
+                      "event": [
+                        {
+                          "listen": "test",
+                          "script": {
+                            "type": "text/javascript",
+                            "exec": [
+                              "pm.test('Статус ответа 201', () => pm.response.to.have.status(201));\r\n\r\npm.test('Тело ответа содержит все поля', () => {\r\n    const json = pm.response.json();\r\n    pm.expect(json).to.have.property('id');\r\n    pm.expect(json).to.have.property('name');\r\n    pm.expect(json).to.have.property('serialNumber');\r\n    pm.expect(json).to.have.property('location');\r\n    pm.expect(json.location).to.have.property('lat');\r\n    pm.expect(json.location).to.have.property('lon');\r\n    pm.expect(json).to.have.property('status');\r\n    pm.expect(json).to.have.property('installedAt');\r\n});\r\n\r\nconst body = pm.response.json();\r\npm.collectionVariables.set('testsEquipmentId', body.id);"
+                            ]
+                          }
+                        },
+                        {
+                          "listen": "prerequest",
+                          "script": {
+                            "type": "text/javascript",
+                            "exec": [
+                              "const uniq = Date.now() + '-' + Math.floor(Math.random() * 1000);\r\n\r\npm.collectionVariables.set('testsSerialNumber', `SN-${uniq}`);\r\n\r\npm.test('Тело запроса содержит все поля', () => {\r\n    const json = JSON.parse(pm.request.body.raw);\r\n    pm.expect(json).to.have.property('name');\r\n    pm.expect(json).to.have.property('type');\r\n    pm.expect(json).to.have.property('serialNumber');\r\n    pm.expect(json).to.have.property('location');\r\n    pm.expect(json).to.have.property('status');\r\n    pm.expect(json).to.have.property('installedAt');\r\n});\r\n"
+                            ]
+                          }
+                        }
+                      ],
+                      "request": {
+                        "method": "POST",
+                        "header": [],
+                        "body": {
+                          "mode": "raw",
+                          "raw": "{\r\n    \"name\": \"Ветряк\",\r\n    \"type\": \"turbine\",\r\n    \"serialNumber\": \"{{testsSerialNumber}}\",\r\n    \"location\": {\r\n        \"lat\": 50,\r\n        \"lon\": 52\r\n    },\r\n    \"status\": \"fault\",\r\n    \"installedAt\": \"2025-12-12\"\r\n}",
+                          "options": {
+                            "raw": {
+                              "language": "json"
+                            }
+                          }
+                        },
+                        "url": {
+                          "raw": "{{baseURL}}/{{equipmenstBaseRoute}}/",
+                          "host": [
+                            "{{baseURL}}"
+                          ],
+                          "path": [
+                            "{{equipmenstBaseRoute}}",
+                            ""
+                          ]
+                        }
+                      },
+                      "response": []
+                    },
+                    {
+                      "name": "Успешное создание (200)",
+                      "event": [
+                        {
+                          "listen": "test",
+                          "script": {
+                            "type": "text/javascript",
+                            "exec": [
+                              "pm.test('Статус ответа 201', () => pm.response.to.have.status(201));\r\n\r\npm.test('Тело ответа содержит все поля', () => {\r\n    const json = pm.response.json();\r\n    pm.expect(json).to.have.property('id');\r\n    pm.expect(json).to.have.property('createdAt');\r\n    pm.expect(json).to.have.property('status');\r\n    pm.expect(json).to.have.property('equipmentId');\r\n    pm.expect(json).to.have.property('title');\r\n    pm.expect(json).to.have.property('priority');\r\n});\r\n\r\nconst body = pm.response.json();\r\npm.collectionVariables.set('testsRequestId', body.id);"
+                            ]
+                          }
+                        },
+                        {
+                          "listen": "prerequest",
+                          "script": {
+                            "type": "text/javascript",
+                            "exec": [
+                              "pm.test('Тело запроса содержит все поля', () => {\r\n    const json = JSON.parse(pm.request.body.raw);\r\n    pm.expect(json).to.have.property('equipmentId');\r\n    pm.expect(json).to.have.property('title');\r\n    pm.expect(json).to.have.property('priority');\r\n});\r\n"
+                            ]
+                          }
+                        }
+                      ],
+                      "request": {
+                        "method": "POST",
+                        "header": [],
+                        "body": {
+                          "mode": "raw",
+                          "raw": "{\r\n    \"equipmentId\": \"{{testsEquipmentId}}\",\r\n    \"title\": \"Срочно\",\r\n    \"priority\": \"critical\"\r\n}",
+                          "options": {
+                            "raw": {
+                              "language": "json"
+                            }
+                          }
+                        },
+                        "url": {
+                          "raw": "{{baseURL}}/{{requestsBaseRoute}}",
+                          "host": [
+                            "{{baseURL}}"
+                          ],
+                          "path": [
+                            "{{requestsBaseRoute}}"
+                          ]
+                        }
+                      },
+                      "response": []
+                    }
+                  ]
+                },
+                {
+                  "name": "Запрещенный переход статуса (409)",
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "type": "text/javascript",
+                        "exec": [
+                          "pm.test('Статус ответа 409', () => pm.response.to.have.status(409));\n\npm.test('Тело ответа пустое', () => {\n    const json = pm.response.json();\n    pm.expect(json).to.have.property('error');\n    pm.expect(json.error).to.have.property('code');\n    pm.expect(json.error).to.have.property('message');\n});"
+                        ]
+                      }
+                    },
+                    {
+                      "listen": "prerequest",
+                      "script": {
+                        "type": "text/javascript",
+                        "exec": [
+                          "pm.test('Тело запроса содержит все поля', () => {\r\n    const json = JSON.parse(pm.request.body.raw);\r\n    pm.expect(json).to.have.property('newStatus');\r\n});\r\n"
+                        ]
+                      }
+                    }
+                  ],
+                  "request": {
+                    "method": "PATCH",
+                    "header": [],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\r\n    \"newStatus\": \"done\"\r\n}",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "{{baseURL}}/{{requestsBaseRoute}}/{{testsRequestId}}/status",
+                      "host": [
+                        "{{baseURL}}"
+                      ],
+                      "path": [
+                        "{{requestsBaseRoute}}",
+                        "{{testsRequestId}}",
+                        "status"
+                      ]
+                    }
+                  },
+                  "response": []
+                }
+              ]
+            },
+            {
+              "name": "Не задано обязательное поле заголовок (400)",
+              "event": [
+                {
+                  "listen": "prerequest",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "const uniq = Date.now() + '-' + Math.floor(Math.random() * 1000);\r\n\r\npm.collectionVariables.set('testsSerialNumber', `SN-${uniq}`);\r\n\r\npm.test('Тело запроса содержит все поля', () => {\r\n    const json = JSON.parse(pm.request.body.raw);\r\n    pm.expect(json).to.have.property('equipmentId');\r\n    pm.expect(json).to.have.property('priority');\r\n});\r\n"
+                    ]
+                  }
+                },
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('Статус ответа 400', () => pm.response.to.have.status(400));\r\n\r\npm.test('Тело ответа содержит все поля', () => {\r\n    const json = pm.response.json();\r\n    pm.expect(json).to.have.property('error');\r\n    pm.expect(json.error).to.have.property('code');\r\n    pm.expect(json.error).to.have.property('message');\r\n});"
+                    ]
+                  }
+                }
+              ],
+              "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"equipmentId\": \"{{testsEquipmentId}}\",\r\n    \"priority\": \"critical\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{baseURL}}/{{requestsBaseRoute}}",
+                  "host": [
+                    "{{baseURL}}"
+                  ],
+                  "path": [
+                    "{{requestsBaseRoute}}"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Неправильное значение для приоритета (400)",
+              "event": [
+                {
+                  "listen": "prerequest",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('Тело запроса содержит все поля', () => {\r\n    const json = JSON.parse(pm.request.body.raw);\r\n    pm.expect(json).to.have.property('equipmentId');\r\n    pm.expect(json).to.have.property('priority');\r\n    pm.expect(json).to.have.property('title');\r\n});\r\n"
+                    ]
+                  }
+                },
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('Статус ответа 400', () => pm.response.to.have.status(400));\r\n\r\npm.test('Тело ответа содержит все поля', () => {\r\n    const json = pm.response.json();\r\n    pm.expect(json).to.have.property('error');\r\n    pm.expect(json.error).to.have.property('code');\r\n    pm.expect(json.error).to.have.property('message');\r\n});"
+                    ]
+                  }
+                }
+              ],
+              "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"equipmentId\": \"{{testsEquipmentId}}\",\r\n    \"priority\": \"danger\",\r\n    \"title\": \"Новая\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{baseURL}}/{{requestsBaseRoute}}/",
+                  "host": [
+                    "{{baseURL}}"
+                  ],
+                  "path": [
+                    "{{requestsBaseRoute}}",
+                    ""
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Фильтрация по несуществующему статусу (400)",
+              "event": [
+                {
+                  "listen": "prerequest",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('Тело запроса пустое', () => {\r\n    const hasBody = !!(pm.request.body && pm.request.body.raw && pm.request.body.raw.trim() !== '');\r\n    \r\n    pm.expect(hasBody).to.be.false;\r\n});\r\n"
+                    ]
+                  }
+                },
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('Статус ответа 400', () => pm.response.to.have.status(400));\r\n\r\npm.test('Тело ответа содержит все поля', () => {\r\n    const json = pm.response.json();\r\n    pm.expect(json).to.have.property('error');\r\n    pm.expect(json.error).to.have.property('code');\r\n    pm.expect(json.error).to.have.property('message');\r\n});"
+                    ]
+                  }
+                }
+              ],
+              "protocolProfileBehavior": {
+                "disableBodyPruning": true
+              },
+              "request": {
+                "method": "GET",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "",
+                  "options": {
+                    "raw": {
+                      "language": "text"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{baseURL}}/{{requestsBaseRoute}}?status=created",
+                  "host": [
+                    "{{baseURL}}"
+                  ],
+                  "path": [
+                    "{{requestsBaseRoute}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "status",
+                      "value": "created"
+                    }
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Неправильный тип ID (400)",
+              "event": [
+                {
+                  "listen": "prerequest",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('Тело запроса пустое', () => {\r\n    const hasBody = !!(pm.request.body && pm.request.body.raw && pm.request.body.raw.trim() !== '');\r\n    \r\n    pm.expect(hasBody).to.be.false;\r\n});\r\n"
+                    ]
+                  }
+                },
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('Статус ответа 400', () => pm.response.to.have.status(400));\r\n\r\npm.test('Тело ответа содержит все поля', () => {\r\n    const json = pm.response.json();\r\n    pm.expect(json).to.have.property('error');\r\n    pm.expect(json.error).to.have.property('code');\r\n    pm.expect(json.error).to.have.property('message');\r\n});"
+                    ]
+                  }
+                }
+              ],
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseURL}}/{{requestsBaseRoute}}/123",
+                  "host": [
+                    "{{baseURL}}"
+                  ],
+                  "path": [
+                    "{{requestsBaseRoute}}",
+                    "123"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Заявка не найдена (404)",
+              "event": [
+                {
+                  "listen": "prerequest",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('Тело запроса пустое', () => {\r\n    const hasBody = !!(pm.request.body && pm.request.body.raw && pm.request.body.raw.trim() !== '');\r\n    \r\n    pm.expect(hasBody).to.be.false;\r\n});\r\n"
+                    ]
+                  }
+                },
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('Статус ответа 404', () => pm.response.to.have.status(404));\r\n\r\npm.test('Тело ответа содержит все поля', () => {\r\n    const json = pm.response.json();\r\n    pm.expect(json).to.have.property('error');\r\n    pm.expect(json.error).to.have.property('code');\r\n    pm.expect(json.error).to.have.property('message');\r\n});"
+                    ]
+                  }
+                }
+              ],
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseURL}}/{{requestsBaseRoute}}q/f965dd79-973b-489c-ab92-472b7cde721c",
+                  "host": [
+                    "{{baseURL}}"
+                  ],
+                  "path": [
+                    "{{requestsBaseRoute}}q",
+                    "f965dd79-973b-489c-ab92-472b7cde721c"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Нет тела запроса (400)",
+              "event": [
+                {
+                  "listen": "prerequest",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('Тело запроса пустое', () => {\r\n    const hasBody = !!(pm.request.body && pm.request.body.raw && pm.request.body.raw.trim() !== '');\r\n    \r\n    pm.expect(hasBody).to.be.false;\r\n});\r\n"
+                    ]
+                  }
+                },
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('Статус ответа 400', () => pm.response.to.have.status(400));\r\n\r\npm.test('Тело ответа содержит все поля', () => {\r\n    const json = pm.response.json();\r\n    pm.expect(json).to.have.property('error');\r\n    pm.expect(json.error).to.have.property('code');\r\n    pm.expect(json.error).to.have.property('message');\r\n});"
+                    ]
+                  }
+                }
+              ],
+              "request": {
+                "method": "PATCH",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{baseURL}}/{{requestsBaseRoute}}/{{testsRequestId}}",
+                  "host": [
+                    "{{baseURL}}"
+                  ],
+                  "path": [
+                    "{{requestsBaseRoute}}",
+                    "{{testsRequestId}}"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Заявка не найдена ID (404)",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('Статус ответа 404', () => pm.response.to.have.status(404));\r\n\r\npm.test('Тело ответа содержит все поля', () => {\r\n    const json = pm.response.json();\r\n    pm.expect(json).to.have.property('error');\r\n    pm.expect(json.error).to.have.property('code');\r\n    pm.expect(json.error).to.have.property('message');\r\n});"
+                    ]
+                  }
+                }
+              ],
+              "request": {
+                "method": "PATCH",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"priority\": \"low\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{baseURL}}/{{requestsBaseRoute}}/f965dd79-973b-489c-ab92-472b7cde725c",
+                  "host": [
+                    "{{baseURL}}"
+                  ],
+                  "path": [
+                    "{{requestsBaseRoute}}",
+                    "f965dd79-973b-489c-ab92-472b7cde725c"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Неправильный тип ID (400)",
+              "event": [
+                {
+                  "listen": "prerequest",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('Тело запроса пустое', () => {\r\n    const hasBody = !!(pm.request.body && pm.request.body.raw && pm.request.body.raw.trim() !== '');\r\n    \r\n    pm.expect(hasBody).to.be.false;\r\n});\r\n"
+                    ]
+                  }
+                },
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('Статус ответа 400', () => pm.response.to.have.status(400));\r\n\r\npm.test('Тело ответа содержит все поля', () => {\r\n    const json = pm.response.json();\r\n    pm.expect(json).to.have.property('error');\r\n    pm.expect(json.error).to.have.property('code');\r\n    pm.expect(json.error).to.have.property('message');\r\n});"
+                    ]
+                  }
+                }
+              ],
+              "request": {
+                "method": "DELETE",
+                "header": [],
+                "url": {
+                  "raw": "{{baseURL}}/{{requestsBaseRoute}}/123",
+                  "host": [
+                    "{{baseURL}}"
+                  ],
+                  "path": [
+                    "{{requestsBaseRoute}}",
+                    "123"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Заявка не найдена (404)",
+              "event": [
+                {
+                  "listen": "prerequest",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('Тело запроса пустое', () => {\r\n    const hasBody = !!(pm.request.body && pm.request.body.raw && pm.request.body.raw.trim() !== '');\r\n    \r\n    pm.expect(hasBody).to.be.false;\r\n});\r\n"
+                    ]
+                  }
+                },
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('Статус ответа 404', () => pm.response.to.have.status(404));\r\n\r\npm.test('Тело ответа содержит все поля', () => {\r\n    const json = pm.response.json();\r\n    pm.expect(json).to.have.property('error');\r\n    pm.expect(json.error).to.have.property('code');\r\n    pm.expect(json.error).to.have.property('message');\r\n});"
+                    ]
+                  }
+                }
+              ],
+              "request": {
+                "method": "DELETE",
+                "header": [],
+                "url": {
+                  "raw": "{{baseURL}}/{{requestsBaseRoute}}/f965dd79-973b-489c-ab92-472b7cde725c",
+                  "host": [
+                    "{{baseURL}}"
+                  ],
+                  "path": [
+                    "{{requestsBaseRoute}}",
+                    "f965dd79-973b-489c-ab92-472b7cde725c"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "МАССОВЫЙ ИМПОРТ",
+          "item": [
+            {
+              "name": "Создание оборудования",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('Статус ответа 201', () => pm.response.to.have.status(201));\r\n\r\npm.test('Тело ответа содержит все поля', () => {\r\n    const json = pm.response.json();\r\n    pm.expect(json).to.have.property('id');\r\n    pm.expect(json).to.have.property('name');\r\n    pm.expect(json).to.have.property('serialNumber');\r\n    pm.expect(json).to.have.property('location');\r\n    pm.expect(json.location).to.have.property('lat');\r\n    pm.expect(json.location).to.have.property('lon');\r\n    pm.expect(json).to.have.property('status');\r\n    pm.expect(json).to.have.property('installedAt');\r\n});\r\n\r\nconst body = pm.response.json();\r\npm.collectionVariables.set('testsEquipmentId', body.id);"
+                    ]
+                  }
+                },
+                {
+                  "listen": "prerequest",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "const uniq = Date.now() + '-' + Math.floor(Math.random() * 1000);\r\n\r\npm.collectionVariables.set('testsSerialNumber', `SN-${uniq}`);\r\n\r\npm.test('Тело запроса содержит все поля', () => {\r\n    const json = JSON.parse(pm.request.body.raw);\r\n    pm.expect(json).to.have.property('name');\r\n    pm.expect(json).to.have.property('type');\r\n    pm.expect(json).to.have.property('serialNumber');\r\n    pm.expect(json).to.have.property('location');\r\n    pm.expect(json).to.have.property('status');\r\n    pm.expect(json).to.have.property('installedAt');\r\n});\r\n"
+                    ]
+                  }
+                }
+              ],
+              "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"name\": \"Ветряк\",\r\n    \"type\": \"turbine\",\r\n    \"serialNumber\": \"{{testsSerialNumber}}\",\r\n    \"location\": {\r\n        \"lat\": 50,\r\n        \"lon\": 52\r\n    },\r\n    \"status\": \"fault\",\r\n    \"installedAt\": \"2025-12-12\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{baseURL}}/{{equipmenstBaseRoute}}/",
+                  "host": [
+                    "{{baseURL}}"
+                  ],
+                  "path": [
+                    "{{equipmenstBaseRoute}}",
+                    ""
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Пустое тело (400)",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('Статус ответа 400', () => pm.response.to.have.status(400));\r\n\r\npm.test('Тело ответа содержит все поля', () => {\r\n    const json = pm.response.json();\r\n    pm.expect(json).to.have.property('error');\r\n    pm.expect(json.error).to.have.property('code');\r\n    pm.expect(json.error).to.have.property('message');\r\n});"
+                    ]
+                  }
+                },
+                {
+                  "listen": "prerequest",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('Тело запроса пустое', () => {\r\n    const hasBody = !!(pm.request.body && pm.request.body.raw && pm.request.body.raw.trim() !== '');\r\n    \r\n    pm.expect(hasBody).to.be.false;\r\n});\r\n"
+                    ]
+                  }
+                }
+              ],
+              "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "[\r\n\r\n]",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{baseURL}}/{{requestsBaseRoute}}/import",
+                  "host": [
+                    "{{baseURL}}"
+                  ],
+                  "path": [
+                    "{{requestsBaseRoute}}",
+                    "import"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Все валидные (200)",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('Статус ответа 200', () => pm.response.to.have.status(200));\r\n\r\npm.test('Тело ответа содержит все поля', () => {\r\n    const json = pm.response.json();\r\n    pm.expect(json).to.have.property('data');\r\n    pm.expect(json).to.have.property('meta');\r\n});\r\n"
+                    ]
+                  }
+                }
+              ],
+              "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "[\r\n    {\r\n        \"equipmentId\": \"{{testsEquipmentId}}\",\r\n        \"priority\": \"low\",\r\n        \"title\": \"Заявка1\"\r\n    },\r\n    {\r\n        \"equipmentId\": \"{{testsEquipmentId}}\",\r\n        \"priority\": \"medium\",\r\n        \"title\": \"Заявка2\"\r\n    },\r\n    {\r\n        \"equipmentId\": \"{{testsEquipmentId}}\",\r\n        \"priority\": \"low\",\r\n        \"description\": \"описание заявки\",\r\n        \"title\": \"Заявка2\"\r\n    }\r\n]",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{baseURL}}/{{requestsBaseRoute}}/import",
+                  "host": [
+                    "{{baseURL}}"
+                  ],
+                  "path": [
+                    "{{requestsBaseRoute}}",
+                    "import"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Есть ошибки (207)",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('Статус ответа 207', () => pm.response.to.have.status(207));\r\n\r\npm.test('Тело ответа содержит все поля', () => {\r\n    const json = pm.response.json();\r\n    pm.expect(json).to.have.property('data');\r\n    pm.expect(json).to.have.property('meta');\r\n});\r\n"
+                    ]
+                  }
+                }
+              ],
+              "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "[\r\n    {\r\n        \"equipmentId\": \"{{testsEquipmentId}}\",\r\n        \"priority\": \"low\",\r\n        \"title\": \"Заявка1\"\r\n    },\r\n    {\r\n        \"equipmentId\": \"123123\",\r\n        \"priority\": \"medium\",\r\n        \"title\": \"Заявка2\"\r\n    },\r\n    {\r\n        \"equipmentId\": \"a0baa275-e139-4af1-88b6-0b5f3839dfb2\",\r\n        \"priority\": \"low\",\r\n        \"description\": \"описание заявки\",\r\n        \"title\": \"Заявка2\"\r\n    }\r\n]",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{baseURL}}/{{requestsBaseRoute}}/import",
+                  "host": [
+                    "{{baseURL}}"
+                  ],
+                  "path": [
+                    "{{requestsBaseRoute}}",
+                    "import"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "packages": {},
+        "requests": {},
+        "exec": [
+          ""
+        ]
+      }
+    },
+    {
+      "listen": "test",
+      "script": {
+        "type": "text/javascript",
+        "packages": {},
+        "requests": {},
+        "exec": [
+          ""
+        ]
+      }
+    }
+  ],
+  "variable": [
+    {
+      "key": "baseURL",
+      "value": "localhost:3000/api"
+    },
+    {
+      "key": "equipmenstBaseRoute",
+      "value": "equipments"
+    },
+    {
+      "key": "requestsBaseRoute",
+      "value": "requests"
+    },
+    {
+      "key": "testsSerialNumber",
+      "value": "SN-1789735964889-181"
+    },
+    {
+      "key": "testsEquipmentId",
+      "value": "b9bc6632-7a98-4ddb-9b2f-b0964b0c4580"
+    },
+    {
+      "key": "testsInstalledAt",
+      "value": "2026-09-18"
+    },
+    {
+      "key": "testsRequestId",
+      "value": "1d52464c-3e75-4e1c-ac7f-9b905505749d"
+    }
+  ]
+}
