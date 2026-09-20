@@ -9,7 +9,8 @@ export function errorHandler(err: unknown, req: Request, res: Response, next: Ne
   const log = req.log ?? logger;
 
   if (err instanceof AppError) {
-    const errorResponse = ErrorResponse.create(err);
+    let errorResponse = ErrorResponse.create(err);
+    errorResponse.requestId = String(req.id);
 
     log[err.status >= 500 ? 'error' : 'warn']({error: err}, 'request failed');
 
