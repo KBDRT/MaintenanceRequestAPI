@@ -9,23 +9,24 @@ import { parseFilterQuery } from '../middlewares/params-parser.middleware.js';
 import { validateCleanQuery } from '../middlewares/clean-query-validator.middleware.js';
 import { filterRequestSchema } from '../validators/schemas/maintenance-request/filter-request.schema.js';
 import { massImportRequestsSchema } from '../validators/schemas/maintenance-request/mass-import-requests.schema.js';
+import { authenticate } from '../middlewares/auth.middleware.js';
 
 const maintenanceRequestRouter = Router();
 
 maintenanceRequestRouter.route('/')
   .get(parseFilterQuery, validateCleanQuery(filterRequestSchema), getRequests)
-  .post(validate({body: createRequestSchema}), createRequest);
+  .post(authenticate, validate({body: createRequestSchema}), createRequest);
 
 maintenanceRequestRouter.route('/:id')
   .get(validate({params: idRequestSchema}), getRequest)
-  .patch(validate({params: idRequestSchema, body: updateRequestSchema}), updateRequest)
-  .delete(validate({params: idRequestSchema}), deleteRequest);
+  .patch(authenticate, validate({params: idRequestSchema, body: updateRequestSchema}), updateRequest)
+  .delete(authenticate, validate({params: idRequestSchema}), deleteRequest);
 
 maintenanceRequestRouter.route('/:id/status')
-  .patch(validate({params: idRequestSchema, body: updateRequestStatusSchema}), updateRequestStatus);
+  .patch(authenticate, validate({params: idRequestSchema, body: updateRequestStatusSchema}), updateRequestStatus);
 
 maintenanceRequestRouter.route('/import')
-  .post(validate({body: massImportRequestsSchema}),createRequestMass);
+  .post(authenticate, validate({body: massImportRequestsSchema}),createRequestMass);
 
 export default maintenanceRequestRouter;
 

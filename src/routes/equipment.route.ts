@@ -16,17 +16,18 @@ import { parseFilterQuery } from '../middlewares/params-parser.middleware.js';
 import { filterEquipmentSchema } from '../validators/schemas/equipment/filter-equipment.schema.js';
 import { validateCleanQuery } from '../middlewares/clean-query-validator.middleware.js';
 import { getEquipmentRequestsSchema } from '../validators/schemas/equipment/get-equipment-requests.schema.js';
+import { authenticate } from '../middlewares/auth.middleware.js';
 
 const equipmentRouter = Router();
 
 equipmentRouter.route('/')
       .get(parseFilterQuery, validateCleanQuery(filterEquipmentSchema), getEquipments)
-      .post(validate({body: createEquipmentRequestSchema}), createEquipment);
+      .post(authenticate, validate({body: createEquipmentRequestSchema}), createEquipment);
 
 equipmentRouter.route('/:id')
       .get(validate({params: idRequestSchema}), getEquipment)
-      .patch(validate({params: idRequestSchema, body: updateEquipmentRequestSchema}), updateEquipment)
-      .delete(validate({params: idRequestSchema}), deleteEquipment);
+      .patch(authenticate, validate({params: idRequestSchema, body: updateEquipmentRequestSchema}), updateEquipment)
+      .delete(authenticate, validate({params: idRequestSchema}), deleteEquipment);
 
 equipmentRouter.route('/:id/requests')
       .get(validate({params: idRequestSchema}), parseFilterQuery, validateCleanQuery(getEquipmentRequestsSchema), getEquipmentRequests);

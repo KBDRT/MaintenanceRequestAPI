@@ -12,6 +12,9 @@ export const envFileSchema = z.object({
   WEATHER_RULE_MIN_TEMPERATURE: z.coerce.number().default(2.5),
   RATE_LIMIT_WINDOW_MS: z.coerce.number().default(60000),
   RATE_LIMIT_MAX_REQUESTS: z.coerce.number().default(100),
+  JWT_SECRET_KEY: z.string().min(5).default("SECRET"),
+  JWT_MAX_AGE_MS: z.coerce.number().min(60).default(60 * 60 * 1000),
+  LOG_LEVEL: z.enum(["fatal", "error", "warn", "info", "debug", "trace"]).default('info'),
   CORS_ORIGINS: z.string()
     .transform((s) => s.split(',').map((o) => o.trim()).filter(Boolean))
     .pipe(z.array(z.string().url())),
