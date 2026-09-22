@@ -1,6 +1,7 @@
 import appConfig from "./config/app.config.js";
 import app from "./app.js";
 import { getLog } from "./lib/context.js";
+import { dbConnection } from "./infrastructure/db-connection.js";
 
 const server = app.listen(appConfig.port, () => {
   getLog().info(`SERVER STARTS ON PORT: ${appConfig.port}.`);

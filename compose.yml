@@ -1,5 +1,25 @@
+name: myapp
+
 services:
   db:
     image: postgres:18-alpine
+    # restart: unless-stopped
     environment:
-      POSTGRES_PASSWORD: postgres
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 12345
+      POSTGRES_DB: maintenance_db
+      POSTGRES_PORT: 5432 
+    ports:
+      - "5480:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql
+      - ./db/init:/docker-entrypoint-initdb.d:ro
+    # healthcheck:
+    #   test: ["CMD-SHELL", "pg_isready -U $$POSTGRES_USER -d $$POSTGRES_DB"]
+    #   interval: 5s
+    #   timeout: 5s
+    #   retries: 10
+    #   start_period: 10s
+
+volumes:
+  pgdata:
