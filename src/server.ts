@@ -7,6 +7,8 @@ const server = app.listen(appConfig.port, () => {
   getLog().info(`SERVER STARTS ON PORT: ${appConfig.port}.`);
   getLog().info(`MODE: ${appConfig.nodeEnv}`);
   getLog().info(`API: /api`);
+
+  dbConnection.sync();
 });
 
 function shutdown(reason: string, err: unknown) {

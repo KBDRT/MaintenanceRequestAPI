@@ -6,6 +6,7 @@ export class AppError extends Error {
   public readonly code: string;
   public readonly details: ErrorDetails[];
   public readonly isOperational: boolean;
+  public readonly cause?: unknown;
 
   constructor(message: string, { status = 500, code = 'ERROR', details = [], cause} : AppErrorOptions) {
     super(message, {cause});
@@ -14,5 +15,6 @@ export class AppError extends Error {
     this.code = code;
     this.details = details;
     this.isOperational = true;
+    this.cause = cause;
   }
 }

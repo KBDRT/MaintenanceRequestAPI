@@ -15,27 +15,12 @@ export function errorHandler(err: unknown, req: Request, res: Response, next: Ne
     log[err.status >= 500 ? 'error' : 'warn']({error: err}, 'request failed');
 
     res.status(err.status)
-       .type('application/problem+json')
-       .json({error: errorResponse});
+        .type('application/problem+json')
+        .json({error: errorResponse});
+
+    return;
   } 
-  else if (err instanceof Error) {
 
-    const body = {
-      error: {
-        message: err.message,
-        requestId: req.id,
-      }
-    }
-    
-    res.status(500)
-      .type('application/problem+json')
-      .json(body);
-  }
-  else {
-
-    res.status(500)
-      .type('application/problem+json')
-      .json({error: "Неизвестная ошибка"});
-      
-  }
+  next(err);
 }
+
