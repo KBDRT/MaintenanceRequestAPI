@@ -1,4 +1,5 @@
 import { Op, OrderItem } from "sequelize";
+import { Model, ModelStatic } from "sequelize-typescript";
 import z from "zod";
 
 interface SearchCondition {
@@ -6,11 +7,13 @@ interface SearchCondition {
 }
 
 const validSortFields = ["status", "id", "type", "priority", "equipmentsIds"];
+
 const MAX_LIMIT = 100;
 
 export class FilterParser<FilterDTO extends object> {
 
-  private readonly declare dto: FilterDTO;
+  private readonly dto: FilterDTO;
+  private readonly dateFieldName?: string;
 
   public readonly filter: SearchCondition = {};
   public readonly sort: OrderItem[] = [];
@@ -26,9 +29,10 @@ export class FilterParser<FilterDTO extends object> {
     return this._offset;
   }
 
-  constructor(filterDTO: FilterDTO) {
+  constructor(filterDTO: FilterDTO, dateFieldName?: string) {
     this.dto = filterDTO;
-    
+    this.dateFieldName = dateFieldName;
+
     try {
       this.parseFilter();
       this.parseDate();
@@ -50,19 +54,22 @@ export class FilterParser<FilterDTO extends object> {
   }
 
   private parseDate() {
+
+    if (!this.dateFieldName) return;
+
     const dateFromValue = this.dto["dateFrom" as keyof FilterDTO];
     if (dateFromValue) {
-      this.filter["dateTo"] = {[Op.gte]: dateFromValue};
+      this.filter[this.dateFieldName] = {[Op.gte]: dateFromValue};
     }
 
     const dateToValue = this.dto["dateTo" as keyof FilterDTO];
     if (dateToValue) {
-      this.filter["dateTo"] = {[Op.lte]: dateToValue};
+      this.filter[this.dateFieldName] = {[Op.lte]: dateToValue};
     }
   }
 
   private parseSort() {
-    const sortValue = this.dto["sortValue" as keyof FilterDTO];
+    const sortValue = this.dto["sort" as keyof FilterDTO];
     const sortDirectionValue = this.dto["sortDirection" as keyof FilterDTO];
     if (sortValue && Array.isArray(sortValue)) {
       for (let index = 0; index < sortValue.length; index++) {

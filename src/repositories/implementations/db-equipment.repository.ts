@@ -2,64 +2,112 @@ import { Equipment } from "../../domains/entities/equipment.entity";
 import { GetEquipmentsFilteredDto } from "../../dto/equipment/get-equipments-filtered.dto";
 import { GetEquipments } from "../../dto/types/get-equipments.type";
 import { IEquipmentRepository } from "../abstractions/equipment-repository.interface";
-import { Equipment as Model } from './../../domains/models/equipment.model';
+import { Equipment as EquipmentModel } from './../../domains/models/equipment.model';
 import { FilterParser } from "../utils/filter-parser";
 import { DatabaseError } from './../../errors/database.error';
+import { AppError } from "../../errors/app.error";
 
 export class EquipmentRepository implements IEquipmentRepository{
 
   async add(newEquipment: Equipment): Promise<string> {
     try {
-      const result = await Model.create({...newEquipment});
+      const result = await EquipmentModel.create({
+        id: newEquipment.id,
+        name: newEquipment.name,
+        type: newEquipment.type,
+        serialNumber: newEquipment.serialNumber,
+        status: newEquipment.status,
+        installedAt: newEquipment.installedAt,
+      });
 
       return result.id;
     }
     catch (error) {
+      if (error instanceof AppError) 
+        throw error;
+
       throw new DatabaseError(error);
     }
   }
 
   async get(request: GetEquipmentsFilteredDto): Promise<GetEquipments> {
+    try {
+      const parser = new FilterParser<GetEquipmentsFilteredDto>(request, "installedAt");
 
-    const parser = new FilterParser<GetEquipmentsFilteredDto>(request);
+      const result = await EquipmentModel.findAll({
+        where: parser.filter, 
+        order: parser.sort, 
+        limit: parser.limit, 
+        offset: parser.offset
+      });
 
-    const result = await Model.findAll({
-      where: parser.filter, 
-      order: parser.sort, 
-      limit: parser.limit, 
-      offset: parser.offset
-    });
+      const count = await EquipmentModel.count({ where: parser.filter });
 
-    const count = await Model.count({ where: parser.filter });
+      return {equipments: Equipment.createListFromModel(result), total: count};
+    }
+    catch (error) {
+      if (error instanceof AppError) 
+        throw error;
 
-    return {equipments: Equipment.createListFromModel(result), total: count};
+      throw new DatabaseError(error);
+    }
   }
 
   async getById(id: string): Promise<Equipment | undefined> {
-    const result = await Model.findByPk(id);
+    try {
+      const result = await EquipmentModel.findByPk(id);
 
-    if (!result) 
-      return undefined;
-    
-    return Equipment.createFromModel(result);
+      if (!result) 
+        return undefined;
+      
+      return Equipment.createFromModel(result);
+    }
+    catch (error) {
+      if (error instanceof AppError) 
+        throw error;
+
+      throw new DatabaseError(error);
+    }
   }
 
   async update(updatedEquipment: Equipment): Promise<void> {
-    const result = await Model.update({...updatedEquipment}, {where: {id: updatedEquipment.id}});
+    try {
+      const [affected] = await EquipmentModel.update({...updatedEquipment}, {where: {id: updatedEquipment.id}});
+    }
+    catch (error) {
+      if (error instanceof AppError) 
+        throw error;
+
+      throw new DatabaseError(error);
+    }
   }
 
   async delete(id: string): Promise<void> {
-    const result = await Model.destroy({where: {id: id}});
+    try {
+      const deleted = await EquipmentModel.destroy({where: {id: id}});
+    }
+    catch (error) {
+      if (error instanceof AppError) 
+        throw error;
+
+      throw new DatabaseError(error);
+    }
   }
   
   async getBySerialNumber(serialNumber: string): Promise<Equipment | undefined> {
+    try {
+      const result = await EquipmentModel.findOne({where: {serialNumber: serialNumber}}) ?? undefined;
 
-    const result = await Model.findOne({where: {serialNumber: serialNumber}}) ?? undefined;
+      if (!result) 
+        return undefined;
 
-    if (!result) 
-      return undefined;
+      return Equipment.createFromModel(result);
+    }
+    catch (error) {
+      if (error instanceof AppError) 
+        throw error;
 
-    return Equipment.createFromModel(result);
+      throw new DatabaseError(error);
+    }
   }
-
 }

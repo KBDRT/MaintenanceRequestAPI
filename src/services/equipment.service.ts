@@ -8,7 +8,6 @@ import { IEquipmentRepository } from "../repositories/abstractions/equipment-rep
 import { IMaintenanceRequestRepository } from "../repositories/abstractions/maintenance-request-repository.interface.js";
 import { weatherSuitableSchema } from "../validators/schemas/equipment/weather-suitable.schema.js";
 import { getWeatherAsync } from "./weather.service.js";
-import { MaintenanceRequestRepository } from './../repositories/implementations/in-memory-maintenance-request.repository.js';
 import { MaintenanceRequestStatus } from "../domains/enums/maintenance-request-status.enum.js";
 import { getRequests } from "./maintenance-request.service.js";
 import { GetEquipmentRequestsDto } from "../dto/equipment/get-equipment-requests.dto.js";
@@ -17,9 +16,10 @@ import { BusinessRuleError } from "../errors/business-rule.error.js";
 import { GetEquipmentsResultDto } from "../dto/equipment/get-equipments-result.dto.js";
 import { UpdateEquipmentDto } from "../dto/equipment/update-equipment.dto.js";
 import { EquipmentRepository } from "../repositories/implementations/db-equipment.repository.js";
+import { RequestRepository } from "../repositories/implementations/db-maintenance.repository.js";
 
 const repository: IEquipmentRepository = new EquipmentRepository();
-const requestsRepository: IMaintenanceRequestRepository = new MaintenanceRequestRepository();
+const requestsRepository: IMaintenanceRequestRepository = new RequestRepository();
 
 export const addEquipment = async(equipmentInfo: CreateEquipmentDto): Promise<Equipment> => {
   if (new Date(equipmentInfo.installedAt) > new Date()) {

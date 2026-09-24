@@ -1,4 +1,4 @@
-import { BelongsTo, BelongsToMany, Column, CreatedAt, DataType, ForeignKey, HasMany, Model, Table, UpdatedAt } from "sequelize-typescript";
+import { BelongsTo, BelongsToMany, Column, CreatedAt, DataType, ForeignKey, HasMany, Model, NotEmpty, Table, UpdatedAt } from "sequelize-typescript";
 import { Equipment } from "./equipment.model";
 import { MaintenanceRequestPriority } from "../enums/maintenance-request-priotiry.enum";
 import { MaintenanceRequestStatus } from "../enums/maintenance-request-status.enum";
@@ -23,9 +23,9 @@ export class MaintenanceRequest extends Model {
 
   @Column({
     type: DataType.STRING(2000),
-    allowNull: false
+    allowNull: true,
   })
-  declare description: string;
+  declare description?: string;
 
   @Column({
     type: DataType.ENUM(...Object.values(MaintenanceRequestPriority)),
@@ -41,15 +41,15 @@ export class MaintenanceRequest extends Model {
 
   @Column({
     type: DataType.DATE,
-    allowNull: false
+    allowNull: true
   })
   declare plannedAt: Date;
 
   @Column({
     type: DataType.STRING(255),
-    allowNull: false
+    allowNull: true
   })
-  declare author: string;
+  declare author?: string;
 
   @CreatedAt
   declare createdAt: Date;

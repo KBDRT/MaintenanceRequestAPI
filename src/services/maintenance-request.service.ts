@@ -1,8 +1,6 @@
 import { MaintenanceRequest } from "../domains/entities/maintenance-request.entity.js";
 import { IMaintenanceRequestRepository } from "../repositories/abstractions/maintenance-request-repository.interface.js";
-import { MaintenanceRequestRepository } from "../repositories/implementations/in-memory-maintenance-request.repository.js";
 import { IEquipmentRepository } from "../repositories/abstractions/equipment-repository.interface.js";
-import { EquipmentRepositoryMemory } from "../repositories/implementations/in-memory-equipment-repository.js";
 import { CreateMaintenanceRequestDto } from "../dto/maintenance-request/create-maintenance-request.dto.js";
 import { GetMaintenanceRequestsFilteredDto } from "../dto/maintenance-request/get-maintenance-requests-filtered.dto.js";
 import { UpdateMaintenanceRequestDto } from "../dto/maintenance-request/update-maintenance-request.dto.js";
@@ -17,9 +15,11 @@ import { CreateMaintenanceRequestMassDto } from "../dto/maintenance-request/crea
 import { ValidationError } from "../errors/validation.error.js";
 import { ErrorResponse } from "../dto/common/error.response.js";
 import { MassImportRequestsResult } from "../dto/types/mass-import-requests-result.type.js";
+import { EquipmentRepository } from "../repositories/implementations/db-equipment.repository.js";
+import { RequestRepository } from "../repositories/implementations/db-maintenance.repository.js";
 
-const repository: IMaintenanceRequestRepository = new MaintenanceRequestRepository();
-const equipmentRepostitory: IEquipmentRepository = new EquipmentRepositoryMemory();
+const equipmentRepostitory: IEquipmentRepository = new EquipmentRepository();
+const repository: IMaintenanceRequestRepository = new RequestRepository();
 
 export const addRequest = async(maintenanceRequest: CreateMaintenanceRequestDto): Promise<MaintenanceRequest> => {
   const existingEquipment = await equipmentRepostitory.getById(maintenanceRequest.equipmentId);
