@@ -6,6 +6,7 @@ import { Equipment as EquipmentModel } from './../../domains/models/equipment.mo
 import { FilterParser } from "../utils/filter-parser";
 import { DatabaseError } from './../../errors/database.error';
 import { AppError } from "../../errors/app.error";
+import { EquipmentPassport } from "../../domains/models/equipment-passport.model";
 
 export class EquipmentRepository implements IEquipmentRepository{
 
@@ -55,7 +56,9 @@ export class EquipmentRepository implements IEquipmentRepository{
 
   async getById(id: string): Promise<Equipment | undefined> {
     try {
-      const result = await EquipmentModel.findByPk(id);
+      const result = await EquipmentModel.findByPk(id, {
+        include: {model: EquipmentPassport}
+      });
 
       if (!result) 
         return undefined;

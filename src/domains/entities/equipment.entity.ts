@@ -3,6 +3,7 @@ import { EquipmentStatus } from "../enums/equipment-status.enum.js";
 import { EquipmentType } from "../enums/equipment-type.enum.js";
 import { EquipmentLocation } from "../values/equipment-location.value.js";
 import { Equipment as Model } from './../models/equipment.model';
+import { EquipmentPassport } from "./equipment-passport.entity.js";
 
 export class Equipment {
   id!: string;
@@ -12,6 +13,7 @@ export class Equipment {
   location!: EquipmentLocation;
   status!: EquipmentStatus;
   installedAt!: string;
+  passport?: EquipmentPassport;
 
   static create(props: {name: string, type: EquipmentType, serialNumber: string, location: EquipmentLocation, status: EquipmentStatus, installedAt: string}):Equipment {
     let newEquipment = new Equipment();
@@ -33,6 +35,10 @@ export class Equipment {
       lat: model.site ? Number(model.site.latitude) : 0,
       lon: model.site ? Number(model.site.longitude) : 0,
     };
+
+    if (model.passport) {
+      equipment.passport = EquipmentPassport.createFromModel(model.passport);
+    }
 
     return equipment;
   }
