@@ -85,6 +85,10 @@ export const updateRequestStatus = async(id: string, request: UpdateMaintenanceR
     throw new ConflictError("Изменение статуса запрещено", [{field: "newStatus", message: `Текущий статус ${savedRequest.status} не может быть изменен на ${request.newStatus}`}]);
   }
 
+  if (request.newStatus == MaintenanceRequestStatus.in_progress && savedRequest.technicians?.length === 0) {
+    throw new ConflictError("Изменение статуса запрещено", [{field: "newStatus", message: `Текущий статус ${savedRequest.status} не может быть изменен на ${request.newStatus}, т.к. к заявке не назначены специалисты!`}]);
+  }
+
   const requestHistory: CreateRequestHistoryDto = {
     id: randomUUID(),
     author: "",
@@ -155,4 +159,5 @@ export const createRequestsMass = async(requests: CreateMaintenanceRequestDto[])
 import { dbConnection } from "../infrastructure/db-connection.js";
 import { IRequestHistoryRepository } from "../repositories/abstractions/request-history-repository.interface.js";
 import { RequestHistoryRepisotory } from "../repositories/implementations/db-request-history.repository.js";
+import { MaintenanceRequestStatus } from "../domains/enums/maintenance-request-status.enum.js";
 

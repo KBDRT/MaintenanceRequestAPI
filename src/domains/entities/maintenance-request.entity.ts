@@ -2,6 +2,7 @@ import { randomUUID } from "node:crypto";
 import { MaintenanceRequestPriority } from "../enums/maintenance-request-priotiry.enum.js";
 import { MaintenanceRequestStatus } from "../enums/maintenance-request-status.enum.js";
 import { MaintenanceRequest as RequestModel } from './../models/maintenance-request.model';
+import { Technician } from "./technician.entity.js";
 
 export class MaintenanceRequest {
   id!: string;
@@ -13,6 +14,7 @@ export class MaintenanceRequest {
   planntedAt?: string;
   createdAt?: string;
   updatedAt?: string;
+  technicians?: Technician[] = [];
 
   static create(props: {equipmentId: string, title: string, description: string, priority: MaintenanceRequestPriority, planntedAt: string}) : MaintenanceRequest {
     let newRequest = new MaintenanceRequest();
@@ -35,6 +37,12 @@ export class MaintenanceRequest {
     request.planntedAt = model?.plannedAt?.toISOString();
     request.createdAt = model?.createdAt?.toISOString();
     request.updatedAt = model?.updatedAt?.toISOString();
+
+    if (model.techinicians && request.technicians) {
+      for (const technician of model.techinicians) {
+        request.technicians.push(Technician.createFromModel(technician));
+      }
+    }
 
     return request;
   }

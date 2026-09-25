@@ -10,6 +10,7 @@ import { FilterParser } from '../utils/filter-parser.js';
 import { MaintenanceRequest as RequestModel } from './../../domains/models/maintenance-request.model';
 import requestAllowStatusChange from '../../config/request-allow-status-change.config.js';
 import { ConflictError } from '../../errors/conflicts.error.js';
+import { Technician } from '../../domains/models/technician.model.js';
 
 export class RequestRepository implements IMaintenanceRequestRepository{
 
@@ -85,7 +86,9 @@ export class RequestRepository implements IMaintenanceRequestRepository{
 
   async getById(id: string): Promise<MaintenanceRequest | undefined> {
     try {
-      const result = await RequestModel.findByPk(id);
+      const result = await RequestModel.findByPk(id, {
+        include: {model: Technician}
+      });
       
       if (!result) 
         return undefined;

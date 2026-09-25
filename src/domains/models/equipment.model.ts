@@ -59,6 +59,10 @@ export class Equipment extends Model {
   @HasOne(() => EquipmentPassport, { foreignKey: "equipmentId", as: "passport" })
   declare passport: EquipmentPassport;
 
-  @HasMany(() => MaintenanceRequest)
+  @HasMany(() => MaintenanceRequest,
+  {
+    onDelete: "SET NULL",   
+    onUpdate: "CASCADE",
+  })
   declare requests: MaintenanceRequest[];
 }
