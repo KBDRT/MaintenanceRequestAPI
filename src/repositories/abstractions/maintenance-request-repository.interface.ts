@@ -4,11 +4,12 @@ import { GetMaintenanceRequestsFilteredDto } from "../../dto/maintenance-request
 import { GetRequests } from "../../dto/types/get-requests.type.js";
 
 export interface IMaintenanceRequestRepository {
-  get(request: GetMaintenanceRequestsFilteredDto): Promise<GetRequests>,
-  add(newRequest: MaintenanceRequest): Promise<string>,
+  get(request: GetMaintenanceRequestsFilteredDto): Promise<GetRequests>;
+  add(newRequest: MaintenanceRequest): Promise<string>;
   getById(id: string): Promise<MaintenanceRequest | undefined>;
   update(updatedRequest: MaintenanceRequest): Promise<void>;
   delete(id: string): Promise<void>;
   existWithStatuses(equipmentId: string, statuses: MaintenanceRequestStatus[]): Promise<boolean>;
-  addMass(newRequest: MaintenanceRequest[]): Promise<void>,
+  addMass(newRequest: MaintenanceRequest[]): Promise<void>;
+  updateStatus(id: string, newStatus: MaintenanceRequestStatus): Promise<void>;
 }

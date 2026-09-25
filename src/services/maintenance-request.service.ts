@@ -18,8 +18,9 @@ import { MassImportRequestsResult } from "../dto/types/mass-import-requests-resu
 import { EquipmentRepository } from "../repositories/implementations/db-equipment.repository.js";
 import { RequestRepository } from "../repositories/implementations/db-maintenance.repository.js";
 
-const equipmentRepostitory: IEquipmentRepository = new EquipmentRepository();
 const repository: IMaintenanceRequestRepository = new RequestRepository();
+const equipmentRepostitory: IEquipmentRepository = new EquipmentRepository();
+const historyRepository: IRequestHistoryRepository = new RequestHistoryRepisotory();
 
 export const addRequest = async(maintenanceRequest: CreateMaintenanceRequestDto): Promise<MaintenanceRequest> => {
   const existingEquipment = await equipmentRepostitory.getById(maintenanceRequest.equipmentId);
@@ -84,8 +85,19 @@ export const updateRequestStatus = async(id: string, request: UpdateMaintenanceR
     throw new ConflictError("Изменение статуса запрещено", [{field: "newStatus", message: `Текущий статус ${savedRequest.status} не может быть изменен на ${request.newStatus}`}]);
   }
 
-  const updated = { ...savedRequest, status: request.newStatus};
-  await repository.update(updated);
+  const requestHistory: CreateRequestHistoryDto = {
+    id: randomUUID(),
+    author: "",
+    commentary: "",
+    newStatus: request.newStatus,
+    oldStatus: savedRequest.status,
+    requestId: id
+  };
+
+  await dbConnection.transaction(async () => {
+    await repository.updateStatus(id, request.newStatus);
+    await historyRepository.create(requestHistory);
+  });
 }
 
 export const createRequestsMass = async(requests: CreateMaintenanceRequestDto[]): Promise<MassImportRequestsResult> => {
@@ -139,4 +151,8 @@ export const createRequestsMass = async(requests: CreateMaintenanceRequestDto[])
   // добавление валидных
   await repository.addMass(newRequests);
   return {imports: importsResult, totalError: totalError, totalSuccess: totalSuccess};
-};
+};import { CreateRequestHistoryDto } from './../dto/maintenance-request/create-request-history.dto';import { randomUUID } from "node:crypto";
+import { dbConnection } from "../infrastructure/db-connection.js";
+import { IRequestHistoryRepository } from "../repositories/abstractions/request-history-repository.interface.js";
+import { RequestHistoryRepisotory } from "../repositories/implementations/db-request-history.repository.js";
+

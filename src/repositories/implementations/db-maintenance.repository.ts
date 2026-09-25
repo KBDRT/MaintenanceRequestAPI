@@ -8,8 +8,34 @@ import { DatabaseError } from '../../errors/database.error.js';
 import { IMaintenanceRequestRepository } from '../abstractions/maintenance-request-repository.interface.js';
 import { FilterParser } from '../utils/filter-parser.js';
 import { MaintenanceRequest as RequestModel } from './../../domains/models/maintenance-request.model';
+import requestAllowStatusChange from '../../config/request-allow-status-change.config.js';
+import { ConflictError } from '../../errors/conflicts.error.js';
 
 export class RequestRepository implements IMaintenanceRequestRepository{
+
+  async updateStatus(id: string, newStatus: MaintenanceRequestStatus): Promise<void> {
+    try {
+    // Повторная проверка для конкрурентного изменения
+      const allowOldStatuses: MaintenanceRequestStatus[] = [];
+      for (const key of Object.keys(requestAllowStatusChange) as MaintenanceRequestStatus[]) {
+        const newStatuses = requestAllowStatusChange[key];
+
+        if (newStatuses.findIndex(s => s === newStatus) > -1)
+          allowOldStatuses.push(key);
+      }
+
+      if (allowOldStatuses.length === 0)
+        throw new ConflictError("Изменение статуса запрещено");
+
+      await RequestModel.update({ status: newStatus }, { where: { id: id, status: {[Op.in]: allowOldStatuses }}});
+    }
+    catch (error) {
+      if (error instanceof AppError) 
+        throw error;
+
+      throw new DatabaseError(error);
+    }
+  }
 
   async get(request: GetMaintenanceRequestsFilteredDto): Promise<GetRequests> {
     try {
