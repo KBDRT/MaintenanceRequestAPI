@@ -1,6 +1,6 @@
 import { AssigneeRole } from "../../domains/enums/assignee-role.enum";
 
 export interface SetRequestTechniciansDto {
-  techinicianId: string,
+  technicianId: string,
   role: AssigneeRole
 }

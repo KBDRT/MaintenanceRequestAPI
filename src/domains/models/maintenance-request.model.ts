@@ -75,7 +75,7 @@ export class MaintenanceRequest extends Model {
   @BelongsToMany(() => Technician, { 
     through: () => RequestAssignee,
     foreignKey: "requestId",
-    otherKey: "techicianId"
+    otherKey: "technicianId"
   })
   declare techinicians: Technician[];
 

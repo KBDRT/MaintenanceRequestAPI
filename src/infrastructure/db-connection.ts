@@ -1,5 +1,9 @@
 import { Sequelize } from "sequelize-typescript";
 import { modelsList } from "./models";
+import cls from 'cls-hooked';
+
+export const namespace = cls.createNamespace('app-transactions');
+Sequelize.useCLS(namespace);
 
 export const dbConnection = new Sequelize({
   dialect: "postgres",

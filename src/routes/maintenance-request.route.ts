@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { createRequest, getRequests, getRequest, updateRequest, deleteRequest, updateRequestStatus, createRequestMass, setRequestTechnicians } from '../controllers/maintenance-request.controller.js';
+import { createRequest, getRequests, deleteRequestTechnician, getRequest, updateRequest, deleteRequest, updateRequestStatus, createRequestMass, setRequestTechnicians } from '../controllers/maintenance-request.controller.js';
 import { validate } from '../middlewares/validator.middleware.js';
 import { createRequestSchema } from '../validators/schemas/maintenance-request/create-request.schema.js';
 import { idRequestSchema } from '../validators/schemas/common/id-request.schema.js';
@@ -11,6 +11,7 @@ import { filterRequestSchema } from '../validators/schemas/maintenance-request/f
 import { massImportRequestsSchema } from '../validators/schemas/maintenance-request/mass-import-requests.schema.js';
 import { authenticate } from '../middlewares/auth.middleware.js';
 import { setRequestTechniciansSchema } from '../validators/schemas/assignees/set-request-technicians.schema.js';
+import { deleteAssigneesSchema } from '../validators/schemas/assignees/delete-assignees.schema.js';
 
 const maintenanceRequestRouter = Router();
 
@@ -31,6 +32,10 @@ maintenanceRequestRouter.route('/import')
 
 maintenanceRequestRouter.route('/:id/assignees')
   .post(authenticate, validate({params: idRequestSchema, body: setRequestTechniciansSchema}), setRequestTechnicians);
+
+maintenanceRequestRouter.route('/:id/assignees/:userId')
+  .delete(authenticate, validate({params: deleteAssigneesSchema}), deleteRequestTechnician);
+
 
 export default maintenanceRequestRouter;
 

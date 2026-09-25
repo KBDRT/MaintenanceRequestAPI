@@ -54,3 +54,9 @@ export const setRequestTechnicians = async (req: Request, res: Response): Promis
   await assigneService.setRequestTechnicians(id as string, req.body);
   res.status(204).send();
 };
+
+export const deleteRequestTechnician = async (req: Request, res: Response): Promise<void> => {
+  const { id, userId } = req.params;
+  await assigneService.deleteRequestTechnician(id as string, userId as string);
+  res.status(204).send();
+};
