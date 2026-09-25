@@ -19,7 +19,6 @@ export const setRequestTechnicians = async(requestId: string, technicians: SetRe
   });
 };
 
-
 export const deleteRequestTechnician = async(requestId: string, technicianId: string): Promise<void> => {
   await repository.deleteTechnicianFromRequest(requestId, technicianId);
 };

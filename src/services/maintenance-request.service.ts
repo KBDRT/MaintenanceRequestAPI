@@ -17,6 +17,12 @@ import { ErrorResponse } from "../dto/common/error.response.js";
 import { MassImportRequestsResult } from "../dto/types/mass-import-requests-result.type.js";
 import { EquipmentRepository } from "../repositories/implementations/db-equipment.repository.js";
 import { RequestRepository } from "../repositories/implementations/db-maintenance.repository.js";
+import { CreateRequestHistoryDto } from './../dto/maintenance-request/create-request-history.dto';import { randomUUID } from "node:crypto";
+import { dbConnection } from "../infrastructure/db-connection.js";
+import { IRequestHistoryRepository } from "../repositories/abstractions/request-history-repository.interface.js";
+import { RequestHistoryRepisotory } from "../repositories/implementations/db-request-history.repository.js";
+import { MaintenanceRequestStatus } from "../domains/enums/maintenance-request-status.enum.js";
+import { RequestStatusHistory } from "../domains/entities/request-status-history.entity.js";
 
 const repository: IMaintenanceRequestRepository = new RequestRepository();
 const equipmentRepostitory: IEquipmentRepository = new EquipmentRepository();
@@ -35,7 +41,7 @@ export const addRequest = async(maintenanceRequest: CreateMaintenanceRequestDto)
 };
 
 export const getRequests = async(request: GetMaintenanceRequestsFilteredDto): Promise<GetMaintenanceRequestsDto> => {
- const serviceResult = new GetMaintenanceRequestsDto();
+  const serviceResult = new GetMaintenanceRequestsDto();
 
   const result = await repository.get(request);
   serviceResult.requests = result.requests;
@@ -155,9 +161,9 @@ export const createRequestsMass = async(requests: CreateMaintenanceRequestDto[])
   // добавление валидных
   await repository.addMass(newRequests);
   return {imports: importsResult, totalError: totalError, totalSuccess: totalSuccess};
-};import { CreateRequestHistoryDto } from './../dto/maintenance-request/create-request-history.dto';import { randomUUID } from "node:crypto";
-import { dbConnection } from "../infrastructure/db-connection.js";
-import { IRequestHistoryRepository } from "../repositories/abstractions/request-history-repository.interface.js";
-import { RequestHistoryRepisotory } from "../repositories/implementations/db-request-history.repository.js";
-import { MaintenanceRequestStatus } from "../domains/enums/maintenance-request-status.enum.js";
+}
 
+
+export const getRequestStatusHistory = async(requestId: string): Promise<RequestStatusHistory[]> => {
+  return await historyRepository.getByRequestId(requestId);
+}

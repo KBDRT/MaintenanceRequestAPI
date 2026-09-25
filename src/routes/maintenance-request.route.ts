@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { createRequest, getRequests, deleteRequestTechnician, getRequest, updateRequest, deleteRequest, updateRequestStatus, createRequestMass, setRequestTechnicians } from '../controllers/maintenance-request.controller.js';
+import { createRequest, getRequests, deleteRequestTechnician, getRequest, updateRequest, deleteRequest, getRequestStatusHistory, updateRequestStatus, createRequestMass, setRequestTechnicians } from '../controllers/maintenance-request.controller.js';
 import { validate } from '../middlewares/validator.middleware.js';
 import { createRequestSchema } from '../validators/schemas/maintenance-request/create-request.schema.js';
 import { idRequestSchema } from '../validators/schemas/common/id-request.schema.js';
@@ -36,6 +36,8 @@ maintenanceRequestRouter.route('/:id/assignees')
 maintenanceRequestRouter.route('/:id/assignees/:userId')
   .delete(authenticate, validate({params: deleteAssigneesSchema}), deleteRequestTechnician);
 
+maintenanceRequestRouter.route('/:id/history')
+  .get(authenticate, validate({params: idRequestSchema}), getRequestStatusHistory);
 
 export default maintenanceRequestRouter;
 

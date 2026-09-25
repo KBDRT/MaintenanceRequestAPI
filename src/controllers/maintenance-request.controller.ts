@@ -60,3 +60,9 @@ export const deleteRequestTechnician = async (req: Request, res: Response): Prom
   await assigneService.deleteRequestTechnician(id as string, userId as string);
   res.status(204).send();
 };
+
+export const getRequestStatusHistory = async (req: Request, res: Response): Promise<void> => {
+  const { id } = req.params;
+  const result = await service.getRequestStatusHistory(id as string);
+  res.status(200).send(result);
+};
