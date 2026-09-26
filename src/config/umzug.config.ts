@@ -21,3 +21,16 @@ export const migrator = new Umzug({
 });
 
 export type Migration = typeof migrator._types.migration;
+
+export const seeder = new Umzug({
+	migrations: {
+		glob: [`../seeds/*.${extension}`, { cwd: __dirname }],
+	},
+	context: sequelize,
+	storage: new SequelizeStorage({
+		sequelize,
+	}),
+	logger: console,
+});
+
+export type Seeder = typeof seeder._types.migration;

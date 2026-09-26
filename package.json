@@ -12,7 +12,11 @@
     "migration:up": "npx tsx src/scripts/migrate.ts all up",
     "migration:down": "npx tsx src/scripts/migrate.ts all down",
     "migration_prod:up": "node tsx dist/src/scripts/migrate.js all up",
-    "migration_prod:down": "node dist/src/scripts/migrate.js all down"
+    "migration_prod:down": "node dist/src/scripts/migrate.js all down",
+    "seeds:up": "npx tsx src/scripts/seed.ts all up",
+    "seeds:down": "npx tsx src/scripts/seed.ts all down",
+    "seeds_prod:up": "node tsx dist/src/scripts/seed.js all up",
+    "seeds_prod:down": "node dist/src/scripts/seed.js all down"
   },
   "dependencies": {
     "@types/cors": "^2.8.19",

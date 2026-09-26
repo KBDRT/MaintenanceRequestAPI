@@ -1,4 +1,4 @@
-import { migrator } from "../config/umzug.config";
+import { seeder } from "../config/umzug.config";
 import { getLog } from "../lib/context";
 
 const mode = process.argv[2]; 
@@ -16,7 +16,7 @@ const availableActions = ['up', 'down'];
   }
 
   if (mode == 'target' && !target) {
-    getLog().info("Empty migration name");
+    getLog().info("Empty seed name");
     process.exit(1);
   }
 
@@ -25,25 +25,24 @@ const availableActions = ['up', 'down'];
     process.exit(1);
   }
 
-  getLog().info(`Migrations start. CONFIG: ${mode} ${action} ${target ?? ""}`);
+  getLog().info(`Seed start. CONFIG: ${mode} ${action} ${target ?? ""}`);
 
   if (mode == "all" && action == "down") {
-    await migrator.down({ to: 0 });
+    await seeder.down({ to: 0 });
   } 
   else if (mode == "all" && action == "up") {
-    await migrator.up();
+    await seeder.up();
   }
   
   if (mode == "target" && action == "down") {
-    await migrator.down({ to: target });
+    await seeder.down({ to: target });
   } 
   else if (mode == "target" && action == "up") {
-    await migrator.up({to: target});
+    await seeder.up({to: target});
   }
-
-  getLog().info("Migrations done");
+  getLog().info("Seed done");
   process.exit(0);
 })().catch(async(err) => {
-  getLog().error(`Migrations errors: ${err}`);
+  getLog().error(`Seed errors: ${err}`);
   process.exit(1);
 });
