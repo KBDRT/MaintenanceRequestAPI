@@ -5,7 +5,7 @@ import cls from 'cls-hooked';
 export const namespace = cls.createNamespace('app-transactions');
 Sequelize.useCLS(namespace);
 
-export const dbConnection = new Sequelize({
+export const sequelize = new Sequelize({
   dialect: "postgres",
   host: "localhost",
   port: 5480,

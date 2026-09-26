@@ -8,9 +8,9 @@ import { RequestsStatusPriorityStats } from "../../dto/types/requests-status-pri
 import { RequestStatusHistory } from "../../domains/models/request-status-history.model";
 import { MaintenanceRequestStatus } from "../../domains/enums/maintenance-request-status.enum";
 import { GetRequestFinishTime } from "../../dto/types/get-request-finish-time.type";
-import { dbConnection } from "../../infrastructure/db-connection";
 import { GetEquipmentsAnalyticsRequest } from './../../dto/reports/get-equipments-analytics-request.dto';
 import { EquipmentsLoadResult } from "../../dto/reports/equipments-load-result.dto";
+import { sequelize } from "../../infrastructure/sequelize";
 
 
 export class ReportsRepository implements IReportsRepository {
@@ -69,7 +69,7 @@ export class ReportsRepository implements IReportsRepository {
   async getEquipmentsAnalytics(request: GetEquipmentsAnalyticsRequest): Promise<EquipmentsLoadResult[]> {
     try{
       const status: MaintenanceRequestStatus[] = [MaintenanceRequestStatus.done];
-      const result = await dbConnection.query(
+      const result = await sequelize.query(
         `
           SELECT 
             e.id,
