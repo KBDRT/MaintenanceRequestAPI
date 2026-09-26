@@ -33,10 +33,10 @@ export class AssigneesRepository implements IAssignessRepository{
   async addRequestTechnicians(requestId:string, technicians: SetRequestTechniciansDto[]): Promise<void> {
     try {
       await RequestAssignee.bulkCreate(technicians.map(a => ({
-          requestId: requestId,
-          technicianId: a.technicianId,
-          role: a.role,
-        })));
+        requestId: requestId,
+        technicianId: a.technicianId,
+        role: a.role,
+      })));
     }
     catch (error) {
       if (error instanceof AppError) 

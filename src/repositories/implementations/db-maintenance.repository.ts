@@ -153,7 +153,15 @@ export class RequestRepository implements IMaintenanceRequestRepository{
 
   async addMass(newRequest: MaintenanceRequest[]): Promise<void> {
     try {
-
+      await RequestModel.bulkCreate(newRequest.map(a => ({
+        id: a.id,
+        equipmentId: a.equipmentId,
+        title: a.title,
+        description: a.description,
+        status: a.status,
+        priority: a.priority,
+        plannedAt: a.planntedAt
+      })));
     }
     catch (error) {
       if (error instanceof AppError) 
