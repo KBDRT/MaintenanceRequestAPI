@@ -13,6 +13,12 @@ export const sequelize = new Sequelize({
   username: dbConnectionConfig.user,
   password: dbConnectionConfig.password,
   database: dbConnectionConfig.name,
+  pool: {
+    max: dbConnectionConfig.pool.max,
+    min: dbConnectionConfig.pool.min,
+    acquire: dbConnectionConfig.pool.acquire,
+    idle: dbConnectionConfig.pool.idle
+  },
   logging: false,
   models: [...modelsList]
 })

@@ -8,10 +8,12 @@ const dbConnectionConfig = {
   name: parsed.data?.DB_NAME,
   user: parsed.data?.DB_USER,
   password: parsed.data?.DB_PASSWORD,
-  poolMax: parsed.data?.DB_POOL_MAX,
-  poolMin: parsed.data?.DB_POOL_MIN,
-  poolAcquire: parsed.data?.DB_POOL_ACQUIRE,
-  poolIdle: parsed.data?.DB_POOL_IDLE,
+  pool: {
+    max: parsed.data?.DB_POOL_MAX,
+    min: parsed.data?.DB_POOL_MIN,
+    acquire: parsed.data?.DB_POOL_ACQUIRE,
+    idle: parsed.data?.DB_POOL_IDLE
+  }
 };
 
 export default dbConnectionConfig;
