@@ -1,3 +1,6 @@
+import { GetEquipmentRequestsDto } from '../dto/equipment/get-equipment-requests.dto';
+import { EquipmentsLoadResult } from '../dto/reports/equipments-load-result.dto';
+import { GetEquipmentsAnalyticsRequest } from '../dto/reports/get-equipments-analytics-request.dto';
 import { GetSiteSummaryResultDto } from '../dto/reports/get-site-summary-result.dto';
 import { ReportsRepository } from '../repositories/implementations/db-reports.repository';
 import { IReportsRepository } from './../repositories/abstractions/reports-repository.interface';
@@ -22,4 +25,9 @@ export const getSiteSummary = async(siteId: string): Promise<GetSiteSummaryResul
 
   return result; 
 };
+
+export const getEquipmentAnalytics = async(request: GetEquipmentsAnalyticsRequest): Promise<EquipmentsLoadResult[]> => {
+  return await repository.getEquipmentsAnalytics(request);
+};
+
 

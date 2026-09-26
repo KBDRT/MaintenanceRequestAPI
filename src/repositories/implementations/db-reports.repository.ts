@@ -1,4 +1,4 @@
-import { col, fn, Op } from "sequelize";
+import { col, fn, Op, QueryTypes } from "sequelize";
 import { IReportsRepository } from "../abstractions/reports-repository.interface";
 import { Equipment } from "../../domains/models/equipment.model";
 import { MaintenanceRequest } from './../../domains/models/maintenance-request.model';
@@ -8,6 +8,9 @@ import { RequestsStatusPriorityStats } from "../../dto/types/requests-status-pri
 import { RequestStatusHistory } from "../../domains/models/request-status-history.model";
 import { MaintenanceRequestStatus } from "../../domains/enums/maintenance-request-status.enum";
 import { GetRequestFinishTime } from "../../dto/types/get-request-finish-time.type";
+import { dbConnection } from "../../infrastructure/db-connection";
+import { GetEquipmentsAnalyticsRequest } from './../../dto/reports/get-equipments-analytics-request.dto';
+import { EquipmentsLoadResult } from "../../dto/reports/equipments-load-result.dto";
 
 
 export class ReportsRepository implements IReportsRepository {
@@ -22,10 +25,10 @@ export class ReportsRepository implements IReportsRepository {
           where: {siteId: siteId}},
         {
           model: RequestStatusHistory,
-          where: {newStatus: {[Op.in]: [MaintenanceRequestStatus.done, MaintenanceRequestStatus.rejected]}},
+          where: {newStatus: {[Op.in]: [MaintenanceRequestStatus.done]}},
           attributes: [["createdAt", 'finishTime']],
         }],
-        where: {status: {[Op.in]: [MaintenanceRequestStatus.done, MaintenanceRequestStatus.rejected]}},
+        where: {status: {[Op.in]: [MaintenanceRequestStatus.done]}},
         raw: true,
         nest: true
       }) as unknown as GetRequestFinishTime[];
@@ -53,6 +56,47 @@ export class ReportsRepository implements IReportsRepository {
         raw: true
       }) as unknown as RequestsStatusPriorityStats[];
 
+      return result;
+    }
+    catch (error) {
+      if (error instanceof AppError) 
+        throw error;
+
+      throw new DatabaseError(error);
+    }
+  }
+
+  async getEquipmentsAnalytics(request: GetEquipmentsAnalyticsRequest): Promise<EquipmentsLoadResult[]> {
+    try{
+      const status: MaintenanceRequestStatus[] = [MaintenanceRequestStatus.done];
+      const result = await dbConnection.query(
+        `
+          SELECT 
+            e.id,
+            e.name,
+            e."serialNumber",
+            ep."lastCheckDate",
+            COUNT(mr.id) as "requests",
+            SUM(ra.hours) as "sumPlannedHours",
+            COUNT(CASE WHEN mr.status = ANY($1) THEN 1 END) as "finishedRequests"
+          FROM "Equipment" as e
+          LEFT JOIN "EquipmentPassports" as ep 
+            ON e.id = ep."equipmentId"
+          LEFT JOIN "MaintenanceRequests" as mr 
+            ON e.id = mr."equipmentId"
+              AND mr."createdAt" >= $2
+              AND mr."createdAt" <= $3
+          LEFT JOIN "RequestAssignees" as ra 
+            ON ra."requestId" = mr.id
+          GROUP BY e.id, e.name, e."serialNumber", ep."lastCheckDate"
+          HAVING COUNT(CASE WHEN mr.status = ANY($1) THEN 1 END) >= $4
+        `,
+        {
+          bind: [status, request.dateFrom, request.dateTo, request.minFinishedRequests],
+          type: QueryTypes.SELECT
+        }
+      ) as unknown as EquipmentsLoadResult[];
+      
       return result;
     }
     catch (error) {
