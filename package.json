@@ -8,7 +8,11 @@
     "build": "tsc",
     "start": "node dist/src/server.js",
     "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js",
-    "test:coverage": "jest --coverage"
+    "test:coverage": "jest --coverage",
+    "migration:up": "npx tsx src/scripts/migrate.ts all up",
+    "migration:down": "npx tsx src/scripts/migrate.ts all down",
+    "migration_prod:up": "node tsx dist/src/scripts/migrate.js all up",
+    "migration_prod:down": "node dist/src/scripts/migrate.js all down"
   },
   "dependencies": {
     "@types/cors": "^2.8.19",
