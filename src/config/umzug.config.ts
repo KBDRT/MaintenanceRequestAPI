@@ -3,6 +3,7 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { sequelize } from "../infrastructure/sequelize";
 import { getLog } from "../lib/context";
+import { DataTypes } from "sequelize";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);

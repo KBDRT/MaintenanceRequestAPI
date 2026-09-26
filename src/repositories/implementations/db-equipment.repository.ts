@@ -1,13 +1,13 @@
-import { Equipment } from "../../domains/entities/equipment.entity";
-import { GetEquipmentsFilteredDto } from "../../dto/equipment/get-equipments-filtered.dto";
-import { GetEquipments } from "../../dto/types/get-equipments.type";
-import { IEquipmentRepository } from "../abstractions/equipment-repository.interface";
-import { Equipment as EquipmentModel } from './../../domains/models/equipment.model';
-import { FilterParser } from "../utils/filter-parser";
-import { DatabaseError } from './../../errors/database.error';
-import { AppError } from "../../errors/app.error";
-import { EquipmentPassport } from "../../domains/models/equipment-passport.model";
-import { Site } from "../../domains/models/site.model";
+import { Equipment } from "../../domains/entities/equipment.entity.js";
+import { GetEquipmentsFilteredDto } from "../../dto/equipment/get-equipments-filtered.dto.js";
+import { GetEquipments } from "../../dto/types/get-equipments.type.js";
+import { IEquipmentRepository } from "../abstractions/equipment-repository.interface.js";
+import { Equipment as EquipmentModel } from './../../domains/models/equipment.model.js';
+import { FilterParser } from "../utils/filter-parser.js";
+import { DatabaseError } from './../../errors/database.error.js';
+import { AppError } from "../../errors/app.error.js";
+import { EquipmentPassport } from "../../domains/models/equipment-passport.model.js";
+import { Site } from "../../domains/models/site.model.js";
 
 export class EquipmentRepository implements IEquipmentRepository{
 
