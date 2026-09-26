@@ -11,6 +11,7 @@ import { MaintenanceRequest as RequestModel } from './../../domains/models/maint
 import requestAllowStatusChange from '../../config/request-allow-status-change.config.js';
 import { ConflictError } from '../../errors/conflicts.error.js';
 import { Technician } from '../../domains/models/technician.model.js';
+import { RequestAssignee } from '../../domains/models/request-assignee.model.js';
 
 export class RequestRepository implements IMaintenanceRequestRepository{
 
@@ -43,10 +44,14 @@ export class RequestRepository implements IMaintenanceRequestRepository{
       const parser = new FilterParser<GetMaintenanceRequestsFilteredDto>(request, "plannedAt");
 
       const result = await RequestModel.findAll({
+        attributes: ['id', 'equipmentId', 'title', 'description', 'priority', 'status', 'plannedAt', 'createdAt', 'updatedAt'],
         where: parser.filter, 
         order: parser.sort, 
         limit: parser.limit, 
-        offset: parser.offset
+        offset: parser.offset,
+         include: [
+          { model: Technician },
+        ],
       });
 
       const count = await RequestModel.count({ where: parser.filter });
@@ -87,7 +92,8 @@ export class RequestRepository implements IMaintenanceRequestRepository{
   async getById(id: string): Promise<MaintenanceRequest | undefined> {
     try {
       const result = await RequestModel.findByPk(id, {
-        include: {model: Technician}
+        attributes: ['id', 'equipmentId', 'title', 'description', 'priority', 'status', 'plannedAt', 'createdAt', 'updatedAt'],
+        include: { model: Technician } 
       });
       
       if (!result) 

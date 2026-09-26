@@ -7,6 +7,7 @@ import { FilterParser } from "../utils/filter-parser";
 import { DatabaseError } from './../../errors/database.error';
 import { AppError } from "../../errors/app.error";
 import { EquipmentPassport } from "../../domains/models/equipment-passport.model";
+import { Site } from "../../domains/models/site.model";
 
 export class EquipmentRepository implements IEquipmentRepository{
 
@@ -36,10 +37,15 @@ export class EquipmentRepository implements IEquipmentRepository{
       const parser = new FilterParser<GetEquipmentsFilteredDto>(request, "installedAt");
 
       const result = await EquipmentModel.findAll({
+        attributes: ['id', 'name', 'type', 'serialNumber', 'status', 'installedAt'],
         where: parser.filter, 
         order: parser.sort, 
         limit: parser.limit, 
-        offset: parser.offset
+        offset: parser.offset,
+        include: [
+          { model: Site, attributes: ['latitude', "longitude"] },
+          { model: EquipmentPassport}
+        ],
       });
 
       const count = await EquipmentModel.count({ where: parser.filter });
@@ -57,7 +63,11 @@ export class EquipmentRepository implements IEquipmentRepository{
   async getById(id: string): Promise<Equipment | undefined> {
     try {
       const result = await EquipmentModel.findByPk(id, {
-        include: {model: EquipmentPassport}
+        attributes: ['id', 'name', 'type', 'serialNumber', 'status', 'installedAt'],
+        include: [
+          { model: Site, attributes: ['latitude', "longitude"] },
+          { model: EquipmentPassport }
+        ],
       });
 
       if (!result) 
@@ -99,7 +109,10 @@ export class EquipmentRepository implements IEquipmentRepository{
   
   async getBySerialNumber(serialNumber: string): Promise<Equipment | undefined> {
     try {
-      const result = await EquipmentModel.findOne({where: {serialNumber: serialNumber}}) ?? undefined;
+      const result = await EquipmentModel.findOne({
+        attributes: ['id', 'name', 'type', 'serialNumber', 'status', 'installedAt'], 
+        where: {serialNumber: serialNumber}
+      }) ?? undefined;
 
       if (!result) 
         return undefined;

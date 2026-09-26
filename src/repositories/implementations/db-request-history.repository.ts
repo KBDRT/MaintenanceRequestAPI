@@ -9,7 +9,10 @@ export class RequestHistoryRepisotory implements IRequestHistoryRepository{
   
   async getByRequestId(requestId: string): Promise<RequestStatusHistory[]> {
      try {
-      const result = await HistoryModel.findAll({where: {requestId: requestId}})
+      const result = await HistoryModel.findAll({
+        attributes: ['id', 'oldStatus', 'newStatus', 'author', 'commentary', 'createdAt'],
+        where: {requestId: requestId}
+      });
 
       return RequestStatusHistory.createListFromModel(result);
     }
