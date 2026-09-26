@@ -1,25 +1,24 @@
-name: myapp
+name: maintenance_api
 
 services:
   db:
     image: postgres:18-alpine
-    # restart: unless-stopped
+    restart: unless-stopped
     environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: 12345
-      POSTGRES_DB: maintenance_db
-      POSTGRES_PORT: 5432 
+      POSTGRES_DB: ${DB_NAME}
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
     ports:
-      - "5480:5432"
+      - "5432:5432"
     volumes:
       - pgdata:/var/lib/postgresql
       - ./db/init:/docker-entrypoint-initdb.d:ro
-    # healthcheck:
-    #   test: ["CMD-SHELL", "pg_isready -U $$POSTGRES_USER -d $$POSTGRES_DB"]
-    #   interval: 5s
-    #   timeout: 5s
-    #   retries: 10
-    #   start_period: 10s
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USER} -d ${DB_NAME}"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+      start_period: 10s
 
 volumes:
   pgdata:
