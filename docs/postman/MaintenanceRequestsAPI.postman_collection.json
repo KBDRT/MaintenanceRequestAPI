@@ -1,6 +1,6 @@
 {
   "info": {
-    "_postman_id": "7e9a23ca-44a5-451f-afb5-6bb59a1dfb56",
+    "_postman_id": "463e75a9-ce37-4321-af7d-e4cc586e016d",
     "name": "MaintenanceRequestsAPI",
     "description": "Проверка запросов к API.\n\nСозданы простые запросы для каждого запроса (проверка тела запроса, статуса ответа и тела ответа).\n\nЗапросы с зависиющими данными вынесены в папки (в которых перед основным запросом отправляются дополнительные): Для запуска ПКМ по папке -> RUN",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
@@ -136,15 +136,6 @@
           "request": {
             "method": "GET",
             "header": [],
-            "body": {
-              "mode": "raw",
-              "raw": "[\r\n    {\r\n        \"equipmentId\": \"{{testsEquipmentId}}\",\r\n        \"priority\": \"low\",\r\n        \"title\": \"Заявка1\"\r\n    },\r\n    {\r\n        \"equipmentId\": \"123123\",\r\n        \"priority\": \"medium\",\r\n        \"title\": \"Заявка2\"\r\n    },\r\n    {\r\n        \"equipmentId\": \"a0baa275-e139-4af1-88b6-0b5f3839dfb2\",\r\n        \"priority\": \"low\",\r\n        \"description\": \"описание заявки\",\r\n        \"title\": \"Заявка2\"\r\n    }\r\n]",
-              "options": {
-                "raw": {
-                  "language": "json"
-                }
-              }
-            },
             "url": {
               "raw": "{{baseURL}}/health",
               "host": [
@@ -2533,7 +2524,7 @@
                   "script": {
                     "type": "text/javascript",
                     "exec": [
-                      "pm.test('Тело запроса пустое', () => {\r\n    const hasBody = !!(pm.request.body && pm.request.body.raw && pm.request.body.raw.trim() !== '');\r\n    \r\n    pm.expect(hasBody).to.be.false;\r\n});\r\n"
+                      ""
                     ]
                   }
                 }
@@ -2642,6 +2633,348 @@
           ]
         }
       ]
+    },
+    {
+      "name": "Новые (Использование сидов)",
+      "item": [
+        {
+          "name": "ПОЛОЖИТЕЛЬНЫЕ",
+          "item": [
+            {
+              "name": "История статусов заявки (200)",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('Статус ответа 200', () => pm.response.to.have.status(200));\r\n"
+                    ]
+                  }
+                },
+                {
+                  "listen": "prerequest",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('Тело запроса пустое', () => {\r\n     const hasBody = !!(pm.request.body && pm.request.body.raw && pm.request.body.raw.trim() !== '');\r\n    \r\n    pm.expect(hasBody).to.be.false;\r\n});\r\n"
+                    ]
+                  }
+                }
+              ],
+              "request": {
+                "method": "GET",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{baseURL}}/{{requestsBaseRoute}}/{{seedRequestId}}/history",
+                  "host": [
+                    "{{baseURL}}"
+                  ],
+                  "path": [
+                    "{{requestsBaseRoute}}",
+                    "{{seedRequestId}}",
+                    "history"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Статистика сводная по площадке (200)",
+              "event": [
+                {
+                  "listen": "prerequest",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('Тело запроса пустое', () => {\r\n     const hasBody = !!(pm.request.body && pm.request.body.raw && pm.request.body.raw.trim() !== '');\r\n    \r\n    pm.expect(hasBody).to.be.false;\r\n});\r\n"
+                    ]
+                  }
+                },
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('Статус ответа 200', () => pm.response.to.have.status(200));\r\n\r\npm.test('Тело ответа содержит все поля', () => {\r\n    const json = pm.response.json();\r\n    pm.expect(json).to.have.property('statistics');\r\n    pm.expect(json).to.have.property('averageHoursRequestFinish');\r\n});\r\n"
+                    ]
+                  }
+                }
+              ],
+              "request": {
+                "method": "GET",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{baseURL}}/sites/{{seedSiteId}}/summary",
+                  "host": [
+                    "{{baseURL}}"
+                  ],
+                  "path": [
+                    "sites",
+                    "{{seedSiteId}}",
+                    "summary"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Статистика по оборудованию (200)",
+              "event": [
+                {
+                  "listen": "prerequest",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('Тело запроса пустое', () => {\r\n     const hasBody = !!(pm.request.body && pm.request.body.raw && pm.request.body.raw.trim() !== '');\r\n    \r\n    pm.expect(hasBody).to.be.false;\r\n});\r\n"
+                    ]
+                  }
+                },
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('Статус ответа 200', () => pm.response.to.have.status(200));\r\n"
+                    ]
+                  }
+                }
+              ],
+              "request": {
+                "method": "GET",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{baseURL}}/reports/equipment-load",
+                  "host": [
+                    "{{baseURL}}"
+                  ],
+                  "path": [
+                    "reports",
+                    "equipment-load"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Снятие специалиста с заявки (204)",
+              "event": [
+                {
+                  "listen": "prerequest",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('Тело запроса пустое', () => {\r\n     const hasBody = !!(pm.request.body && pm.request.body.raw && pm.request.body.raw.trim() !== '');\r\n    \r\n    pm.expect(hasBody).to.be.false;\r\n});\r\n"
+                    ]
+                  }
+                },
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('Статус ответа 204', () => pm.response.to.have.status(204));\r\n\r\npm.test('Тело ответа пустое', () => {\r\n    pm.expect(pm.response.text()).to.be.empty;\r\n});\r\n"
+                    ]
+                  }
+                }
+              ],
+              "request": {
+                "method": "DELETE",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{baseURL}}/{{requestsBaseRoute}}/{{seedRequestId}}/assignees/{{seedTechnicianId}}",
+                  "host": [
+                    "{{baseURL}}"
+                  ],
+                  "path": [
+                    "{{requestsBaseRoute}}",
+                    "{{seedRequestId}}",
+                    "assignees",
+                    "{{seedTechnicianId}}"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "НЕГАТИВНЫЕ",
+          "item": [
+            {
+              "name": "Назначение бригады без ведущего (422)",
+              "event": [
+                {
+                  "listen": "prerequest",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('Тело запроса содержит все поля', () => {\r\n    const json = JSON.parse(pm.request.body.raw);\r\n});\r\n"
+                    ]
+                  }
+                },
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('Статус ответа 422', () => pm.response.to.have.status(422));\r\n\r\npm.test('Тело ответа содержит все поля', () => {\r\n    const json = pm.response.json();\r\n    pm.expect(json).to.have.property('error');\r\n    pm.expect(json.error).to.have.property('code');\r\n    pm.expect(json.error).to.have.property('message');\r\n});"
+                    ]
+                  }
+                }
+              ],
+              "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "[\r\n    {\r\n        \"technicianId\": \"095330fd-58f3-4722-8005-8cf9326a27c7\",\r\n        \"role\": \"member\",\r\n        \"hours\": 10\r\n    },\r\n    {\r\n        \"technicianId\": \"3e3f88bd-30ec-4893-899b-e58dd6363584\",\r\n        \"role\": \"member\",\r\n        \"hours\": 10\r\n    }\r\n]",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{baseURL}}/{{requestsBaseRoute}}/{{seedRequestId}}/assignees",
+                  "host": [
+                    "{{baseURL}}"
+                  ],
+                  "path": [
+                    "{{requestsBaseRoute}}",
+                    "{{seedRequestId}}",
+                    "assignees"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Назначение несуществующего специалиста (422)",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('Статус ответа 422', () => pm.response.to.have.status(422));\r\n\r\npm.test('Тело ответа содержит все поля', () => {\r\n    const json = pm.response.json();\r\n    pm.expect(json).to.have.property('error');\r\n    pm.expect(json.error).to.have.property('code');\r\n    pm.expect(json.error).to.have.property('message');\r\n});"
+                    ]
+                  }
+                }
+              ],
+              "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "[\r\n    {\r\n        \"technicianId\": \"095330fd-58f3-4722-8005-8cf9326a27c1\",\r\n        \"role\": \"lead\",\r\n        \"hours\": 10\r\n    },\r\n    {\r\n        \"technicianId\": \"3e3f88bd-30ec-4893-899b-e58dd6363584\",\r\n        \"role\": \"member\",\r\n        \"hours\": 10\r\n    }\r\n]",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{baseURL}}/{{requestsBaseRoute}}/{{seedRequestId}}/assignees",
+                  "host": [
+                    "{{baseURL}}"
+                  ],
+                  "path": [
+                    "{{requestsBaseRoute}}",
+                    "{{seedRequestId}}",
+                    "assignees"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Обновление статуса на in_progress без бригады (409)",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('Статус ответа 409', () => pm.response.to.have.status(409));\n\npm.test('Тело ответа содержит все поля', () => {\n    const json = pm.response.json();\n    pm.expect(json).to.have.property('error');\n    pm.expect(json.error).to.have.property('code');\n    pm.expect(json.error).to.have.property('message');\n});"
+                    ]
+                  }
+                },
+                {
+                  "listen": "prerequest",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('Тело запроса содержит все поля', () => {\r\n    const json = JSON.parse(pm.request.body.raw);\r\n    pm.expect(json).to.have.property('newStatus');\r\n});\r\n"
+                    ]
+                  }
+                }
+              ],
+              "request": {
+                "method": "PATCH",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"newStatus\": \"in_progress\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{baseURL}}/{{requestsBaseRoute}}/125ba7e8-94f0-4e57-9409-4af51b0d189e/status",
+                  "host": [
+                    "{{baseURL}}"
+                  ],
+                  "path": [
+                    "{{requestsBaseRoute}}",
+                    "125ba7e8-94f0-4e57-9409-4af51b0d189e",
+                    "status"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        }
+      ]
     }
   ],
   "event": [
@@ -2696,6 +3029,22 @@
     {
       "key": "testsRequestId",
       "value": "1d52464c-3e75-4e1c-ac7f-9b905505749d"
+    },
+    {
+      "key": "seedSiteId",
+      "value": ""
+    },
+    {
+      "key": "seedEquipmentId",
+      "value": ""
+    },
+    {
+      "key": "seedRequestId",
+      "value": ""
+    },
+    {
+      "key": "seedTechnicianId",
+      "value": ""
     }
   ]
 }
