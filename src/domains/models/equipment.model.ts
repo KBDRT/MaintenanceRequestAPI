@@ -1,4 +1,4 @@
-import { BelongsTo, Column, DataType, ForeignKey, HasMany, HasOne, Model, Table } from "sequelize-typescript";
+import { BelongsTo, Column, DataType, DeletedAt, ForeignKey, HasMany, HasOne, Model, Table } from "sequelize-typescript";
 import { EquipmentType } from "../enums/equipment-type.enum";
 import { EquipmentStatus } from "../enums/equipment-status.enum";
 import { Site } from "./site.model";
@@ -6,7 +6,11 @@ import { EquipmentPassport } from "./equipment-passport.model";
 import { MaintenanceRequest } from "./maintenance-request.model";
 
 @Table({
-  timestamps: false,
+  timestamps: true,
+  createdAt: false,
+  updatedAt: false,
+  deletedAt: true,
+  paranoid: true
 })
 export class Equipment extends Model {
 
@@ -46,6 +50,9 @@ export class Equipment extends Model {
     allowNull: true
   })
   declare installedAt: string;
+
+  @DeletedAt
+  declare deletedAt: Date;
 
   @Column({
     type: DataType.UUID,

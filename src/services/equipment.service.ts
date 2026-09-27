@@ -26,10 +26,11 @@ export const addEquipment = async(equipmentInfo: CreateEquipmentDto): Promise<Eq
     throw new BusinessRuleError("Дата установки оборудования неккоретна", [{field: "installedAt", message: "Дата установки оборудования не может быть в будущем"}])
   }
 
-  const existing = await repository.getBySerialNumber(equipmentInfo.serialNumber);
-  if (existing) {
-    throw new ConflictError("Оборудование с указанным серийным номером уже существует!", [{field: "serialNumber", message: "Неуникальный серийный номер"}]);
-  }
+  // обработка на уровне БД UNIQUE с использованием paranoid + index
+  // const existing = await repository.getBySerialNumber(equipmentInfo.serialNumber);
+  // if (existing) {
+  //   // throw new ConflictError("Оборудование с указанным серийным номером уже существует!", [{field: "serialNumber", message: "Неуникальный серийный номер"}]);
+  // }
   
   const equipment = Equipment.create(equipmentInfo);
   await repository.add(equipment);
@@ -67,7 +68,7 @@ export const getEquipment = async(id: string): Promise<Equipment | undefined> =>
     throw new NotFoundError("Оборудование не найдено!", [{field: "id", message: `Оборудования с id = ${id} не существует`}]);
   }
 
-  return await repository.getById(id);
+  return existing;
 };
 
 export const updateEquipment = async(id: string, equipmentInfo: UpdateEquipmentDto): Promise<void> => {

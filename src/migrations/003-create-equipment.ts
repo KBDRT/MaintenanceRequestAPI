@@ -8,9 +8,11 @@ export const up: Migration = async ({ context: sequelize }) => {
 		id: { type: DataTypes.UUID, primaryKey: true, allowNull: false },
     name: { type: DataTypes.STRING(100), allowNull: false },
     type: { type: DataTypes.ENUM(...Object.values(EquipmentType)), allowNull: false },
-    serialNumber: { type: DataTypes.STRING(255), allowNull: false, unique: true },
+    // unique выключен для мягкого удаления (paranoid), уникальность с помощью индекса (миграция 008)
+    serialNumber: { type: DataTypes.STRING(255), allowNull: false}, 
     status: { type: DataTypes.ENUM(...Object.values(EquipmentStatus)), allowNull: false },
     installedAt: { type: DataTypes.DATEONLY, allowNull: true },
+    deletedAt: { type: DataTypes.DATE, allowNull: true },
     siteId: {
       type: DataTypes.UUID,
       allowNull: true,
