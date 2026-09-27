@@ -1,5 +1,5 @@
 import { Column, DataType, HasMany, Model, Table } from "sequelize-typescript";
-import { Equipment } from "./equipment.model";
+import { Equipment } from "./equipment.model.js";
 
 @Table({
   timestamps: false,

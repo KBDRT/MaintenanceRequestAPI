@@ -1,7 +1,9 @@
 import { BelongsTo, Column, DataType, ForeignKey, Model, Table } from "sequelize-typescript";
-import { AssigneeRole } from "../enums/assignee-role.enum";
-import { MaintenanceRequest } from "./maintenance-request.model";
-import { Technician } from "./technician.model";
+import { AssigneeRole } from "../enums/assignee-role.enum.js";
+import type { MaintenanceRequest as MaintenanceRequestModel } from "./maintenance-request.model.js";
+import { MaintenanceRequest } from "./maintenance-request.model.js";
+import type { Technician as TechnicianModel } from "./technician.model.js";
+import { Technician } from "./technician.model.js";
 
 @Table({
   timestamps: false,
@@ -36,9 +38,9 @@ export class RequestAssignee extends Model {
   declare technicianId : string;
 
   @BelongsTo(() => MaintenanceRequest)
-  declare request: MaintenanceRequest;
+  declare request: MaintenanceRequestModel;
 
   @BelongsTo(() => Technician)
-  declare technician: Technician;
+  declare technician: TechnicianModel;
 }
 

@@ -1,5 +1,5 @@
-import { Seeder } from "../../config/umzug.config";
-import { seedEquipment } from "./002-create-equipment.seed";
+import { Seeder } from "../../config/umzug.config.js";
+import { seedEquipment } from "./002-create-equipment.seed.js";
 
 export const seedPassports = [
   {

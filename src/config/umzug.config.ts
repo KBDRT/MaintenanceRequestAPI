@@ -1,8 +1,8 @@
 import { SequelizeStorage, Umzug } from "umzug";
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { sequelize } from "../infrastructure/sequelize";
-import { getLog } from "../lib/context";
+import { sequelize } from "../infrastructure/sequelize.js";
+import { getLog } from "../lib/context.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);

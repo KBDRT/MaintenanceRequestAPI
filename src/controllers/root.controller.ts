@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { sequelize } from '../infrastructure/sequelize';
+import { sequelize } from '../infrastructure/sequelize.js';
 
 export const getHealth = async (req: Request, res: Response): Promise<void> => {
   try {

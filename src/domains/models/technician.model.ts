@@ -1,6 +1,6 @@
 import { BelongsToMany, Column, DataType, Model, Table } from "sequelize-typescript";
-import { MaintenanceRequest } from "./maintenance-request.model";
-import { RequestAssignee } from "./request-assignee.model";
+import { MaintenanceRequest } from "./maintenance-request.model.js";
+import { RequestAssignee } from "./request-assignee.model.js";
 
 @Table({
   timestamps: false,

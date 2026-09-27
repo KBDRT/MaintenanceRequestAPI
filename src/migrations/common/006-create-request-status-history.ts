@@ -1,6 +1,6 @@
 import { DataTypes } from 'sequelize';
-import { Migration } from '../../config/umzug.config';
-import { MaintenanceRequestStatus } from '../../domains/enums/maintenance-request-status.enum';
+import { Migration } from '../../config/umzug.config.js';
+import { MaintenanceRequestStatus } from '../../domains/enums/maintenance-request-status.enum.js';
 
 export const up: Migration = async ({ context: sequelize }) => {
 	await sequelize.getQueryInterface().createTable('RequestStatusHistories', {

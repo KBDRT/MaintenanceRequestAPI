@@ -1,6 +1,5 @@
-import { error } from "node:console";
-import { getLog } from "../lib/context";
-import { sequelize } from "./sequelize";
+import { getLog } from "../lib/context.js";
+import { sequelize } from "./sequelize.js";
 
 export async function waitForDatabase({ attempts = 10, baseDelayMs = 500 } = {}) {
   for (let attempt = 1; attempt <= attempts; attempt++) {

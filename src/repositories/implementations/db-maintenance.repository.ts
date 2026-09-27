@@ -11,7 +11,6 @@ import { MaintenanceRequest as RequestModel } from './../../domains/models/maint
 import requestAllowStatusChange from '../../config/request-allow-status-change.config.js';
 import { ConflictError } from '../../errors/conflicts.error.js';
 import { Technician } from '../../domains/models/technician.model.js';
-import { RequestAssignee } from '../../domains/models/request-assignee.model.js';
 
 export class RequestRepository implements IMaintenanceRequestRepository{
 

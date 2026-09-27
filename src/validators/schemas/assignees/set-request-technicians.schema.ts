@@ -1,5 +1,5 @@
 import * as z from 'zod';
-import { AssigneeRole } from '../../../domains/enums/assignee-role.enum';
+import { AssigneeRole } from '../../../domains/enums/assignee-role.enum.js';
 
 const technicianSchema = z.object({
   technicianId: z.uuid(),

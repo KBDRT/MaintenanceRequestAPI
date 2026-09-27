@@ -1,5 +1,6 @@
 import { BelongsTo, Column, DataType, ForeignKey, Model, Table } from "sequelize-typescript";
-import { Equipment } from "./equipment.model";
+import type { Equipment as EquipmentType } from "./equipment.model.js";
+import { Equipment } from "./equipment.model.js";
 
 @Table({
   timestamps: false,
@@ -45,5 +46,5 @@ export class EquipmentPassport extends Model {
   declare equipmentId: string;
 
   @BelongsTo(() => Equipment)
-  declare equipment: Equipment;
+  declare equipment: EquipmentType;
 }

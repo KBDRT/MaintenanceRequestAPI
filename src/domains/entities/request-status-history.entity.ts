@@ -1,5 +1,5 @@
-import { MaintenanceRequestStatus } from "../enums/maintenance-request-status.enum";
-import { RequestStatusHistory as HistoryModel } from './../models/request-status-history.model';
+import { MaintenanceRequestStatus } from "../enums/maintenance-request-status.enum.js";
+import { RequestStatusHistory as HistoryModel } from './../models/request-status-history.model.js';
 
 export class RequestStatusHistory {
   id!: string;

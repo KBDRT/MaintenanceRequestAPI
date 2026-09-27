@@ -1,6 +1,6 @@
 import { migrator, migratorTest, seeder, seederTest } from "../config/umzug.config";
-import { getLog } from "../lib/context";
-import { startMigrationSettingsSchema } from "../validators/schemas/common/start-migration-settings.schema";
+import { getLog } from "../lib/context.js";
+import { startMigrationSettingsSchema } from "../validators/schemas/common/start-migration-settings.schema.js";
 
 const [type, env, mode, action, target] = process.argv.slice(2);
 

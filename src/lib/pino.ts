@@ -1,4 +1,3 @@
-import appConfig from '../config/app.config.js';
 import pino from 'pino';
 import NODE_ENV_VALUES from '../config/node_env.enum.js';
 

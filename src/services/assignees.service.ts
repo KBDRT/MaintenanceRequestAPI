@@ -1,12 +1,12 @@
-import { AssigneeRole } from '../domains/enums/assignee-role.enum';
-import { BusinessRuleError } from '../errors/business-rule.error';
-import { SetRequestTechniciansDto } from '../dto/assignees/set-request-technicians.dto';
-import { IAssignessRepository } from './../repositories/abstractions/assignees-repository.interface';
-import { AssigneesRepository } from '../repositories/implementations/db-assigness.repository';
-import { sequelize } from '../infrastructure/sequelize';
-import { IMaintenanceRequestRepository } from '../repositories/abstractions/maintenance-request-repository.interface';
-import { RequestRepository } from '../repositories/implementations/db-maintenance.repository';
-import { NotFoundError } from '../errors/not-found.error';
+import { AssigneeRole } from '../domains/enums/assignee-role.enum.js';
+import { BusinessRuleError } from '../errors/business-rule.error.js';
+import { SetRequestTechniciansDto } from '../dto/assignees/set-request-technicians.dto.js';
+import { IAssignessRepository } from './../repositories/abstractions/assignees-repository.interface.js';
+import { AssigneesRepository } from '../repositories/implementations/db-assigness.repository.js';
+import { sequelize } from '../infrastructure/sequelize.js';
+import { IMaintenanceRequestRepository } from '../repositories/abstractions/maintenance-request-repository.interface.js';
+import { RequestRepository } from '../repositories/implementations/db-maintenance.repository.js';
+import { NotFoundError } from '../errors/not-found.error.js';
 
 const repository: IAssignessRepository = new AssigneesRepository();
 const requestRepository: IMaintenanceRequestRepository = new RequestRepository();

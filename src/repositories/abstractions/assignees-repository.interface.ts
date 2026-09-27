@@ -1,4 +1,4 @@
-import { SetRequestTechniciansDto } from "../../dto/assignees/set-request-technicians.dto";
+import { SetRequestTechniciansDto } from "../../dto/assignees/set-request-technicians.dto.js";
 
 export interface IAssignessRepository {
   addRequestTechnicians(requestId:string, technicians: SetRequestTechniciansDto[]): Promise<void>;

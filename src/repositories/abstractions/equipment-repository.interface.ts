@@ -1,4 +1,3 @@
-import { Transaction } from "sequelize";
 import { Equipment } from "../../domains/entities/equipment.entity.js";
 import { GetEquipmentsFilteredDto } from "../../dto/equipment/get-equipments-filtered.dto.js";
 import { GetEquipments } from "../../dto/types/get-equipments.type.js";

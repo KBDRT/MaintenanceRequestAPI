@@ -1,9 +1,8 @@
-import { GetEquipmentRequestsDto } from '../dto/equipment/get-equipment-requests.dto';
-import { EquipmentsLoadResult } from '../dto/reports/equipments-load-result.dto';
-import { GetEquipmentsAnalyticsRequest } from '../dto/reports/get-equipments-analytics-request.dto';
-import { GetSiteSummaryResultDto } from '../dto/reports/get-site-summary-result.dto';
-import { ReportsRepository } from '../repositories/implementations/db-reports.repository';
-import { IReportsRepository } from './../repositories/abstractions/reports-repository.interface';
+import { EquipmentsLoadResult } from '../dto/reports/equipments-load-result.dto.js';
+import { GetEquipmentsAnalyticsRequest } from '../dto/reports/get-equipments-analytics-request.dto.js';
+import { GetSiteSummaryResultDto } from '../dto/reports/get-site-summary-result.dto.js';
+import { ReportsRepository } from '../repositories/implementations/db-reports.repository.js';
+import { IReportsRepository } from './../repositories/abstractions/reports-repository.interface.js';
 
 const repository: IReportsRepository = new ReportsRepository();
 
