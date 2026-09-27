@@ -13,7 +13,7 @@ const seedEquipment = [{
   id: "d08587b1-9412-4ca7-a9bf-abdb8d891675",
   name: "Газовая турбина ГТ-1",
   type: EquipmentType.turbine,
-  serialNumber: "TURB-MSQ-001",
+  serialNumber: randomUUID(),
   status: EquipmentStatus.operational,
   installedAt: "2026-06-15",
   siteId: null 
@@ -37,7 +37,7 @@ export const up: SeederTest = async ({ context: sequelize }) => {
   await sequelize.getQueryInterface().bulkInsert('Equipment', seedEquipment);
 
   let requests = [];
-  for (let index = 0; index < 5000; index++) {
+  for (let index = 0; index < 10000; index++) {
     requests.push({...exampleRequest, id: randomUUID(), description: randomInt(1000, 1000001).toString()});
   }
   await sequelize.getQueryInterface().bulkInsert('MaintenanceRequests', requests);
