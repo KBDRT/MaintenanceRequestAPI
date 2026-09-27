@@ -5,12 +5,6 @@ import type { Site as SiteModel } from "./site.model.js";
 import { Site } from "./site.model.js";
 import { EquipmentPassport } from "./equipment-passport.model.js";
 import { MaintenanceRequest } from "./maintenance-request.model.js";
-import { BelongsTo, Column, DataType, DeletedAt, ForeignKey, HasMany, HasOne, Model, Table } from "sequelize-typescript";
-import { EquipmentType } from "../enums/equipment-type.enum";
-import { EquipmentStatus } from "../enums/equipment-status.enum";
-import { Site } from "./site.model";
-import { EquipmentPassport } from "./equipment-passport.model";
-import { MaintenanceRequest } from "./maintenance-request.model";
 
 @Table({
   timestamps: true,

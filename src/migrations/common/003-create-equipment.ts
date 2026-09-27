@@ -1,7 +1,7 @@
 import { DataTypes } from 'sequelize';
-import { Migration } from '../config/umzug.config.js';
-import { EquipmentType } from '../domains/enums/equipment-type.enum.js';
-import { EquipmentStatus } from '../domains/enums/equipment-status.enum.js';
+import { Migration } from '../../config/umzug.config.js';
+import { EquipmentType } from '../../domains/enums/equipment-type.enum.js';
+import { EquipmentStatus } from '../../domains/enums/equipment-status.enum.js';
 
 export const up: Migration = async ({ context: sequelize }) => {
 	await sequelize.getQueryInterface().createTable('Equipment', {
