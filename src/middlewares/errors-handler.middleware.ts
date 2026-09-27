@@ -15,12 +15,29 @@ export function errorHandler(err: unknown, req: Request, res: Response, next: Ne
     log[err.status >= 500 ? 'error' : 'warn']({error: err}, 'request failed');
 
     res.status(err.status)
-        .type('application/problem+json')
-        .json({error: errorResponse});
-
-    return;
+       .type('application/problem+json')
+       .json({error: errorResponse});
   } 
+  else {
 
-  next(err);
+    log.error(err);
+
+    let status = 500;
+
+    let body = {
+      error: {
+        message: "Server problem",
+        requestId: req.id,
+      }
+    }
+
+    if (err instanceof Error && err.name.startsWith("Sequelize")) {
+      status = 503;
+      body.error.message = "Database connection problem";
+    }
+
+    res.status(status)
+      .type('application/problem+json')
+      .json({error: body});
+  }
 }
-

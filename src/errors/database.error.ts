@@ -8,6 +8,9 @@ export class DatabaseError extends AppError {
     const code = errorCause?.code ?? errorCause?.original?.code ?? errorCause?.code;
     const error = getError(code);
     const details = getDetails(errorCause);
+    
+    console.log("ERR");
+
     super(error.message, { details: details, status: error.status, code: 'DATABASE_ERROR', cause });
   }
 }
