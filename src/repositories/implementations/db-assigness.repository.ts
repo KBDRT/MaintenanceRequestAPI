@@ -36,6 +36,7 @@ export class AssigneesRepository implements IAssignessRepository{
         requestId: requestId,
         technicianId: a.technicianId,
         role: a.role,
+        hours: a.hours
       })));
     }
     catch (error) {
