@@ -56,5 +56,6 @@ const [type, env, mode, action, target] = process.argv.slice(2);
 
 })().catch(async(err) => {
   getLog().error(`${type} errors: ${err}`);
+  getLog().warn(err);
   process.exit(1);
 });

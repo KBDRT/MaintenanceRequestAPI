@@ -34,7 +34,8 @@ export class Equipment extends Model {
 
   @Column({
     type: DataType.STRING(255),
-    unique: true,
+    // unique выключен для мягкого удаления (paranoid), уникальность с помощью индекса (миграция 008
+    // unique: true, 
     allowNull: false
   })
   declare serialNumber: string;
