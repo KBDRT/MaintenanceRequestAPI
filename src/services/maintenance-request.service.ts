@@ -104,6 +104,7 @@ export const updateRequestStatus = async(id: string, request: UpdateMaintenanceR
     requestId: id
   };
 
+  // транзакция с помощью cls-hooked
   await dbConnection.transaction(async () => {
     await repository.updateStatus(id, request.newStatus);
     await historyRepository.create(requestHistory);
