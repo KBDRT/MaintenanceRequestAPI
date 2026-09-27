@@ -1,9 +1,9 @@
-import { RequestStatusHistory as HistoryModel } from "../../domains/models/request-status-history.model";
-import { CreateRequestHistoryDto } from "../../dto/maintenance-request/create-request-history.dto";
-import { AppError } from "../../errors/app.error";
-import { DatabaseError } from "../../errors/database.error";
-import { IRequestHistoryRepository } from "../abstractions/request-history-repository.interface";
-import { RequestStatusHistory } from './../../domains/entities/request-status-history.entity';
+import { RequestStatusHistory as HistoryModel } from "../../domains/models/request-status-history.model.js";
+import { CreateRequestHistoryDto } from "../../dto/maintenance-request/create-request-history.dto.js";
+import { AppError } from "../../errors/app.error.js";
+import { DatabaseError } from "../../errors/database.error.js";
+import { IRequestHistoryRepository } from "../abstractions/request-history-repository.interface.js";
+import { RequestStatusHistory } from './../../domains/entities/request-status-history.entity.js';
 
 export class RequestHistoryRepisotory implements IRequestHistoryRepository{
   

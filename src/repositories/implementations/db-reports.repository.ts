@@ -1,16 +1,16 @@
 import { col, fn, Op, QueryTypes } from "sequelize";
-import { IReportsRepository } from "../abstractions/reports-repository.interface";
-import { Equipment } from "../../domains/models/equipment.model";
-import { MaintenanceRequest } from './../../domains/models/maintenance-request.model';
-import { AppError } from "../../errors/app.error";
-import { DatabaseError } from "../../errors/database.error";
-import { RequestsStatusPriorityStats } from "../../dto/types/requests-status-priority-stats.dto";
-import { RequestStatusHistory } from "../../domains/models/request-status-history.model";
-import { MaintenanceRequestStatus } from "../../domains/enums/maintenance-request-status.enum";
-import { GetRequestFinishTime } from "../../dto/types/get-request-finish-time.type";
-import { dbConnection } from "../../infrastructure/db-connection";
-import { GetEquipmentsAnalyticsRequest } from './../../dto/reports/get-equipments-analytics-request.dto';
-import { EquipmentsLoadResult } from "../../dto/reports/equipments-load-result.dto";
+import { IReportsRepository } from "../abstractions/reports-repository.interface.js";
+import { Equipment } from "../../domains/models/equipment.model.js";
+import { MaintenanceRequest } from './../../domains/models/maintenance-request.model.js';
+import { AppError } from "../../errors/app.error.js";
+import { DatabaseError } from "../../errors/database.error.js";
+import { RequestsStatusPriorityStats } from "../../dto/types/requests-status-priority-stats.dto.js";
+import { RequestStatusHistory } from "../../domains/models/request-status-history.model.js";
+import { MaintenanceRequestStatus } from "../../domains/enums/maintenance-request-status.enum.js";
+import { GetRequestFinishTime } from "../../dto/types/get-request-finish-time.type.js";
+import { GetEquipmentsAnalyticsRequest } from './../../dto/reports/get-equipments-analytics-request.dto.js';
+import { EquipmentsLoadResult } from "../../dto/reports/equipments-load-result.dto.js";
+import { sequelize } from "../../infrastructure/sequelize.js";
 
 
 export class ReportsRepository implements IReportsRepository {
@@ -69,7 +69,7 @@ export class ReportsRepository implements IReportsRepository {
   async getEquipmentsAnalytics(request: GetEquipmentsAnalyticsRequest): Promise<EquipmentsLoadResult[]> {
     try{
       const status: MaintenanceRequestStatus[] = [MaintenanceRequestStatus.done];
-      const result = await dbConnection.query(
+      const result = await sequelize.query(
         `
           SELECT 
             e.id,

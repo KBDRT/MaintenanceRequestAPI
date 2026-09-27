@@ -7,7 +7,7 @@ import { AppError } from '../../errors/app.error.js';
 import { DatabaseError } from '../../errors/database.error.js';
 import { IMaintenanceRequestRepository } from '../abstractions/maintenance-request-repository.interface.js';
 import { FilterParser } from '../utils/filter-parser.js';
-import { MaintenanceRequest as RequestModel } from './../../domains/models/maintenance-request.model';
+import { MaintenanceRequest as RequestModel } from './../../domains/models/maintenance-request.model.js';
 import requestAllowStatusChange from '../../config/request-allow-status-change.config.js';
 import { ConflictError } from '../../errors/conflicts.error.js';
 import { Technician } from '../../domains/models/technician.model.js';

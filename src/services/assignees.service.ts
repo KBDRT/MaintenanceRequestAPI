@@ -3,7 +3,7 @@ import { BusinessRuleError } from '../errors/business-rule.error';
 import { SetRequestTechniciansDto } from '../dto/assignees/set-request-technicians.dto';
 import { IAssignessRepository } from './../repositories/abstractions/assignees-repository.interface';
 import { AssigneesRepository } from '../repositories/implementations/db-assigness.repository';
-import { dbConnection } from '../infrastructure/db-connection';
+import { sequelize } from '../infrastructure/sequelize';
 
 const repository: IAssignessRepository = new AssigneesRepository();
 

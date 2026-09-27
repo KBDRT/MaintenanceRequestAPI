@@ -1,8 +1,8 @@
-import { RequestAssignee } from "../../domains/models/request-assignee.model";
-import { SetRequestTechniciansDto } from "../../dto/assignees/set-request-technicians.dto";
-import { AppError } from "../../errors/app.error";
-import { DatabaseError } from "../../errors/database.error";
-import { IAssignessRepository } from "../abstractions/assignees-repository.interface";
+import { RequestAssignee } from "../../domains/models/request-assignee.model.js";
+import { SetRequestTechniciansDto } from "../../dto/assignees/set-request-technicians.dto.js";
+import { AppError } from "../../errors/app.error.js";
+import { DatabaseError } from "../../errors/database.error.js";
+import { IAssignessRepository } from "../abstractions/assignees-repository.interface.js";
 
 export class AssigneesRepository implements IAssignessRepository{
   

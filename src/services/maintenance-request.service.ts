@@ -18,11 +18,11 @@ import { MassImportRequestsResult } from "../dto/types/mass-import-requests-resu
 import { EquipmentRepository } from "../repositories/implementations/db-equipment.repository.js";
 import { RequestRepository } from "../repositories/implementations/db-maintenance.repository.js";
 import { CreateRequestHistoryDto } from './../dto/maintenance-request/create-request-history.dto';import { randomUUID } from "node:crypto";
-import { dbConnection } from "../infrastructure/db-connection.js";
 import { IRequestHistoryRepository } from "../repositories/abstractions/request-history-repository.interface.js";
 import { RequestHistoryRepisotory } from "../repositories/implementations/db-request-history.repository.js";
 import { MaintenanceRequestStatus } from "../domains/enums/maintenance-request-status.enum.js";
 import { RequestStatusHistory } from "../domains/entities/request-status-history.entity.js";
+import { sequelize } from "../infrastructure/sequelize.js";
 
 const repository: IMaintenanceRequestRepository = new RequestRepository();
 const equipmentRepostitory: IEquipmentRepository = new EquipmentRepository();
