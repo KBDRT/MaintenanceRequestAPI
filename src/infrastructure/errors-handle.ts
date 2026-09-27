@@ -1,6 +1,6 @@
-import { getLog } from "../lib/context";
-import { server } from "../server";
-import { sequelize } from "./sequelize";
+import { getLog } from "../lib/context.js";
+import { server } from "../server.js";
+import { sequelize } from "./sequelize.js";
 
 async function shutdown(reason: string, err: unknown) {
   getLog().fatal({ err, reason }, 'shutting down');

@@ -1,4 +1,4 @@
-import { MaintenanceRequestStatus } from "../../domains/enums/maintenance-request-status.enum";
+import { MaintenanceRequestStatus } from "../../domains/enums/maintenance-request-status.enum.js";
 
 export interface CreateRequestHistoryDto {
   id: string;

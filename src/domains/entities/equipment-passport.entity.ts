@@ -1,4 +1,4 @@
-import { EquipmentPassport as Model } from './../models/equipment-passport.model';
+import { EquipmentPassport as Model } from './../models/equipment-passport.model.js';
 
 export class EquipmentPassport {
   id!: string;

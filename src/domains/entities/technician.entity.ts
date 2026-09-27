@@ -1,4 +1,4 @@
-import { Technician as Model } from './../models/technician.model';
+import { Technician as Model } from './../models/technician.model.js';
 
 export class Technician {
   id?: string;
@@ -8,7 +8,7 @@ export class Technician {
   middleName?: string;
   specialization?: string;
 
-  static createFromModel(model: Technician) {
+  static createFromModel(model: Model) {
     let technician = new Technician();
     technician.id = model.id;
     technician.tableNumber = model.tableNumber;

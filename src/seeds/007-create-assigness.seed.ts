@@ -1,7 +1,7 @@
-import { Seeder } from "../config/umzug.config";
-import { AssigneeRole } from "../domains/enums/assignee-role.enum";
-import { seedTechnicians } from "./004-create-technicians.seed";
-import { seedRequests } from "./005-create-requests.seed";
+import { Seeder } from "../config/umzug.config.js";
+import { AssigneeRole } from "../domains/enums/assignee-role.enum.js";
+import { seedTechnicians } from "./004-create-technicians.seed.js";
+import { seedRequests } from "./005-create-requests.seed.js";
 
 export const seedAssigness = [
   { requestId: seedRequests[0].id,  technicianId: seedTechnicians[0].id, hours: 4.5, role: AssigneeRole.lead },

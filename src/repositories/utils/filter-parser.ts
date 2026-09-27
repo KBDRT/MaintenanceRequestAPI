@@ -1,5 +1,4 @@
 import { Op, OrderItem } from "sequelize";
-import { Model, ModelStatic } from "sequelize-typescript";
 import z from "zod";
 
 interface SearchCondition {

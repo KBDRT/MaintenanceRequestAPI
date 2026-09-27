@@ -1,7 +1,7 @@
-import { Seeder } from "../config/umzug.config";
-import { MaintenanceRequestPriority } from "../domains/enums/maintenance-request-priotiry.enum";
-import { MaintenanceRequestStatus } from "../domains/enums/maintenance-request-status.enum";
-import { seedEquipment } from "./002-create-equipment.seed";
+import { Seeder } from "../config/umzug.config.js";
+import { MaintenanceRequestPriority } from "../domains/enums/maintenance-request-priotiry.enum.js";
+import { MaintenanceRequestStatus } from "../domains/enums/maintenance-request-status.enum.js";
+import { seedEquipment } from "./002-create-equipment.seed.js";
 
 const d = (iso: string) => new Date(iso);
 

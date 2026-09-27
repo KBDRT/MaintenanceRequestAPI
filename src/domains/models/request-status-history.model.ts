@@ -1,6 +1,7 @@
 import { BeforeBulkDestroy, BeforeBulkUpdate, BeforeDestroy, BeforeUpdate, BelongsTo, Column, CreatedAt, DataType, ForeignKey, Model, Table } from "sequelize-typescript";
-import { MaintenanceRequestStatus } from "../enums/maintenance-request-status.enum";
-import { MaintenanceRequest } from "./maintenance-request.model";
+import { MaintenanceRequestStatus } from "../enums/maintenance-request-status.enum.js";
+import type{ MaintenanceRequest as MaintenanceRequestModel } from "./maintenance-request.model.js";
+import { MaintenanceRequest } from "./maintenance-request.model.js";
 
 @Table({
   timestamps: true,
@@ -48,7 +49,7 @@ export class RequestStatusHistory extends Model {
   declare requestId: string;
 
   @BelongsTo(() => MaintenanceRequest)
-  declare request: MaintenanceRequest;
+  declare request: MaintenanceRequestModel;
 
   @BeforeUpdate
   static forbidUpdate() {

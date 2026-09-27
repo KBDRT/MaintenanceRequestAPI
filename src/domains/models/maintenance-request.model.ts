@@ -1,10 +1,11 @@
-import { BelongsTo, BelongsToMany, Column, CreatedAt, DataType, ForeignKey, HasMany, Model, NotEmpty, Table, UpdatedAt } from "sequelize-typescript";
-import { Equipment } from "./equipment.model";
-import { MaintenanceRequestPriority } from "../enums/maintenance-request-priotiry.enum";
-import { MaintenanceRequestStatus } from "../enums/maintenance-request-status.enum";
-import { RequestStatusHistory } from "./request-status-history.model";
-import { Technician } from "./technician.model";
-import { RequestAssignee } from "./request-assignee.model";
+import { BelongsTo, BelongsToMany, Column, CreatedAt, DataType, ForeignKey, HasMany, Model, Table, UpdatedAt } from "sequelize-typescript";
+import type { Equipment as EquipmentType } from "./equipment.model.js";
+import { Equipment } from "./equipment.model.js";
+import { MaintenanceRequestPriority } from "../enums/maintenance-request-priotiry.enum.js";
+import { MaintenanceRequestStatus } from "../enums/maintenance-request-status.enum.js";
+import { RequestStatusHistory } from "./request-status-history.model.js";
+import { Technician } from "./technician.model.js";
+import { RequestAssignee } from "./request-assignee.model.js";
 
 @Table
 export class MaintenanceRequest extends Model {
@@ -64,7 +65,7 @@ export class MaintenanceRequest extends Model {
   declare equipmentId: string;
 
   @BelongsTo(() => Equipment)
-  declare equipment: Equipment;
+  declare equipment: EquipmentType;
 
   @HasMany(() => RequestStatusHistory, {
     onDelete: "CASCADE",   

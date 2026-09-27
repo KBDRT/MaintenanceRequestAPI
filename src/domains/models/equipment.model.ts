@@ -1,9 +1,10 @@
 import { BelongsTo, Column, DataType, ForeignKey, HasMany, HasOne, Model, Table } from "sequelize-typescript";
-import { EquipmentType } from "../enums/equipment-type.enum";
-import { EquipmentStatus } from "../enums/equipment-status.enum";
-import { Site } from "./site.model";
-import { EquipmentPassport } from "./equipment-passport.model";
-import { MaintenanceRequest } from "./maintenance-request.model";
+import { EquipmentType } from "../enums/equipment-type.enum.js";
+import { EquipmentStatus } from "../enums/equipment-status.enum.js";
+import type { Site as SiteModel } from "./site.model.js";
+import { Site } from "./site.model.js";
+import { EquipmentPassport } from "./equipment-passport.model.js";
+import { MaintenanceRequest } from "./maintenance-request.model.js";
 
 @Table({
   timestamps: false,
@@ -54,7 +55,7 @@ export class Equipment extends Model {
   declare siteId: string;
 
   @BelongsTo(() => Site)
-  declare site: Site;
+  declare site: SiteModel;
 
   @HasOne(() => EquipmentPassport, { foreignKey: "equipmentId", as: "passport" })
   declare passport: EquipmentPassport;

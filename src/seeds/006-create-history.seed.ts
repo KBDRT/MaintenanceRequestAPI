@@ -1,6 +1,6 @@
-import { Seeder } from "../config/umzug.config";
-import { MaintenanceRequestStatus } from "../domains/enums/maintenance-request-status.enum";
-import { seedRequests } from "./005-create-requests.seed";
+import { Seeder } from "../config/umzug.config.js";
+import { MaintenanceRequestStatus } from "../domains/enums/maintenance-request-status.enum.js";
+import { seedRequests } from "./005-create-requests.seed.js";
 
 const d = (iso: string) => new Date(iso);
 

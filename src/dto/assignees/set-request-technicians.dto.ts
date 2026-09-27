@@ -1,4 +1,4 @@
-import { AssigneeRole } from "../../domains/enums/assignee-role.enum";
+import { AssigneeRole } from "../../domains/enums/assignee-role.enum.js";
 
 export interface SetRequestTechniciansDto {
   technicianId: string,

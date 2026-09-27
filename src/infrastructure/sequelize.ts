@@ -1,7 +1,7 @@
 import { Sequelize } from "sequelize-typescript";
-import { modelsList } from "./models";
+import { modelsList } from "./models.js";
 import cls from 'cls-hooked';
-import dbConnectionConfig from "../config/db-connection.config";
+import dbConnectionConfig from "../config/db-connection.config.js";
 
 export const namespace = cls.createNamespace('app-transactions');
 Sequelize.useCLS(namespace);

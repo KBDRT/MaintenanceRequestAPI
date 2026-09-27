@@ -1,7 +1,7 @@
 import { randomUUID } from "node:crypto";
 import { MaintenanceRequestPriority } from "../enums/maintenance-request-priotiry.enum.js";
 import { MaintenanceRequestStatus } from "../enums/maintenance-request-status.enum.js";
-import { MaintenanceRequest as RequestModel } from './../models/maintenance-request.model';
+import { MaintenanceRequest as RequestModel } from './../models/maintenance-request.model.js';
 import { Technician } from "./technician.entity.js";
 
 export class MaintenanceRequest {

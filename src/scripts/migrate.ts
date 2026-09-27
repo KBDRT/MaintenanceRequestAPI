@@ -1,5 +1,5 @@
-import { migrator } from "../config/umzug.config";
-import { getLog } from "../lib/context";
+import { migrator } from "../config/umzug.config.js";
+import { getLog } from "../lib/context.js";
 
 const mode = process.argv[2]; 
 const action = process.argv[3];
