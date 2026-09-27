@@ -9,28 +9,28 @@ const __dirname = path.dirname(__filename);
 
 const extension = __filename.endsWith(".ts") ? "ts" : "js";
 
-export const migrator = new Umzug({
-	migrations: {
-		glob: [`../migrations/*.${extension}`, { cwd: __dirname }],
-	},
-	context: sequelize,
-	storage: new SequelizeStorage({
-		sequelize: sequelize,
-	}),
-	logger: getLog(),
-});
+function createUmzug(folder: string) {
+  return new Umzug({
+    migrations: {
+      glob: [`../${folder}/*.${extension}`, { cwd: __dirname }],
+    },
+    context: sequelize,
+    storage: new SequelizeStorage({
+      sequelize: sequelize,
+    }),
+    logger: getLog(),
+  });
+}
 
+export const migrator = createUmzug("migrations/common");
 export type Migration = typeof migrator._types.migration;
 
-export const seeder = new Umzug({
-	migrations: {
-		glob: [`../seeds/*.${extension}`, { cwd: __dirname }],
-	},
-	context: sequelize,
-	storage: new SequelizeStorage({
-		sequelize,
-	}),
-	logger: console,
-});
-
+export const seeder = createUmzug("seeds/common");
 export type Seeder = typeof seeder._types.migration;
+
+export const migratorTest = createUmzug("migrations/test");
+export type MigrationTest = typeof migratorTest._types.migration;
+
+export const seederTest = createUmzug("seeds/test");
+export type SeederTest = typeof seederTest._types.migration;
+

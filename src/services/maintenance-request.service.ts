@@ -66,7 +66,7 @@ export const getRequest = async(id: string): Promise<MaintenanceRequest | undefi
     throw new NotFoundError("Заявки не найдено", [{field: "id", message: `Заявки с id = ${id} не существует`}]);
   }
 
-  return await repository.getById(id);
+  return existing;
 };
 
 export const updateRequest = async(id: string, updatedRequest: UpdateMaintenanceRequestDto): Promise<void> => {

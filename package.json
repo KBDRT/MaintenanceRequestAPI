@@ -9,14 +9,24 @@
     "start": "node dist/src/server.js",
     "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js",
     "test:coverage": "jest --coverage",
-    "migration:up": "npx tsx src/scripts/migrate.ts all up",
-    "migration:down": "npx tsx src/scripts/migrate.ts all down",
-    "migration_prod:up": "node tsx dist/src/scripts/migrate.js all up",
-    "migration_prod:down": "node dist/src/scripts/migrate.js all down",
-    "seeds:up": "npx tsx src/scripts/seed.ts all up",
-    "seeds:down": "npx tsx src/scripts/seed.ts all down",
-    "seeds_prod:up": "node tsx dist/src/scripts/seed.js all up",
-    "seeds_prod:down": "node dist/src/scripts/seed.js all down"
+
+    "migration:up": "npx tsx src/scripts/migrate.ts migration common all up",
+    "migration:down": "npx tsx src/scripts/migrate.ts migration common all down",
+
+    "prod:migration:up": "node dist/src/scripts/migrate.js migration common all up",
+    "prod:migration:down": "node dist/src/scripts/migrate.js migration common all down",
+
+    "test:migration:up": "npx tsx src/scripts/migrate.ts migration test all up",
+    "test:migration:down": "npx tsx src/scripts/migrate.ts migration test all down",
+
+    "seeds:up": "npx tsx src/scripts/migrate.ts seed common all up",
+    "seeds:down": "npx tsx src/scripts/migrate.ts seed common all down",
+
+    "prod:seeds:up": "node dist/src/scripts/migrate.js seed common all up",
+    "prod:seeds:down": "node dist/src/scripts/migrate.js seed common all down",
+
+    "test:seeds:up": "npx tsx src/scripts/migrate.ts seed test all up",
+    "test:seeds:down": "npx tsx src/scripts/migrate.ts seed test all down"
   },
   "dependencies": {
     "@types/cors": "^2.8.19",
