@@ -1,5 +1,5 @@
-import { Seeder } from "../config/umzug.config";
-import { AssigneeRole } from "../domains/enums/assignee-role.enum";
+import { Seeder } from "../../config/umzug.config";
+import { AssigneeRole } from "../../domains/enums/assignee-role.enum";
 import { seedTechnicians } from "./004-create-technicians.seed";
 import { seedRequests } from "./005-create-requests.seed";
 

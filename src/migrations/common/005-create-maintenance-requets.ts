@@ -1,7 +1,7 @@
 import { DataTypes } from 'sequelize';
-import { Migration } from '../config/umzug.config';
-import { MaintenanceRequestPriority } from '../domains/enums/maintenance-request-priotiry.enum';
-import { MaintenanceRequestStatus } from '../domains/enums/maintenance-request-status.enum';
+import { Migration } from '../../config/umzug.config';
+import { MaintenanceRequestPriority } from '../../domains/enums/maintenance-request-priotiry.enum';
+import { MaintenanceRequestStatus } from '../../domains/enums/maintenance-request-status.enum';
 
 export const up: Migration = async ({ context: sequelize }) => {
 	await sequelize.getQueryInterface().createTable('MaintenanceRequests', {

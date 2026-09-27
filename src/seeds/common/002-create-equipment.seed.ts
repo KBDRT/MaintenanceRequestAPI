@@ -1,6 +1,6 @@
-import { Seeder } from "../config/umzug.config";
-import { EquipmentStatus } from "../domains/enums/equipment-status.enum";
-import { EquipmentType } from "../domains/enums/equipment-type.enum";
+import { Seeder } from "../../config/umzug.config";
+import { EquipmentStatus } from "../../domains/enums/equipment-status.enum";
+import { EquipmentType } from "../../domains/enums/equipment-type.enum";
 import { seedSites } from "./001-create-sites.seed";
 
 export const seedEquipment = [

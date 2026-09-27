@@ -1,6 +1,6 @@
 import { DataTypes } from 'sequelize';
-import { Migration } from '../config/umzug.config';
-import { AssigneeRole } from '../domains/enums/assignee-role.enum';
+import { Migration } from '../../config/umzug.config';
+import { AssigneeRole } from '../../domains/enums/assignee-role.enum';
 
 export const up: Migration = async ({ context: sequelize }) => {
 	await sequelize.getQueryInterface().createTable('RequestAssignees', {
