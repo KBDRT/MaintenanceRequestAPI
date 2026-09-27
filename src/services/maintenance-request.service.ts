@@ -105,7 +105,7 @@ export const updateRequestStatus = async(id: string, request: UpdateMaintenanceR
   };
 
   // транзакция с помощью cls-hooked
-  await dbConnection.transaction(async () => {
+  await sequelize.transaction(async () => {
     await repository.updateStatus(id, request.newStatus);
     await historyRepository.create(requestHistory);
   });
