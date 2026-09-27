@@ -1,4 +1,4 @@
-import { Seeder } from "../config/umzug.config";
+import { Seeder } from "../../config/umzug.config";
 
 export const seedTechnicians = [
    {

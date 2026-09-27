@@ -1,5 +1,5 @@
 import { DataTypes } from 'sequelize';
-import { Migration } from '../config/umzug.config';
+import { Migration } from '../../config/umzug.config';
 
 export const up: Migration = async ({ context: sequelize }) => {
 	await sequelize.getQueryInterface().createTable('EquipmentPassports', {

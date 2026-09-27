@@ -1,49 +1,60 @@
-import { migrator } from "../config/umzug.config";
+import { migrator, migratorTest, seeder, seederTest } from "../config/umzug.config";
 import { getLog } from "../lib/context";
+import { startMigrationSettingsSchema } from "../validators/schemas/common/start-migration-settings.schema";
 
-const mode = process.argv[2]; 
-const action = process.argv[3];
-const target = process.argv[4];
-
-const availableModes = ['all', 'target'];
-const availableActions = ['up', 'down'];
+const [type, env, mode, action, target] = process.argv.slice(2);
 
 (async () => {
 
-  if (!availableModes.includes(mode)) {
-    getLog().info("Incorrect mode. Only available: all | target");
+  const result = startMigrationSettingsSchema.safeParse({
+    type, env, mode, action, target,
+  });
+  if (!result.success) {
+    getLog().error("Incorrect parameters, use: migrate <migration|seed> <test|common> <all|target> <up|down> [target]");
     process.exit(1);
   }
 
-  if (mode == 'target' && !target) {
-    getLog().info("Empty migration name");
+  let umzug = undefined;
+  switch (true) {
+    case type === 'seed' && env === 'test':
+      umzug = seederTest;
+      break;
+    case type === 'seed' && env === 'common':
+      umzug = seeder;
+      break;
+    case type === 'migration' && env === 'test':
+      umzug = migratorTest;
+      break;
+    case type === 'migration' && env === 'common':
+      umzug = migrator;
+      break;
+  }
+
+  if (!umzug) {
+    getLog().error("Incorrect parameters");
     process.exit(1);
   }
 
-  if (!availableActions.includes(action)) {
-    getLog().info("Incorrect acctions. Only available: up | down");
-    process.exit(1);
+  getLog().info(`${type} starting... CONFIG: ${env} ${mode} ${action} ${target ?? ""}`);
+  switch (true) {
+    case mode === 'all' && action === 'up':
+      await umzug.up();
+      break;
+    case mode === 'all' && action === 'down':
+      await umzug.down({ to: 0 });
+      break;
+    case mode === 'target' && action === 'up':
+      await umzug.up({to: target});
+      break;
+    case mode === 'target' && action === 'down':
+      await umzug.down({to: target});
+      break;
   }
 
-  getLog().info(`Migrations start. CONFIG: ${mode} ${action} ${target ?? ""}`);
-
-  if (mode == "all" && action == "down") {
-    await migrator.down({ to: 0 });
-  } 
-  else if (mode == "all" && action == "up") {
-    await migrator.up();
-  }
-  
-  if (mode == "target" && action == "down") {
-    await migrator.down({ to: target });
-  } 
-  else if (mode == "target" && action == "up") {
-    await migrator.up({to: target});
-  }
-
-  getLog().info("Migrations done");
+  getLog().info(`${type} done.`);
   process.exit(0);
+
 })().catch(async(err) => {
-  getLog().error(`Migrations errors: ${err}`);
+  getLog().error(`${type} errors: ${err}`);
   process.exit(1);
 });
