@@ -23,5 +23,14 @@ export const envFileSchema = z.object({
       message: 'Ожидается размер вида 100b, 100kb, 1mb, 2gb',
     })
     .transform((s) => s.toLowerCase().replace(/\s+/g, ''))
-    .default("100kb")
+    .default("100kb"),
+  DB_HOST: z.string().min(1),
+  DB_PORT: z.coerce.number().min(4),
+  DB_NAME: z.string().min(1),
+  DB_USER: z.string().min(1),
+  DB_PASSWORD: z.string().min(1),
+  DB_POOL_MAX: z.coerce.number().min(1).default(10),
+  DB_POOL_MIN: z.coerce.number().default(0),
+  DB_POOL_ACQUIRE: z.coerce.number().default(30000),
+  DB_POOL_IDLE: z.coerce.number().default(10000),
 });
