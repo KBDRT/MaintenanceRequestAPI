@@ -3,7 +3,8 @@ import { AssigneeRole } from '../../../domains/enums/assignee-role.enum';
 
 const technicianSchema = z.object({
   technicianId: z.uuid(),
-  role: z.enum(AssigneeRole, "Допустимые значения роли специалиста: lead, member")
+  role: z.enum(AssigneeRole, "Допустимые значения роли специалиста: lead, member"),
+  hours: z.coerce.number()
 })
 
 export const setRequestTechniciansSchema = z

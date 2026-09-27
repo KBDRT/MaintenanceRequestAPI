@@ -12,7 +12,8 @@ export const setRequestTechnicians = async(requestId: string, technicians: SetRe
   if (techniciansWithLead.length !== 1)
     throw new BusinessRuleError("В бригаде должен быть только один человек с ролью lead");
 
-  await sequelize.transaction(async (t1) => {
+  // транзакция с помощью cls-hooked
+  await dbConnection.transaction(async (t1) => {
     await repository.deleteRequestTechnicians(requestId);
 
     await repository.addRequestTechnicians(requestId, technicians);
