@@ -1,8 +1,6 @@
 import { MaintenanceRequest } from "../domains/entities/maintenance-request.entity.js";
 import { IMaintenanceRequestRepository } from "../repositories/abstractions/maintenance-request-repository.interface.js";
-import { MaintenanceRequestRepository } from "../repositories/implementations/in-memory-maintenance-request.repository.js";
 import { IEquipmentRepository } from "../repositories/abstractions/equipment-repository.interface.js";
-import { EquipmentRepositoryMemory } from "../repositories/implementations/in-memory-equipment-repository.js";
 import { CreateMaintenanceRequestDto } from "../dto/maintenance-request/create-maintenance-request.dto.js";
 import { GetMaintenanceRequestsFilteredDto } from "../dto/maintenance-request/get-maintenance-requests-filtered.dto.js";
 import { UpdateMaintenanceRequestDto } from "../dto/maintenance-request/update-maintenance-request.dto.js";
@@ -17,9 +15,18 @@ import { CreateMaintenanceRequestMassDto } from "../dto/maintenance-request/crea
 import { ValidationError } from "../errors/validation.error.js";
 import { ErrorResponse } from "../dto/common/error.response.js";
 import { MassImportRequestsResult } from "../dto/types/mass-import-requests-result.type.js";
+import { EquipmentRepository } from "../repositories/implementations/db-equipment.repository.js";
+import { RequestRepository } from "../repositories/implementations/db-maintenance.repository.js";
+import { CreateRequestHistoryDto } from './../dto/maintenance-request/create-request-history.dto';import { randomUUID } from "node:crypto";
+import { dbConnection } from "../infrastructure/db-connection.js";
+import { IRequestHistoryRepository } from "../repositories/abstractions/request-history-repository.interface.js";
+import { RequestHistoryRepisotory } from "../repositories/implementations/db-request-history.repository.js";
+import { MaintenanceRequestStatus } from "../domains/enums/maintenance-request-status.enum.js";
+import { RequestStatusHistory } from "../domains/entities/request-status-history.entity.js";
 
-const repository: IMaintenanceRequestRepository = new MaintenanceRequestRepository();
-const equipmentRepostitory: IEquipmentRepository = new EquipmentRepositoryMemory();
+const repository: IMaintenanceRequestRepository = new RequestRepository();
+const equipmentRepostitory: IEquipmentRepository = new EquipmentRepository();
+const historyRepository: IRequestHistoryRepository = new RequestHistoryRepisotory();
 
 export const addRequest = async(maintenanceRequest: CreateMaintenanceRequestDto): Promise<MaintenanceRequest> => {
   const existingEquipment = await equipmentRepostitory.getById(maintenanceRequest.equipmentId);
@@ -34,7 +41,7 @@ export const addRequest = async(maintenanceRequest: CreateMaintenanceRequestDto)
 };
 
 export const getRequests = async(request: GetMaintenanceRequestsFilteredDto): Promise<GetMaintenanceRequestsDto> => {
- const serviceResult = new GetMaintenanceRequestsDto();
+  const serviceResult = new GetMaintenanceRequestsDto();
 
   const result = await repository.get(request);
   serviceResult.requests = result.requests;
@@ -84,8 +91,24 @@ export const updateRequestStatus = async(id: string, request: UpdateMaintenanceR
     throw new ConflictError("Изменение статуса запрещено", [{field: "newStatus", message: `Текущий статус ${savedRequest.status} не может быть изменен на ${request.newStatus}`}]);
   }
 
-  const updated = { ...savedRequest, status: request.newStatus};
-  await repository.update(updated);
+  if (request.newStatus == MaintenanceRequestStatus.in_progress && savedRequest.technicians?.length === 0) {
+    throw new ConflictError("Изменение статуса запрещено", [{field: "newStatus", message: `Текущий статус ${savedRequest.status} не может быть изменен на ${request.newStatus}, т.к. к заявке не назначены специалисты!`}]);
+  }
+
+  const requestHistory: CreateRequestHistoryDto = {
+    id: randomUUID(),
+    author: "",
+    commentary: "",
+    newStatus: request.newStatus,
+    oldStatus: savedRequest.status,
+    requestId: id
+  };
+
+  // транзакция с помощью cls-hooked
+  await dbConnection.transaction(async () => {
+    await repository.updateStatus(id, request.newStatus);
+    await historyRepository.create(requestHistory);
+  });
 }
 
 export const createRequestsMass = async(requests: CreateMaintenanceRequestDto[]): Promise<MassImportRequestsResult> => {
@@ -139,4 +162,9 @@ export const createRequestsMass = async(requests: CreateMaintenanceRequestDto[])
   // добавление валидных
   await repository.addMass(newRequests);
   return {imports: importsResult, totalError: totalError, totalSuccess: totalSuccess};
-};
+}
+
+
+export const getRequestStatusHistory = async(requestId: string): Promise<RequestStatusHistory[]> => {
+  return await historyRepository.getByRequestId(requestId);
+}

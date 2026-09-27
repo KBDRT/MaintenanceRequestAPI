@@ -1,0 +1,44 @@
+import { BelongsTo, Column, DataType, ForeignKey, Model, Table } from "sequelize-typescript";
+import { AssigneeRole } from "../enums/assignee-role.enum";
+import { MaintenanceRequest } from "./maintenance-request.model";
+import { Technician } from "./technician.model";
+
+@Table({
+  timestamps: false,
+})
+export class RequestAssignee extends Model {
+
+  @Column({
+    type: DataType.DECIMAL(6, 2),
+    allowNull: false,
+    defaultValue: 0
+  })
+  declare hours: number;
+
+  @Column({
+    type: DataType.ENUM(...Object.values(AssigneeRole)),
+    allowNull: false
+  })
+  declare role: AssigneeRole;
+
+  @Column({
+    type: DataType.UUID,
+    primaryKey: true
+  })
+  @ForeignKey(() => MaintenanceRequest)
+  declare requestId: string;
+
+  @Column({
+    type: DataType.UUID,
+    primaryKey: true
+  })
+  @ForeignKey(() => Technician)
+  declare technicianId : string;
+
+  @BelongsTo(() => MaintenanceRequest)
+  declare request: MaintenanceRequest;
+
+  @BelongsTo(() => Technician)
+  declare technician: Technician;
+}
+

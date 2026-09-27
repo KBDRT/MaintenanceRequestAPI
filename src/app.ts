@@ -13,6 +13,7 @@ import { corsSettings } from './config/cors.config.js';
 import cors from 'cors';
 import authRouter from './routes/auth.route.js';
 import cookieParser from 'cookie-parser';
+import reportsRouter from './routes/reports.route.js';
 
 const app = express();
 
@@ -33,6 +34,7 @@ app.use('/api/auth', authRouter);
 app.use('/api', rootRouter);
 app.use('/api/equipments', equipmentRouter);
 app.use('/api/requests', maintenanceRequestRouter);
+app.use('/api/', reportsRouter);
 
 app.use(endpointNotFound);
 

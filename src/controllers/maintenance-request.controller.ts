@@ -1,5 +1,6 @@
 import { Request, Response } from 'express';
 import * as service from './../services/maintenance-request.service.js';
+import * as assigneService from './../services/assignees.service.js';
 import { GetMaintenanceRequestsFilteredDto } from '../dto/maintenance-request/get-maintenance-requests-filtered.dto.js';
 
 export const getRequests = async (req: Request, res: Response): Promise<void> => {
@@ -46,4 +47,22 @@ export const createRequestMass = async (req: Request, res: Response): Promise<vo
 
   res.status(status)
     .json({data: result.imports, meta: {requestId: req.id, totalSuccess: result.totalSuccess, totalErrors: result.totalError }});
+};
+
+export const setRequestTechnicians = async (req: Request, res: Response): Promise<void> => {
+  const { id } = req.params;
+  await assigneService.setRequestTechnicians(id as string, req.body);
+  res.status(204).send();
+};
+
+export const deleteRequestTechnician = async (req: Request, res: Response): Promise<void> => {
+  const { id, userId } = req.params;
+  await assigneService.deleteRequestTechnician(id as string, userId as string);
+  res.status(204).send();
+};
+
+export const getRequestStatusHistory = async (req: Request, res: Response): Promise<void> => {
+  const { id } = req.params;
+  const result = await service.getRequestStatusHistory(id as string);
+  res.status(200).send(result);
 };
