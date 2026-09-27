@@ -26,11 +26,12 @@ export const addEquipment = async(equipmentInfo: CreateEquipmentDto): Promise<Eq
     throw new BusinessRuleError("Дата установки оборудования неккоретна", [{field: "installedAt", message: "Дата установки оборудования не может быть в будущем"}])
   }
 
-  // обработка на уровне БД UNIQUE с использованием paranoid + index
-  // const existing = await repository.getBySerialNumber(equipmentInfo.serialNumber);
-  // if (existing) {
-  //   // throw new ConflictError("Оборудование с указанным серийным номером уже существует!", [{field: "serialNumber", message: "Неуникальный серийный номер"}]);
-  // }
+  
+  // для обработки на уровне БД UNIQUE с использованием paranoid + index
+  const existing = await repository.getBySerialNumber(equipmentInfo.serialNumber);
+  if (existing) {
+    throw new ConflictError("Оборудование с указанным серийным номером уже существует!", [{field: "serialNumber", message: "Неуникальный серийный номер"}]);
+  }
   
   const equipment = Equipment.create(equipmentInfo);
   await repository.add(equipment);
