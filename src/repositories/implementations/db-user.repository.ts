@@ -1,8 +1,8 @@
-import { User } from "../../domains/entities/user.entity";
-import { AppError } from "../../errors/app.error";
-import { DatabaseError } from "../../errors/database.error";
-import { IUserRepository } from "../abstractions/user-repository.interface";
-import { User as Model } from './../../domains/models/user.model';
+import { User } from "../../domains/entities/user.entity.js";
+import { AppError } from "../../errors/app.error.js";
+import { DatabaseError } from "../../errors/database.error.js";
+import { IUserRepository } from "../abstractions/user-repository.interface.js";
+import { User as Model } from './../../domains/models/user.model.js';
 
 export class UserRepository implements IUserRepository{
 

@@ -1,19 +1,19 @@
 import bcrypt from 'bcrypt';
-import { IUserRepository } from '../repositories/abstractions/user-repository.interface';
-import { UserRepository } from '../repositories/implementations/db-user.repository';
-import { User } from '../domains/entities/user.entity';
+import { IUserRepository } from '../repositories/abstractions/user-repository.interface.js';
+import { UserRepository } from '../repositories/implementations/db-user.repository.js';
+import { User } from '../domains/entities/user.entity.js';
 import { randomUUID } from 'node:crypto';
-import { UserRole } from '../domains/enums/user-role.enum';
-import { RegisterUserRequest } from '../dto/auth/register-user-request.dto';
-import { RegisterUserResult } from '../dto/auth/register-user-result.dto';
+import { UserRole } from '../domains/enums/user-role.enum.js';
+import { RegisterUserRequest } from '../dto/auth/register-user-request.dto.js';
+import { RegisterUserResult } from '../dto/auth/register-user-result.dto.js';
 import jwt, { JwtPayload } from "jsonwebtoken";
-import authConfig from '../config/auth.config';
-import { LoginUserRequest } from '../dto/auth/login-user-request.dto';
-import { ConflictError } from '../errors/conflicts.error';
-import { AuthenticationError } from '../errors/authentication.error';
-import { GetTokensResult } from '../dto/auth/get-tokens-result.dto';
-import { TokenPayload } from '../dto/types/tokens-payload.type';
-import { AccessError } from '../errors/accesss.error';
+import authConfig from '../config/auth.config.js';
+import { LoginUserRequest } from '../dto/auth/login-user-request.dto.js';
+import { ConflictError } from '../errors/conflicts.error.js';
+import { AuthenticationError } from '../errors/authentication.error.js';
+import { GetTokensResult } from '../dto/auth/get-tokens-result.dto.js';
+import { TokenPayload } from '../dto/types/tokens-payload.type.js';
+import { AccessError } from '../errors/accesss.error.js';
 
 
 const SALT_ROUNDS = 10;

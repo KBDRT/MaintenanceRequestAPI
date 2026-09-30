@@ -2,6 +2,7 @@ import { BelongsToMany, Column, DataType, HasOne, Model, Table } from "sequelize
 import { MaintenanceRequest } from "./maintenance-request.model.js";
 import { RequestAssignee } from "./request-assignee.model.js";
 import { User } from "./user.model.js";
+import type { User as UserModel } from "./user.model.js";
 
 @Table({
   timestamps: false,
@@ -64,5 +65,5 @@ export class Technician extends Model {
   declare requests: MaintenanceRequest[];
 
   @HasOne(() => User)
-    declare user: User;
+    declare user: UserModel;
 }

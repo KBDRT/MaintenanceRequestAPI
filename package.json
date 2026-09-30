@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "tsx watch src/server.ts",
     "build": "tsc",
-    "start": "node dist/src/server.js",
+    "start": "node dist/server.js",
     "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js",
     "test:coverage": "jest --coverage",
     "migration:up": "npx tsx src/scripts/migrate.ts migration common all up",
@@ -39,7 +39,9 @@
     "sequelize": "^6.37.8",
     "sequelize-typescript": "^2.1.6",
     "umzug": "^3.8.3",
-    "zod": "^4.6.5"
+    "cls-hooked": "^4.2.2",
+    "zod": "^4.6.5",
+    "bcrypt": "^6.0.0"
   },
   "devDependencies": {
     "@types/bcrypt": "^6.0.0",
@@ -54,10 +56,7 @@
     "@types/pino-http": "^5.8.4",
     "@types/supertest": "^7.2.1",
     "@types/validator": "^13.15.10",
-    "bcrypt": "^6.0.0",
-    "cls-hooked": "^4.2.2",
     "jest": "^30.5.2",
-    "sequelize-cli": "^6.6.5",
     "supertest": "^7.2.2",
     "ts-jest": "^29.4.12",
     "ts-node": "^10.9.2",
