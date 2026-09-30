@@ -25,7 +25,9 @@ export const getRequest = async (req: Request, res: Response): Promise<void> => 
 
 export const updateRequest = async (req: Request, res: Response): Promise<void> => {
   const { id } = req.params;
-  await service.updateRequest(id as string, req.body);
+  const { technicianId, role } = res.locals.user;
+
+  await service.updateRequest(id as string, technicianId, role, req.body);
   res.status(204).send();
 };
 
@@ -37,7 +39,9 @@ export const deleteRequest = async (req: Request, res: Response): Promise<void> 
 
 export const updateRequestStatus = async (req: Request, res: Response): Promise<void> => {
   const { id } = req.params;
-  await service.updateRequestStatus(id as string, req.body);
+  const { technicianId, role } = res.locals.user;
+
+  await service.updateRequestStatus(id as string, technicianId, role, req.body);
   res.status(204).send();
 };
 

@@ -25,6 +25,6 @@ export function authenticate(req: Request, res: Response, next: NextFunction) {
     next();
   }
   catch (error) {
-    throw new AccessError("Невалидный токен");
+    throw new AuthenticationError("Невалидный токен");
   }
 }

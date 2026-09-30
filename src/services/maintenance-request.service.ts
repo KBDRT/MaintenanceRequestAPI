@@ -24,6 +24,8 @@ import { RequestHistoryRepisotory } from "../repositories/implementations/db-req
 import { MaintenanceRequestStatus } from "../domains/enums/maintenance-request-status.enum.js";
 import { RequestStatusHistory } from "../domains/entities/request-status-history.entity.js";
 import { sequelize } from "../infrastructure/sequelize.js";
+import { AccessError } from "../errors/accesss.error.js";
+import { UserRole } from "../domains/enums/user-role.enum.js";
 
 const repository: IMaintenanceRequestRepository = new RequestRepository();
 const equipmentRepostitory: IEquipmentRepository = new EquipmentRepository();
@@ -69,11 +71,16 @@ export const getRequest = async(id: string): Promise<MaintenanceRequest | undefi
   return existing;
 };
 
-export const updateRequest = async(id: string, updatedRequest: UpdateMaintenanceRequestDto): Promise<void> => {
+export const updateRequest = async(id: string, userId: string, role: UserRole, updatedRequest: UpdateMaintenanceRequestDto): Promise<void> => {
   const savedRequest = await repository.getById(id);
   if (!savedRequest) {
     throw new NotFoundError("Заявки не найдено", [{field: "id", message: `Заявки с id = ${id} не существует`}]);
   }
+  
+  if (role != UserRole.admin && !savedRequest.technicians?.some(x => x.id == userId)) {
+    throw new AccessError("У вас недостаточно прав на данную операцию");
+  }
+
 
   if (savedRequest) {
     const updated = { ...savedRequest, ...updatedRequest, updatedAt: new Date().toISOString()};
@@ -81,10 +88,14 @@ export const updateRequest = async(id: string, updatedRequest: UpdateMaintenance
   }
 };
 
-export const updateRequestStatus = async(id: string, request: UpdateMaintenanceRequestStatusDto): Promise<void> => {
+export const updateRequestStatus = async(id: string, userId: string, role: UserRole, request: UpdateMaintenanceRequestStatusDto): Promise<void> => {
   const savedRequest = await repository.getById(id);
   if (!savedRequest) {
     throw new NotFoundError("Заявки не найдено", [{field: "id", message: `Заявки с id = ${id} не существует`}]);
+  }
+
+  if (role != UserRole.admin && !savedRequest.technicians?.some(x => x.id == userId)) {
+    throw new AccessError("У вас недостаточно прав на данную операцию");
   }
 
   const validNextStatuses = requestAllowStatusChange[savedRequest.status];
