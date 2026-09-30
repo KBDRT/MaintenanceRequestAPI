@@ -6,12 +6,15 @@ import { randomUUID } from 'node:crypto';
 import { UserRole } from '../domains/enums/user-role.enum';
 import { RegisterUserRequest } from '../dto/auth/register-user-request.dto';
 import { RegisterUserResult } from '../dto/auth/register-user-result.dto';
-import jwt from "jsonwebtoken";
+import jwt, { JwtPayload } from "jsonwebtoken";
 import authConfig from '../config/auth.config';
 import { LoginUserRequest } from '../dto/auth/login-user-request.dto';
 import { ConflictError } from '../errors/conflicts.error';
 import { AuthenticationError } from '../errors/authentication.error';
-import { LoginUserResult } from '../dto/auth/login-user-result.dto';
+import { GetTokensResult } from '../dto/auth/get-tokens-result.dto';
+import { TokenPayload } from '../dto/types/tokens-payload.type';
+import { AccessError } from '../errors/accesss.error';
+
 
 const SALT_ROUNDS = 10;
 
@@ -42,7 +45,7 @@ export const registerUser = async(request: RegisterUserRequest): Promise<Registe
   return result;
 }
 
-export const loginUser = async(request: LoginUserRequest): Promise<LoginUserResult> => {
+export const loginUser = async(request: LoginUserRequest): Promise<GetTokensResult> => {
   const user = await repository.getByLogin(request.login);
   if (!user) {
     throw new AuthenticationError("Неверные данные для входа");
@@ -53,14 +56,36 @@ export const loginUser = async(request: LoginUserRequest): Promise<LoginUserResu
     throw new AuthenticationError("Неверные данные для входа");
   }
 
-  const result = new LoginUserResult();
+  return generateTokens({...user});
+}
+
+
+export const refreshToken = async(token: string): Promise<GetTokensResult> => { 
+  try {
+    const decoded = jwt.verify(token, authConfig.secretKey) as TokenPayload;
+
+    const user = await repository.getByLogin(decoded.login as string);
+    if (!user) {
+      throw new AuthenticationError("Неверные данные");
+    }
+
+    return generateTokens({...user});
+  }
+  catch {
+    throw new AccessError("Невалидный токен");
+  }
+}
+
+
+export const generateTokens = async(payload: TokenPayload): Promise<GetTokensResult> => {  
+  const result = new GetTokensResult();
 
   result.accessToken = jwt.sign(
     {
-      userId: user.id,
-      role: user.role,
-      login: user.login,
-      technicianId: user.technicianId
+      userId: payload.id,
+      role: payload.role,
+      login: payload.login,
+      technicianId: payload.technicianId
     }, 
     authConfig.secretKey, 
     { expiresIn: "15m" }
@@ -68,7 +93,8 @@ export const loginUser = async(request: LoginUserRequest): Promise<LoginUserResu
 
   result.refreshToken = jwt.sign(
     {
-      userId: user.id
+      userId: payload.id,
+      login: payload.login,
     }, 
     authConfig.secretKey, 
     { expiresIn: "7d" }
@@ -76,4 +102,3 @@ export const loginUser = async(request: LoginUserRequest): Promise<LoginUserResu
 
   return result;
 }
-

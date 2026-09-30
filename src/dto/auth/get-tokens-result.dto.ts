@@ -1,4 +1,4 @@
-export class LoginUserResult {
+export class GetTokensResult {
   accessToken!: string;
   refreshToken!: string;
 }
