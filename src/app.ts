@@ -31,7 +31,7 @@ app.use(cookieParser());
 app.use(setRequestId);
 
 app.use('/api/auth', authRouter);
-app.use('/api', rootRouter);
+app.use('/', rootRouter);
 app.use('/api/equipments', equipmentRouter);
 app.use('/api/requests', maintenanceRequestRouter);
 app.use('/api/', reportsRouter);

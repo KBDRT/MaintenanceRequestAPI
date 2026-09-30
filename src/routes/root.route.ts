@@ -1,8 +1,10 @@
 import { Router } from "express";
-import { getHealth } from "../controllers/root.controller.js";
+import { getFullHealth, getHealth, who } from "../controllers/root.controller.js";
 
 const rootRouter = Router();
 
-rootRouter.get("/health", getHealth);
+rootRouter.get("/api/health", getFullHealth);
+rootRouter.get("/healthz", getHealth);
+rootRouter.get("/api/who", who);
 
 export default rootRouter;

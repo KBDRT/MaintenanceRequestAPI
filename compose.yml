@@ -1,31 +1,35 @@
+name: maintenance_requests
+
 services:
-  # nginx:
-  #   image: nginx:1.30-alpine
-  #   ports:
-  #     - "80:80"
-  #     - "443:443"
-  #   volumes:
-  #     - ./nginx/conf.d:/etc/nginx/conf.d:ro
-  #     - ./nginx/errors:/etc/nginx/errors:ro
-  #     - ./nginx/certs:/etc/nginx/certs:ro
-  #     - ./frontend/dist:/usr/share/nginx/html:ro
-  #   depends_on:
-  #     app:
-  #       condition: service_healthy
-  #   restart: unless-stopped
+  nginx:
+    container_name: nginx
+    image: nginx:1.30-alpine
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./deploy/nginx/app.conf:/etc/nginx/conf.d/app.conf:ro
+      - /dev/null:/etc/nginx/conf.d/default.conf
+      # - ./nginx/errors:/etc/nginx/errors:ro
+      # - ./nginx/certs:/etc/nginx/certs:ro
+      # - ./frontend/dist:/usr/share/nginx/html:ro
+    depends_on:
+      app:
+        condition: service_healthy
+    restart: unless-stopped
 
   app:
+    container_name: app
     build: .
     init: true                    
     environment:
       NODE_ENV: production
       PORT: "3000"
-      # DATABASE_URL: postgres://${DB_USER}:${DB_PASSWORD}@db:5432/${DB_NAME}
     env_file:
       - ./.env
     healthcheck:
       test: ["CMD", "node", "-e",
-             "fetch('http://127.0.0.1:3000/api/health').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"]
+             "fetch('http://127.0.0.1:3000/healthz').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"]
       interval: 10s
       timeout: 3s
       retries: 3
@@ -37,6 +41,7 @@ services:
     restart: unless-stopped
 
   db:
+    container_name: db
     image: postgres:18-alpine
     environment:
       POSTGRES_USER: ${DB_USER}
