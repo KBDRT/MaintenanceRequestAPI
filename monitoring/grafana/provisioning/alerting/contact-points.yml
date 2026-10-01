@@ -1,0 +1,12 @@
+apiVersion: 1
+contactPoints:
+    - orgId: 1
+      name: API_WEBHOOK
+      receivers:
+        - uid: dfzwxjdwaocn5c
+          type: webhook
+          settings:
+            httpMethod: POST
+            password: admin
+            url: http://app:3000/api/monitoring
+          disableResolveMessage: false
