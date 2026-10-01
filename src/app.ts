@@ -17,6 +17,8 @@ import reportsRouter from './routes/reports.route.js';
 
 const app = express();
 
+app.set('trust proxy', 1);
+
 app.use(httpLogger);
 
 app.use(helmet());
