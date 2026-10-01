@@ -14,10 +14,13 @@ import cors from 'cors';
 import authRouter from './routes/auth.route.js';
 import cookieParser from 'cookie-parser';
 import reportsRouter from './routes/reports.route.js';
+import { saveMetrics } from './middlewares/metrics.middleware.js';
 
 const app = express();
 
 app.use(httpLogger);
+
+app.use(saveMetrics);
 
 app.use(helmet());
 app.use(cors(corsSettings));

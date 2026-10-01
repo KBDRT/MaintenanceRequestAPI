@@ -10,7 +10,7 @@ export const up: Migration = async ({ context: sequelize }) => {
     createdAt: { type: DataTypes.DATE, allowNull: false, defaultValue: DataTypes.NOW },
     route: { type: DataTypes.STRING(255), allowNull: false },
     method: { type: DataTypes.STRING(10), allowNull: false },
-    statucCode: { type: DataTypes.INTEGER, allowNull: false },
+    statusCode: { type: DataTypes.INTEGER, allowNull: false },
     durationMs: { type: DataTypes.DOUBLE, allowNull: false },
   });
 };
