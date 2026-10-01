@@ -7,7 +7,7 @@ const rootRouter = Router();
 
 rootRouter.get("/api/health", getFullHealth);
 rootRouter.get("/healthz", getHealth);
-rootRouter.post("/api/monitoring", monitoringAlert);
+rootRouter.post("/monitoring", monitoringAlert);
 
 rootRouter.route('/api/test5xx')
   .get(authenticate, checkAccess([]), response5xx)
