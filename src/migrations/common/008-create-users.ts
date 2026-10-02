@@ -6,7 +6,7 @@ import { UserRole } from '../../domains/enums/user-role.enum.js';
 export const up: Migration = async ({ context: sequelize }) => {
   await sequelize.getQueryInterface().createTable('Users', {
     id: { type: DataTypes.UUID, primaryKey: true, allowNull: false },
-    login: { type: DataTypes.STRING(255), allowNull: false },
+    login: { type: DataTypes.STRING(255), allowNull: false, unique: true },
     password: { type: DataTypes.STRING(100), allowNull: false },
     role: { type: DataTypes.ENUM(...Object.values(UserRole)), allowNull: false, defaultValue: UserRole.viewer },
     createdAt: { type: DataTypes.DATE, allowNull: false, defaultValue: DataTypes.NOW },

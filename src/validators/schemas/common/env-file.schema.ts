@@ -12,8 +12,11 @@ export const envFileSchema = z.object({
   WEATHER_RULE_MIN_TEMPERATURE: z.coerce.number().default(2.5),
   RATE_LIMIT_WINDOW_MS: z.coerce.number().default(60000),
   RATE_LIMIT_MAX_REQUESTS: z.coerce.number().default(100),
-  JWT_SECRET_KEY: z.string().min(5).default("SECRET"),
-  JWT_MAX_AGE_MS: z.coerce.number().min(60).default(60 * 60 * 1000),
+  JWT_REFRESH_TOKEN_KEY: z.string().min(5).default("REF_SECRET_KEY"),
+  JWT_ACCESS_TOKEN_KEY: z.string().min(5).default("ACC_SECRET_KEY"),
+  JWT_REFRESH_TOKEN_MAX_AGE_MS: z.coerce.number().min(1000).default(604800000),
+  JWT_ACCESS_TOKEN_MAX_AGE_S: z.coerce.number().min(60).default(900),
+  JWT_SALT_ROUNDS: z.coerce.number().min(1).default(10),
   LOG_LEVEL: z.enum(["fatal", "error", "warn", "info", "debug", "trace", "silent"]).default('info'),
   CORS_ORIGINS: z.string()
     .transform((s) => s.split(',').map((o) => o.trim()).filter(Boolean))
@@ -34,3 +37,4 @@ export const envFileSchema = z.object({
   DB_POOL_ACQUIRE: z.coerce.number().default(30000),
   DB_POOL_IDLE: z.coerce.number().default(10000),
 });
+

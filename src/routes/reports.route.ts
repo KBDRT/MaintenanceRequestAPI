@@ -8,10 +8,10 @@ import { authenticate } from '../middlewares/auth.middleware.js';
 const reportsRouter = Router();
 
 reportsRouter.route('/sites/:id/summary')
-  .get(authenticate, validate({params: idRequestSchema}), getSiteSummaryReport)
+  .get(validate({params: idRequestSchema}), getSiteSummaryReport)
 
 reportsRouter.route('/reports/equipment-load')
-  .get(authenticate, validate({query: getEquipmentLoadSchema}), getEquipmentAnalyticsReport)
+  .get(validate({query: getEquipmentLoadSchema}), getEquipmentAnalyticsReport)
 
 export default reportsRouter;
 

@@ -5,14 +5,11 @@ import { checkAccess } from "../middlewares/access.middleware.js";
 
 const rootRouter = Router();
 
-rootRouter.get("/api/health", getFullHealth);
-rootRouter.get("/healthz", getHealth);
+rootRouter.get("/api/health/ready", getFullHealth);
+rootRouter.get("/health/live", getHealth);
 rootRouter.post("/monitoring", monitoringAlert);
 
-rootRouter.route('/api/test5xx')
+rootRouter.route('/api/test500')
   .get(authenticate, checkAccess([]), response5xx)
 
-
-
-  
 export default rootRouter;

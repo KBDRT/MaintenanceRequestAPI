@@ -15,9 +15,6 @@ import { GetTokensResult } from '../dto/auth/get-tokens-result.dto.js';
 import { TokenPayload } from '../dto/types/tokens-payload.type.js';
 import { AccessError } from '../errors/accesss.error.js';
 
-
-const SALT_ROUNDS = 10;
-
 const repository: IUserRepository = new UserRepository();
 
 export const registerUser = async(request: RegisterUserRequest): Promise<RegisterUserResult> => {
@@ -27,7 +24,7 @@ export const registerUser = async(request: RegisterUserRequest): Promise<Registe
     throw new ConflictError("Пользователь с таким логином уже существует!", [{field: "login", message: "Неуникальный логин пользователя"}]);
   }
 
-  const hashedPassword = await bcrypt.hash(request.password, SALT_ROUNDS);
+  const hashedPassword = await bcrypt.hash(request.password, authConfig.saltRounds);
 
   const newUser = new User();
   newUser.id = randomUUID();
@@ -62,7 +59,7 @@ export const loginUser = async(request: LoginUserRequest): Promise<GetTokensResu
 
 export const refreshToken = async(token: string): Promise<GetTokensResult> => { 
   try {
-    const decoded = jwt.verify(token, authConfig.secretKey) as TokenPayload;
+    const decoded = jwt.verify(token, authConfig.refreshToken.secretKey) as TokenPayload;
 
     const user = await repository.getByLogin(decoded.login as string);
     if (!user) {
@@ -87,8 +84,8 @@ export const generateTokens = async(payload: TokenPayload): Promise<GetTokensRes
       login: payload.login,
       technicianId: payload.technicianId
     }, 
-    authConfig.secretKey, 
-    { expiresIn: "15m" }
+    authConfig.accessToken.secretKey, 
+    { expiresIn: authConfig.accessToken.maxAge / 1000 }
   );
 
   result.refreshToken = jwt.sign(
@@ -96,8 +93,8 @@ export const generateTokens = async(payload: TokenPayload): Promise<GetTokensRes
       userId: payload.id,
       login: payload.login,
     }, 
-    authConfig.secretKey, 
-    { expiresIn: "7d" }
+    authConfig.refreshToken.secretKey, 
+    { expiresIn: authConfig.refreshToken.maxAge }
   );
 
   return result;
