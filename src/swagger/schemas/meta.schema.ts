@@ -1,0 +1,23 @@
+/**
+ * @openapi
+ * components:
+ *   schemas:
+ *     Meta:
+ *       type: object
+ *       description: Метаданные при получении списка
+ *       required:
+ *         - total
+ *         - page
+ *         - limit
+ *       properties:
+ *         total:
+ *           type: integer
+ *           description: Всего элементов
+ *         page:
+ *           type: integer
+ *           description: Страница
+ *         limit:
+ *           type: integer
+ *           description: Элементов на странице
+ */
+export {};

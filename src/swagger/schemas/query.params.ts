@@ -1,0 +1,64 @@
+/**
+ * @openapi
+ * components:
+ *   parameters:
+ *     paginationPage:
+ *       in: query
+ *       name: page
+ *       required: false
+ *       description: Номер страницы
+ *       schema:
+ *         type: integer
+ *         minimum: 1
+ *         default: 1
+ *
+ *     paginationLimit:
+ *       in: query
+ *       name: limit
+ *       required: false
+ *       description: Количество элементов на странице
+ *       schema:
+ *         type: integer
+ *         maximum: 1000
+ *         default: 20
+ *
+ *     sort:
+ *       in: query
+ *       name: sort
+ *       required: false
+ *       description: Поля сортировки
+ *       schema:
+ *         type: array
+ *         items:
+ *           type: string
+ *
+ *     sortDirection:
+ *       in: query
+ *       name: sortDirection
+ *       required: false
+ *       description: Направление сортировки
+ *       schema:
+ *         type: array
+ *         items:
+ *           type: string
+ *           enum: [ASC, DESC]
+ *
+ *     dateFrom:
+ *       in: query
+ *       name: dateFrom
+ *       required: false
+ *       description: Дата начала периода
+ *       schema:
+ *         type: string
+ *         format: date
+ *
+ *     dateTo:
+ *       in: query
+ *       name: dateTo
+ *       required: false
+ *       description: Дата окончания периода
+ *       schema:
+ *         type: string
+ *         format: date
+ */
+export {};
