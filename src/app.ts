@@ -15,6 +15,9 @@ import authRouter from './routes/auth.route.js';
 import cookieParser from 'cookie-parser';
 import reportsRouter from './routes/reports.route.js';
 import { saveMetrics } from './middlewares/metrics.middleware.js';
+import swaggerUi from 'swagger-ui-express';
+import { options, specs } from './swagger/swagger.config.js';
+import swaggerJSDoc from 'swagger-jsdoc';
 
 const app = express();
 
@@ -32,6 +35,24 @@ app.use(express.json({limit: appConfig.jsonLimit}));
 app.use(cookieParser()); 
 
 app.use(setRequestId);
+
+app.get('/api-docs.json', (_req, res) => {
+  const spec = swaggerJSDoc(options);
+  res.setHeader('Content-Type', 'application/json');
+  res.send(spec);
+});
+
+
+app.use(
+  '/api-docs',
+  swaggerUi.serve,
+  swaggerUi.setup(undefined, {
+    swaggerOptions: {
+      url: '/api-docs.json',
+    },
+  }),
+);
+
 
 app.use('/api/auth', authRouter);
 app.use('/', rootRouter);

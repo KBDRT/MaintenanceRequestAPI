@@ -32,7 +32,7 @@ export const login = async (req: Request, res: Response): Promise<void> => {
 
 export const refresh = async (req: Request, res: Response): Promise<void> => {
   const tokenFromCookie = req.cookies.refreshToken;
-  if (!tokenFromCookie) res.status(401).send("Нет Refresh Token");
+  if (!tokenFromCookie) throw new AuthenticationError("Отсутствует refresh токен");
 
   const result = await refreshToken(tokenFromCookie);
 
