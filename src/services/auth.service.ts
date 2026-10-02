@@ -59,7 +59,7 @@ export const loginUser = async(request: LoginUserRequest): Promise<GetTokensResu
 
 export const refreshToken = async(token: string): Promise<GetTokensResult> => { 
   try {
-    const decoded = jwt.verify(token, authConfig.refreshSecretKey) as TokenPayload;
+    const decoded = jwt.verify(token, authConfig.refreshToken.secretKey) as TokenPayload;
 
     const user = await repository.getByLogin(decoded.login as string);
     if (!user) {
@@ -84,8 +84,8 @@ export const generateTokens = async(payload: TokenPayload): Promise<GetTokensRes
       login: payload.login,
       technicianId: payload.technicianId
     }, 
-    authConfig.accessSecretKey, 
-    { expiresIn: "15m" }
+    authConfig.accessToken.secretKey, 
+    { expiresIn: authConfig.accessToken.maxAge / 1000 }
   );
 
   result.refreshToken = jwt.sign(
@@ -93,8 +93,8 @@ export const generateTokens = async(payload: TokenPayload): Promise<GetTokensRes
       userId: payload.id,
       login: payload.login,
     }, 
-    authConfig.refreshSecretKey, 
-    { expiresIn: "7d" }
+    authConfig.refreshToken.secretKey, 
+    { expiresIn: authConfig.refreshToken.maxAge }
   );
 
   return result;

@@ -19,7 +19,7 @@ export function authenticate(req: Request, res: Response, next: NextFunction) {
   }
 
   try {
-    const decoded = jwt.verify(token, authConfig.accessSecretKey);
+    const decoded = jwt.verify(token, authConfig.accessToken.secretKey);
     res.locals.user = decoded;
     next();
   }
