@@ -18,28 +18,28 @@ import { UserRole } from '../domains/enums/user-role.enum.js';
 const maintenanceRequestRouter = Router();
 
 maintenanceRequestRouter.route('/')
-  .get(authenticate, parseFilterQuery, validateCleanQuery(filterRequestSchema), getRequests)
-  .post(authenticate, checkAccess([UserRole.technician]), validate({body: createRequestSchema}), createRequest);
+  .get(parseFilterQuery, validateCleanQuery(filterRequestSchema), getRequests)
+  .post(checkAccess([UserRole.technician]), validate({body: createRequestSchema}), createRequest);
 
 maintenanceRequestRouter.route('/:id')
-  .get(authenticate, validate({params: idRequestSchema}), getRequest)
-  .patch(authenticate, checkAccess([UserRole.technician]), validate({params: idRequestSchema, body: updateRequestSchema}), updateRequest)
-  .delete(authenticate, checkAccess([]), validate({params: idRequestSchema}), deleteRequest);
+  .get(validate({params: idRequestSchema}), getRequest)
+  .patch(checkAccess([UserRole.technician]), validate({params: idRequestSchema, body: updateRequestSchema}), updateRequest)
+  .delete(checkAccess([]), validate({params: idRequestSchema}), deleteRequest);
 
 maintenanceRequestRouter.route('/:id/status')
-  .patch(authenticate, checkAccess([UserRole.technician]), validate({params: idRequestSchema, body: updateRequestStatusSchema}), updateRequestStatus);
+  .patch(checkAccess([UserRole.technician]), validate({params: idRequestSchema, body: updateRequestStatusSchema}), updateRequestStatus);
 
 maintenanceRequestRouter.route('/import')
-  .post(authenticate, checkAccess([UserRole.technician]), validate({body: massImportRequestsSchema}), createRequestMass);
+  .post(checkAccess([UserRole.technician]), validate({body: massImportRequestsSchema}), createRequestMass);
 
 maintenanceRequestRouter.route('/:id/assignees')
-  .post(authenticate, checkAccess([]), validate({params: idRequestSchema, body: setRequestTechniciansSchema}), setRequestTechnicians);
+  .post(checkAccess([]), validate({params: idRequestSchema, body: setRequestTechniciansSchema}), setRequestTechnicians);
 
 maintenanceRequestRouter.route('/:id/assignees/:userId')
-  .delete(authenticate, checkAccess([]), validate({params: deleteAssigneesSchema}), deleteRequestTechnician);
+  .delete(checkAccess([]), validate({params: deleteAssigneesSchema}), deleteRequestTechnician);
 
 maintenanceRequestRouter.route('/:id/history')
-  .get(authenticate, validate({params: idRequestSchema}), getRequestStatusHistory);
+  .get(validate({params: idRequestSchema}), getRequestStatusHistory);
 
 export default maintenanceRequestRouter;
 

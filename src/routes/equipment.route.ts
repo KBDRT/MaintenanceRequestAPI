@@ -22,18 +22,18 @@ import { checkAccess } from '../middlewares/access.middleware.js';
 const equipmentRouter = Router();
 
 equipmentRouter.route('/')
-      .get(authenticate, parseFilterQuery, validateCleanQuery(filterEquipmentSchema), getEquipments)
-      .post(authenticate, checkAccess([]), validate({body: createEquipmentRequestSchema}), createEquipment);
+      .get(parseFilterQuery, validateCleanQuery(filterEquipmentSchema), getEquipments)
+      .post(checkAccess([]), validate({body: createEquipmentRequestSchema}), createEquipment);
 
 equipmentRouter.route('/:id')
-      .get(authenticate, validate({params: idRequestSchema}), getEquipment)
-      .patch(authenticate, checkAccess([]), validate({params: idRequestSchema, body: updateEquipmentRequestSchema}), updateEquipment)
-      .delete(authenticate, checkAccess([]), validate({params: idRequestSchema}), deleteEquipment);
+      .get(validate({params: idRequestSchema}), getEquipment)
+      .patch(checkAccess([]), validate({params: idRequestSchema, body: updateEquipmentRequestSchema}), updateEquipment)
+      .delete(checkAccess([]), validate({params: idRequestSchema}), deleteEquipment);
 
 equipmentRouter.route('/:id/requests')
-      .get(authenticate, validate({params: idRequestSchema}), parseFilterQuery, validateCleanQuery(getEquipmentRequestsSchema), getEquipmentRequests);
+      .get(validate({params: idRequestSchema}), parseFilterQuery, validateCleanQuery(getEquipmentRequestsSchema), getEquipmentRequests);
 
 equipmentRouter.route('/:id/weather')
-      .get(authenticate, validate({params: idRequestSchema}), getEquipmentWeather);
+      .get(validate({params: idRequestSchema}), getEquipmentWeather);
 
 export default equipmentRouter;

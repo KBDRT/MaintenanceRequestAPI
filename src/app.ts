@@ -18,6 +18,7 @@ import { saveMetrics } from './middlewares/metrics.middleware.js';
 import swaggerUi from 'swagger-ui-express';
 import { options, specs } from './swagger/swagger.config.js';
 import swaggerJSDoc from 'swagger-jsdoc';
+import { authenticate } from './middlewares/auth.middleware.js';
 
 const app = express();
 
@@ -56,9 +57,9 @@ app.use(
 
 app.use('/api/auth', authRouter);
 app.use('/', rootRouter);
-app.use('/api/equipments', equipmentRouter);
-app.use('/api/requests', maintenanceRequestRouter);
-app.use('/api/', reportsRouter);
+app.use('/api/equipments', authenticate, equipmentRouter);
+app.use('/api/requests', authenticate, maintenanceRequestRouter);
+app.use('/api/', authenticate, reportsRouter);
 
 app.use(endpointNotFound);
 
