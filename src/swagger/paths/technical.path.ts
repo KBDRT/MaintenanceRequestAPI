@@ -1,0 +1,84 @@
+/**
+ * @openapi
+ * /api/health/ready:
+ *   get:
+ *     tags:
+ *       - Технические
+ *     summary: Жизнеспособность процесса
+ *     security: []
+ *     responses:
+ *       200:
+ *         description: Доступно
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/HealthStatus'
+ *       503:
+ *         description: Проблемы с базой данных
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/HealthStatusError' 
+ *                        
+ * 
+ * /api/health/live:
+ *   get:
+ *     tags:
+ *       - Технические
+ *     summary: Жизнеспособность процесса
+ *     security: []
+ *     responses:
+ *       200:
+ *         description: Сервис доступен
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               required:
+ *                 - status
+ *               properties:
+ *                 status:
+ *                   type: string
+ *                   default: "ok" 
+ *
+ * /api/test500:
+ *   post:
+ *     tags:
+ *       - Технические
+ *     summary: Получить 500 ответ для тестирования
+ *     description: Обновление access-токена по refresh токену из cookie
+ *     security: [{ bearerAuth: [] }]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/LoginUserRequest'
+ *     responses:
+ *       401:
+ *         description: Не авторизован
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Error'
+ *             example:
+ *                error:
+ *                 code: AUTHENTICATION_ERROR
+ *                 message: Невалидный токен
+ *                 requestId: 457dab4b-cc25-46e1-b071-8481e909111f
+ *       403:
+ *         description: Нет прав 
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Error'
+ *             example:
+ *                error:
+ *                 code: ACCESS_ERROR
+ *                 message: Нет прав
+ *                 requestId: 457dab4b-cc25-46e1-b071-8481e909111f
+ *       500:
+ *         description: Получен 500 для тестирования
+ *
+ */
+export {};

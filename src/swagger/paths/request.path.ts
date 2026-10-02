@@ -25,6 +25,23 @@
  *           application/json:
  *             schema:
  *               $ref: '#/components/schemas/MaintenanceRequestListResponse'
+ *       400:
+ *         description: Ошибка валидации
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Error'
+ *       401:
+ *         description: Не авторизован (пустой или невалидный acess токен)
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Error'
+ *             example:
+ *                error:
+ *                 code: AUTHENTICATION_ERROR
+ *                 message: Токен не предоставлен
+ *                 requestId: 457dab4b-cc25-46e1-b071-8481e909111f
  *   post:
  *     tags:
  *       - Заявки
@@ -44,6 +61,45 @@
  *           application/json:
  *             schema:
  *               $ref: '#/components/schemas/MaintenanceRequest'
+ *       400:
+ *         description: Ошибка валидации
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Error'
+ *       401:
+ *         description: Не авторизован (пустой или невалидный acess токен)
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Error'
+ *             example:
+ *                error:
+ *                 code: AUTHENTICATION_ERROR
+ *                 message: Токен не предоставлен
+ *                 requestId: 457dab4b-cc25-46e1-b071-8481e909111f
+ *       403:
+ *         description: Нет доступа не хватает прав для операции
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Error'
+ *             example:
+ *                error:
+ *                 code: ACCESS_ERROR
+ *                 message: Нет доступа
+ *                 requestId: 457dab4b-cc25-46e1-b071-8481e909111f
+ *       404:
+ *         description: Оборудование не найдено
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Error'
+ *             example:
+ *                error:
+ *                 code: NOT_FOUND
+ *                 message: Не найдено
+ *                 requestId: 457dab4b-cc25-46e1-b071-8481e909111f
  *
  * /api/requests/{id}:
  *   get:
@@ -61,6 +117,29 @@
  *           application/json:
  *             schema:
  *               $ref: '#/components/schemas/MaintenanceRequest'
+ *       401:
+ *         description: Не авторизован (пустой или невалидный acess токен)
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Error'
+ *             example:
+ *                error:
+ *                 code: AUTHENTICATION_ERROR
+ *                 message: Токен не предоставлен
+ *                 requestId: 457dab4b-cc25-46e1-b071-8481e909111f
+ *       404:
+ *         description: Заявка не найдена
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Error'
+ *             example:
+ *                error:
+ *                 code: NOT_FOUND
+ *                 message: Не найдено
+ *                 requestId: 457dab4b-cc25-46e1-b071-8481e909111f
+ * 
  *   patch:
  *     tags:
  *       - Заявки
@@ -89,6 +168,45 @@
  *     responses:
  *       204:
  *         description: Заявка удалена
+ *       400:
+ *         description: Ошибка валидации
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Error'
+ *       401:
+ *         description: Не авторизован (пустой или невалидный acess токен)
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Error'
+ *             example:
+ *                error:
+ *                 code: AUTHENTICATION_ERROR
+ *                 message: Токен не предоставлен
+ *                 requestId: 457dab4b-cc25-46e1-b071-8481e909111f
+ *       403:
+ *         description: Нет доступа не хватает прав для операции
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Error'
+ *             example:
+ *                error:
+ *                 code: ACCESS_ERROR
+ *                 message: Нет доступа
+ *                 requestId: 457dab4b-cc25-46e1-b071-8481e909111f
+ *       404:
+ *         description: Заявка не найдена
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Error'
+ *             example:
+ *                error:
+ *                 code: NOT_FOUND
+ *                 message: Не найдено
+ *                 requestId: 457dab4b-cc25-46e1-b071-8481e909111f
  *
  * /api/requests/{id}/status:
  *   patch:
@@ -108,6 +226,56 @@
  *     responses:
  *       204:
  *         description: Статус заявки обновлён
+ *       400:
+ *         description: Ошибка валидации
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Error'
+ *       401:
+ *         description: Не авторизован (пустой или невалидный acess токен)
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Error'
+ *             example:
+ *                error:
+ *                 code: AUTHENTICATION_ERROR
+ *                 message: Токен не предоставлен
+ *                 requestId: 457dab4b-cc25-46e1-b071-8481e909111f
+ *       403:
+ *         description: Нет доступа не хватает прав для операции
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Error'
+ *             example:
+ *                error:
+ *                 code: ACCESS_ERROR
+ *                 message: Нет доступа
+ *                 requestId: 457dab4b-cc25-46e1-b071-8481e909111f
+ *       404:
+ *         description: Заявка не найдена
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Error'
+ *             example:
+ *                error:
+ *                 code: NOT_FOUND
+ *                 message: Не найдено
+ *                 requestId: 457dab4b-cc25-46e1-b071-8481e909111f
+ *       409:
+ *         description: Запрещенный переход статуса, на данный статус нельзя выполнить переход/отсутствуют специалисты
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Error'
+ *             example:
+ *                error:
+ *                 code: CONFLICT_ERROR
+ *                 message: Изменение статуса запрещено
+ *                 requestId: 457dab4b-cc25-46e1-b071-8481e909111f
  *
  * /api/requests/import:
  *   post:
@@ -129,6 +297,34 @@
  *           application/json:
  *             schema:
  *               $ref: '#/components/schemas/MassImportRequestsResponse'
+ *       400:
+ *         description: Ошибка валидации
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Error'
+ *       401:
+ *         description: Не авторизован (пустой или невалидный acess токен)
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Error'
+ *             example:
+ *                error:
+ *                 code: AUTHENTICATION_ERROR
+ *                 message: Токен не предоставлен
+ *                 requestId: 457dab4b-cc25-46e1-b071-8481e909111f
+ *       403:
+ *         description: Нет доступа не хватает прав для операции
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Error'
+ *             example:
+ *                error:
+ *                 code: ACCESS_ERROR
+ *                 message: Нет доступа
+ *                 requestId: 457dab4b-cc25-46e1-b071-8481e909111f
  *
  * /api/requests/{id}/assignees:
  *   post:
@@ -148,6 +344,45 @@
  *     responses:
  *       204:
  *         description: Специалисты назначены
+ *       400:
+ *         description: Ошибка валидации
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Error'
+ *       401:
+ *         description: Не авторизован (пустой или невалидный acess токен)
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Error'
+ *             example:
+ *                error:
+ *                 code: AUTHENTICATION_ERROR
+ *                 message: Токен не предоставлен
+ *                 requestId: 457dab4b-cc25-46e1-b071-8481e909111f
+ *       403:
+ *         description: Нет доступа не хватает прав для операции
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Error'
+ *             example:
+ *                error:
+ *                 code: ACCESS_ERROR
+ *                 message: Нет доступа
+ *                 requestId: 457dab4b-cc25-46e1-b071-8481e909111f
+ *       422:
+ *         description: В бригаде должен быть только один человек с ролью lead
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Error'
+ *             example:
+ *                error:
+ *                 code: BUSINESS_RULE_ERROR
+ *                 message: Дата установки оборудования неккоретна
+ *                 requestId: 457dab4b-cc25-46e1-b071-8481e909111f
  *
  * /api/requests/{id}/assignees/{userId}:
  *   delete:
@@ -162,6 +397,45 @@
  *     responses:
  *       204:
  *         description: Специалист снят с заявки
+ *       400:
+ *         description: Ошибка валидации
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Error'
+ *       401:
+ *         description: Не авторизован (пустой или невалидный acess токен)
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Error'
+ *             example:
+ *                error:
+ *                 code: AUTHENTICATION_ERROR
+ *                 message: Токен не предоставлен
+ *                 requestId: 457dab4b-cc25-46e1-b071-8481e909111f
+ *       403:
+ *         description: Нет доступа не хватает прав для операции
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Error'
+ *             example:
+ *                error:
+ *                 code: ACCESS_ERROR
+ *                 message: Нет доступа
+ *                 requestId: 457dab4b-cc25-46e1-b071-8481e909111f
+ *       404:
+ *         description: Заявка не найдена
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Error'
+ *             example:
+ *                error:
+ *                 code: NOT_FOUND
+ *                 message: Заявка не найдена
+ *                 requestId: 457dab4b-cc25-46e1-b071-8481e909111f
  *
  * /api/requests/{id}/history:
  *   get:
@@ -179,5 +453,22 @@
  *           application/json:
  *             schema:
  *               $ref: '#/components/schemas/RequestStatusHistoryListResponse'
+ *       400:
+ *         description: Ошибка валидации
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Error'
+ *       401:
+ *         description: Не авторизован (пустой или невалидный acess токен)
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Error'
+ *             example:
+ *                error:
+ *                 code: AUTHENTICATION_ERROR
+ *                 message: Токен не предоставлен
+ *                 requestId: 457dab4b-cc25-46e1-b071-8481e909111f
  */
 export {};

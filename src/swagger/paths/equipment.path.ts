@@ -78,7 +78,7 @@
  *                 message: Токен не предоставлен
  *                 requestId: 457dab4b-cc25-46e1-b071-8481e909111f
  *       403:
- *         description: Нет доступа: не хватает прав для операции
+ *         description: Нет доступа не хватает прав для операции
  *         content:
  *           application/json:
  *             schema:
@@ -185,7 +185,7 @@
  *                 message: Токен не предоставлен
  *                 requestId: 457dab4b-cc25-46e1-b071-8481e909111f
  *       403:
- *         description: Нет доступа: не хватает прав для операции
+ *         description: Нет доступа не хватает прав для операции
  *         content:
  *           application/json:
  *             schema:
@@ -236,7 +236,7 @@
  *                 message: Токен не предоставлен
  *                 requestId: 457dab4b-cc25-46e1-b071-8481e909111f
  *       403:
- *         description: Нет доступа: не хватает прав для операции
+ *         description: Нет доступа не хватает прав для операции
  *         content:
  *           application/json:
  *             schema:
@@ -392,7 +392,7 @@
  *             example:
  *                error:
  *                 code: WEATHER_API_TIMEOUT
- *                 message: Ошибка получения погоды: таймаут
+ *                 message: Ошибка получения погоды таймаут
  *                 requestId: 457dab4b-cc25-46e1-b071-8481e909111f
  */
 export {};

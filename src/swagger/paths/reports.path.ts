@@ -17,6 +17,23 @@
  *           application/json:
  *             schema:
  *               $ref: '#/components/schemas/GetSiteSummaryResult'
+ *       400:
+ *         description: Ошибка валидации
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Error'
+ *       401:
+ *         description: Не авторизован (пустой или невалидный acess токен)
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Error'
+ *             example:
+ *                error:
+ *                 code: AUTHENTICATION_ERROR
+ *                 message: Токен не предоставлен
+ *                 requestId: 457dab4b-cc25-46e1-b071-8481e909111f
  *
  * /api/reports/equipment-load:
  *   get:
@@ -60,5 +77,16 @@
  *               type: array
  *               items:
  *                 $ref: '#/components/schemas/EquipmentsLoadResult'
+ *       401:
+ *         description: Не авторизован (пустой или невалидный acess токен)
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Error'
+ *             example:
+ *                error:
+ *                 code: AUTHENTICATION_ERROR
+ *                 message: Токен не предоставлен
+ *                 requestId: 457dab4b-cc25-46e1-b071-8481e909111f
  */
 export {};

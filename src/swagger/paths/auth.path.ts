@@ -60,7 +60,7 @@
  *             schema:
  *               $ref: '#/components/schemas/Error'
  *       401:
- *         description: Неверные данные для входа: пользователя с комбинацией логин+пароль не существует
+ *         description: Неверные данные для входа. Пользователя с комбинацией логин+пароль не существует
  *         content:
  *           application/json:
  *             schema:
