@@ -15,8 +15,6 @@ import { GetTokensResult } from '../dto/auth/get-tokens-result.dto.js';
 import { TokenPayload } from '../dto/types/tokens-payload.type.js';
 import { AccessError } from '../errors/accesss.error.js';
 
-const SALT_ROUNDS = 10;
-
 const repository: IUserRepository = new UserRepository();
 
 export const registerUser = async(request: RegisterUserRequest): Promise<RegisterUserResult> => {
@@ -26,7 +24,7 @@ export const registerUser = async(request: RegisterUserRequest): Promise<Registe
     throw new ConflictError("Пользователь с таким логином уже существует!", [{field: "login", message: "Неуникальный логин пользователя"}]);
   }
 
-  const hashedPassword = await bcrypt.hash(request.password, SALT_ROUNDS);
+  const hashedPassword = await bcrypt.hash(request.password, authConfig.saltRounds);
 
   const newUser = new User();
   newUser.id = randomUUID();
@@ -61,7 +59,7 @@ export const loginUser = async(request: LoginUserRequest): Promise<GetTokensResu
 
 export const refreshToken = async(token: string): Promise<GetTokensResult> => { 
   try {
-    const decoded = jwt.verify(token, authConfig.secretKey) as TokenPayload;
+    const decoded = jwt.verify(token, authConfig.refreshSecretKey) as TokenPayload;
 
     const user = await repository.getByLogin(decoded.login as string);
     if (!user) {
@@ -86,7 +84,7 @@ export const generateTokens = async(payload: TokenPayload): Promise<GetTokensRes
       login: payload.login,
       technicianId: payload.technicianId
     }, 
-    authConfig.secretKey, 
+    authConfig.accessSecretKey, 
     { expiresIn: "15m" }
   );
 
@@ -95,7 +93,7 @@ export const generateTokens = async(payload: TokenPayload): Promise<GetTokensRes
       userId: payload.id,
       login: payload.login,
     }, 
-    authConfig.secretKey, 
+    authConfig.refreshSecretKey, 
     { expiresIn: "7d" }
   );
 
