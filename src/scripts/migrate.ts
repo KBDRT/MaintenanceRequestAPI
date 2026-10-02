@@ -1,4 +1,4 @@
-import { migrator, migratorTest, seeder, seederTest } from "../config/umzug.config";
+import { migrator, migratorTest, seeder, seederTest } from "../config/umzug.config.js";
 import { getLog } from "../lib/context.js";
 import { startMigrationSettingsSchema } from "../validators/schemas/common/start-migration-settings.schema.js";
 

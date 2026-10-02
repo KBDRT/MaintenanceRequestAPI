@@ -1,6 +1,7 @@
 import { BelongsTo, Column, CreatedAt, DataType, ForeignKey, Model, Table } from "sequelize-typescript";
 import { UserRole } from "../enums/user-role.enum.js";
 import { Technician } from "./technician.model.js";
+import type { Technician as TechnicianModel } from "./technician.model.js";
 
 @Table({
   timestamps: true,
@@ -43,7 +44,7 @@ export class User extends Model {
   declare technicianId: string;
 
   @BelongsTo(() => Technician)
-  declare technician: Technician;
+  declare technician: TechnicianModel;
 
   @CreatedAt
   declare createdAt: Date;

@@ -17,6 +17,8 @@ import reportsRouter from './routes/reports.route.js';
 
 const app = express();
 
+app.set('trust proxy', 1);
+
 app.use(httpLogger);
 
 app.use(helmet());
@@ -31,7 +33,7 @@ app.use(cookieParser());
 app.use(setRequestId);
 
 app.use('/api/auth', authRouter);
-app.use('/api', rootRouter);
+app.use('/', rootRouter);
 app.use('/api/equipments', equipmentRouter);
 app.use('/api/requests', maintenanceRequestRouter);
 app.use('/api/', reportsRouter);

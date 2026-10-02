@@ -19,5 +19,8 @@ export let server: Server | undefined;
     getLog().info(`SERVER STARTS ON PORT: ${appConfig.port}.`);
     getLog().info(`MODE: ${appConfig.nodeEnv}`);
     getLog().info(`API: /api`);
+    
   });
+
+  server.keepAliveTimeout = 65_000;
 })();

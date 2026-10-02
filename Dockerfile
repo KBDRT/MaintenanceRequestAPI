@@ -1,13 +1,27 @@
-FROM node:20-alpine
-
+# сборка
+FROM node:20-alpine AS builder
 WORKDIR /src
 
-COPY package.json package-lock.json ./
+COPY package*.json ./
+RUN npm ci
 
-RUN npm install
+COPY . .
+RUN npm run build 
 
-COPY . . 
+# зависимости
+FROM node:20-alpine AS depend
+WORKDIR /src
 
-RUN npm run build
+COPY package*.json ./
+
+RUN npm ci --omit=dev
+
+# запуск
+FROM node:20-alpine
+WORKDIR /
+
+COPY --from=depend /src/node_modules ./node_modules
+COPY --from=builder /src/dist ./dist
+COPY package.json ./
 
 CMD ["node", "dist/server.js"]
