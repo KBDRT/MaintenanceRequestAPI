@@ -19,6 +19,11 @@ export const sequelize = new Sequelize({
     acquire: dbConnectionConfig.pool.acquire,
     idle: dbConnectionConfig.pool.idle
   },
+  dialectOptions: {
+    connectTimeout: 5000,   
+    statement_timeout: 10000,
+    query_timeout: 10000,    
+  },
   logging: false,
   models: [...modelsList]
 })

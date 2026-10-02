@@ -6,9 +6,10 @@ import { MaintenanceRequest } from "../domains/models/maintenance-request.model.
 import { RequestStatusHistory } from "../domains/models/request-status-history.model.js";
 import { RequestAssignee } from "../domains/models/request-assignee.model.js";
 import { User } from './../domains/models/user.model.js';
+import { HttpMetric } from "../domains/models/http-metric.model.js";
 
 export const modelsList = [
   Site, Technician, User, Equipment, 
   EquipmentPassport, MaintenanceRequest, 
-  RequestStatusHistory, RequestAssignee,
+  RequestStatusHistory, RequestAssignee, HttpMetric
 ] as const;
