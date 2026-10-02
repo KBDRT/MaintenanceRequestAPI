@@ -17,22 +17,23 @@ import { filterEquipmentSchema } from '../validators/schemas/equipment/filter-eq
 import { validateCleanQuery } from '../middlewares/clean-query-validator.middleware.js';
 import { getEquipmentRequestsSchema } from '../validators/schemas/equipment/get-equipment-requests.schema.js';
 import { authenticate } from '../middlewares/auth.middleware.js';
+import { checkAccess } from '../middlewares/access.middleware.js';
 
 const equipmentRouter = Router();
 
 equipmentRouter.route('/')
-      .get(parseFilterQuery, validateCleanQuery(filterEquipmentSchema), getEquipments)
-      .post(authenticate, validate({body: createEquipmentRequestSchema}), createEquipment);
+      .get(authenticate, parseFilterQuery, validateCleanQuery(filterEquipmentSchema), getEquipments)
+      .post(authenticate, checkAccess([]), validate({body: createEquipmentRequestSchema}), createEquipment);
 
 equipmentRouter.route('/:id')
-      .get(validate({params: idRequestSchema}), getEquipment)
-      .patch(authenticate, validate({params: idRequestSchema, body: updateEquipmentRequestSchema}), updateEquipment)
-      .delete(authenticate, validate({params: idRequestSchema}), deleteEquipment);
+      .get(authenticate, validate({params: idRequestSchema}), getEquipment)
+      .patch(authenticate, checkAccess([]), validate({params: idRequestSchema, body: updateEquipmentRequestSchema}), updateEquipment)
+      .delete(authenticate, checkAccess([]), validate({params: idRequestSchema}), deleteEquipment);
 
 equipmentRouter.route('/:id/requests')
-      .get(validate({params: idRequestSchema}), parseFilterQuery, validateCleanQuery(getEquipmentRequestsSchema), getEquipmentRequests);
+      .get(authenticate, validate({params: idRequestSchema}), parseFilterQuery, validateCleanQuery(getEquipmentRequestsSchema), getEquipmentRequests);
 
 equipmentRouter.route('/:id/weather')
-      .get(validate({params: idRequestSchema}), getEquipmentWeather);
+      .get(authenticate, validate({params: idRequestSchema}), getEquipmentWeather);
 
 export default equipmentRouter;

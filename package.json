@@ -9,22 +9,16 @@
     "start": "node dist/src/server.js",
     "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js",
     "test:coverage": "jest --coverage",
-
     "migration:up": "npx tsx src/scripts/migrate.ts migration common all up",
     "migration:down": "npx tsx src/scripts/migrate.ts migration common all down",
-
     "prod:migration:up": "node dist/src/scripts/migrate.js migration common all up",
     "prod:migration:down": "node dist/src/scripts/migrate.js migration common all down",
-
     "test:migration:up": "npx tsx src/scripts/migrate.ts migration test all up",
     "test:migration:down": "npx tsx src/scripts/migrate.ts migration test all down",
-
     "seeds:up": "npx tsx src/scripts/migrate.ts seed common all up",
     "seeds:down": "npx tsx src/scripts/migrate.ts seed common all down",
-
     "prod:seeds:up": "node dist/src/scripts/migrate.js seed common all up",
     "prod:seeds:down": "node dist/src/scripts/migrate.js seed common all down",
-
     "test:seeds:up": "npx tsx src/scripts/migrate.ts seed test all up",
     "test:seeds:down": "npx tsx src/scripts/migrate.ts seed test all down"
   },
@@ -48,6 +42,7 @@
     "zod": "^4.6.5"
   },
   "devDependencies": {
+    "@types/bcrypt": "^6.0.0",
     "@types/cls-hooked": "^4.3.9",
     "@types/cookie-parser": "^1.4.10",
     "@types/dotenv": "^6.1.1",
@@ -59,6 +54,7 @@
     "@types/pino-http": "^5.8.4",
     "@types/supertest": "^7.2.1",
     "@types/validator": "^13.15.10",
+    "bcrypt": "^6.0.0",
     "cls-hooked": "^4.2.2",
     "jest": "^30.5.2",
     "sequelize-cli": "^6.6.5",
