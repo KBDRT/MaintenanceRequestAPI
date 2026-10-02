@@ -11,7 +11,7 @@ registerProcessHandlers();
 export let server: Server | undefined;
 
 (async () => {
-  // await waitForDatabase();
+  await waitForDatabase();
 
   // sequelize.sync({force: true});
 

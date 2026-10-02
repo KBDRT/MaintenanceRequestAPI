@@ -8,24 +8,25 @@ export const options: swaggerJsdoc.Options = {
       version: "1.0.0",
       description: 'Документация для REST API «Сервис учёта заявок на обслуживание оборудования»',
     },
-    // servers: [
-    //   {
-    //     url: 'http://localhost:3000/api',
-    //     description: 'Development server',
-    //   },
-    // ],
     components: {
       securitySchemes: {
         bearerAuth: {
           type: 'http',
           scheme: "bearer",
-          bearerFormat: "JWT"
+          bearerFormat: "JWT",
+          description: "Access-токен в заголовке `Authorization: Bearer <token>`"
+        },
+        cookieAuth: {
+          type: 'apiKey',
+          in: 'cookie',
+          name: 'refreshToken',
+          description: "Refresh-токен в HttpOnly cookie `refreshToken`"
         },
       },
     },
     security: [
       {
-        cookieAuth: [],
+        bearerAuth: [],
       },
     ],
   },

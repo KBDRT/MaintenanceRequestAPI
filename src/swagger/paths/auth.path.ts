@@ -1,58 +1,18 @@
 /**
  * @openapi
- * components:
- *   schemas:
- *     User:
- *       type: object
- *       required:
- *         - login
- *         - password
- *       properties:
- *         id:
- *           type: string
- *           format: uuid
- *           description: Автоматически сгенерированный ID пользователя
- *         login:
- *           type: string
- *           description: Логин пользователя (имя пользователя)
- *         role:
- *           type: integer
- *           description: Роль пользователя
- *       example:
- *         id: 457dab4b-cc25-46e1-b071-8481e909111f
- *         login: test
- *         role: "viewer"
- *     Token:
- *       type: object
- *       required:
- *         - token
- *       properties:
- *         token:
- *           type: string
- *           description: Access токен
- * 
  * /api/auth/register:
  *   post:
  *     tags:
  *       - Аутентификация
  *     summary: Регистрация пользователя
  *     description: Создает новую учетную запись пользователя
+ *     security: []
  *     requestBody:
  *       required: true
  *       content:
  *         application/json:
  *           schema:
- *             type: object
- *             required:
- *               - login
- *               - password
- *             properties:
- *               login:
- *                 type: string
- *                 default: user
- *               password:
- *                 type: string
- *                 default: password
+ *             $ref: '#/components/schemas/LoginUserRequest'
  *     responses:
  *       201:
  *         description: Пользователь успешно зарегистрирован
@@ -72,29 +32,20 @@
  *           application/json:
  *             schema:
  *               $ref: '#/components/schemas/Error'
- * 
+ *
  * /api/auth/login:
  *   post:
  *     tags:
  *       - Аутентификация
  *     summary: Вход пользователя
  *     description: Аутентификация пользователя, возвращение access токена и заполнение refresh токена в HttpOnly cookie
+ *     security: []
  *     requestBody:
  *       required: true
  *       content:
  *         application/json:
  *           schema:
- *             type: object
- *             required:
- *               - login
- *               - password
- *             properties:
- *               login:
- *                 type: string
- *                 default: user
- *               password:
- *                 type: string
- *                 default: password
+ *             $ref: '#/components/schemas/LoginUserRequest'
  *     responses:
  *       200:
  *         description: Пользователь успешно авторизирован
@@ -119,29 +70,20 @@
  *                 code: AUTHENTICATION_ERROR
  *                 message: Неверные данные для входа
  *                 requestId: 457dab4b-cc25-46e1-b071-8481e909111f
- * 
+ *
  * /api/auth/refresh:
  *   post:
  *     tags:
  *       - Аутентификация
  *     summary: Обновление токенов
  *     description: Обновление access-токена по refresh токену из cookie
+ *     security: [{ cookieAuth: [] }]
  *     requestBody:
  *       required: true
  *       content:
  *         application/json:
  *           schema:
- *             type: object
- *             required:
- *               - login
- *               - password
- *             properties:
- *               login:
- *                 type: string
- *                 default: user
- *               password:
- *                 type: string
- *                 default: password
+ *             $ref: '#/components/schemas/LoginUserRequest'
  *     responses:
  *       200:
  *         description: Успешное обновление токена
@@ -167,13 +109,14 @@
  *           application/json:
  *             schema:
  *               $ref: '#/components/schemas/Error'
- * 
+ *
  * /api/auth/logout:
  *   post:
  *     tags:
  *       - Аутентификация
  *     summary: Выход пользователя
  *     description: Завершение сессии, удаление refresh-cookie
+ *     security: [{ cookieAuth: [] }]
  *     requestBody:
  *       required: false
  *     responses:
@@ -189,13 +132,14 @@
  *           application/json:
  *             schema:
  *               $ref: '#/components/schemas/Error'
- * 
+ *
  * /api/auth/me:
  *   get:
  *     tags:
  *       - Аутентификация
  *     summary: Текущий пользователь
  *     description: Данные текущего пользователя и его роль
+ *     security: []
  *     requestBody:
  *       required: false
  *     responses:
@@ -212,5 +156,4 @@
  *             schema:
  *               $ref: '#/components/schemas/Error'
  */
-
-export {}; 
+export {};
