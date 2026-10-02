@@ -2,6 +2,8 @@ import { Router } from "express";
 import { getFullHealth, getHealth, monitoringAlert, response5xx } from "../controllers/root.controller.js";
 import { authenticate } from "../middlewares/auth.middleware.js";
 import { checkAccess } from "../middlewares/access.middleware.js";
+import swaggerJSDoc from "swagger-jsdoc";
+import { options } from "../swagger/swagger.config.js";
 
 const rootRouter = Router();
 
