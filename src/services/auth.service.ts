@@ -15,7 +15,6 @@ import { GetTokensResult } from '../dto/auth/get-tokens-result.dto.js';
 import { TokenPayload } from '../dto/types/tokens-payload.type.js';
 import { AccessError } from '../errors/accesss.error.js';
 
-
 const SALT_ROUNDS = 10;
 
 const repository: IUserRepository = new UserRepository();

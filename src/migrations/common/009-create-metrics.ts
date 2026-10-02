@@ -1,7 +1,5 @@
 import { DataTypes } from 'sequelize';
 import { Migration } from '../../config/umzug.config.js';
-import { AssigneeRole } from '../../domains/enums/assignee-role.enum.js';
-import { UserRole } from '../../domains/enums/user-role.enum.js';
 import { DataType } from 'sequelize-typescript';
 
 export const up: Migration = async ({ context: sequelize }) => {

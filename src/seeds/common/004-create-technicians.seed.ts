@@ -41,6 +41,14 @@ export const seedTechnicians = [
     middleName: "Владимирович",
     specialization: "Электрик",
   },
+  {
+    id: "30fe4b7e-0853-4d38-a6bf-167dd785f3ea",
+    tableNumber: 1006,
+    lastName: "Федоров",
+    firstName: "Иван",
+    middleName: "Владимирович",
+    specialization: "Электрик",
+  },
 ];
 
 export const up: Seeder = async ({ context: sequelize }) => {
