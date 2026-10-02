@@ -4,7 +4,6 @@ import authConfig from '../config/auth.config.js';
 import { AuthenticationError } from '../errors/authentication.error.js';
 import appConfig from '../config/app.config.js';
 import NODE_ENV_VALUES from '../config/node_env.enum.js';
-import { AccessError } from '../errors/accesss.error.js';
 
 export function authenticate(req: Request, res: Response, next: NextFunction) {
 

@@ -24,6 +24,23 @@
  *           application/json:
  *             schema:
  *               $ref: '#/components/schemas/EquipmentListResponse'
+ *       400:
+ *         description: Ошибка валидации
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Error'
+ *       401:
+ *         description: Не авторизован (пустой или невалидный acess токен)
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Error'
+ *             example:
+ *                error:
+ *                 code: AUTHENTICATION_ERROR
+ *                 message: Токен не предоставлен
+ *                 requestId: 457dab4b-cc25-46e1-b071-8481e909111f
  *   post:
  *     tags:
  *       - Оборудование
@@ -43,6 +60,56 @@
  *           application/json:
  *             schema:
  *               $ref: '#/components/schemas/Equipment'
+ *       400:
+ *         description: Ошибка валидации
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Error'
+ *       401:
+ *         description: Не авторизован (пустой или невалидный acess токен)
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Error'
+ *             example:
+ *                error:
+ *                 code: AUTHENTICATION_ERROR
+ *                 message: Токен не предоставлен
+ *                 requestId: 457dab4b-cc25-46e1-b071-8481e909111f
+ *       403:
+ *         description: Нет доступа: не хватает прав для операции
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Error'
+ *             example:
+ *                error:
+ *                 code: ACCESS_ERROR
+ *                 message: Нет доступа
+ *                 requestId: 457dab4b-cc25-46e1-b071-8481e909111f
+ *       409:
+ *         description: Неуникальный серийный номер
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Error'
+ *             example:
+ *                error:
+ *                 code: CONFLICT_ERROR
+ *                 message: Оборудование с указанным серийным номером уже существует!
+ *                 requestId: 457dab4b-cc25-46e1-b071-8481e909111f
+ *       422:
+ *         description: Дата установки в будущем
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Error'
+ *             example:
+ *                error:
+ *                 code: BUSINESS_RULE_ERROR
+ *                 message: Дата установки оборудования неккоретна
+ *                 requestId: 457dab4b-cc25-46e1-b071-8481e909111f
  *
  * /api/equipments/{id}:
  *   get:
@@ -60,6 +127,29 @@
  *           application/json:
  *             schema:
  *               $ref: '#/components/schemas/Equipment'
+ *       401:
+ *         description: Не авторизован (пустой или невалидный acess токен)
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Error'
+ *             example:
+ *                error:
+ *                 code: AUTHENTICATION_ERROR
+ *                 message: Токен не предоставлен
+ *                 requestId: 457dab4b-cc25-46e1-b071-8481e909111f
+ *       404:
+ *         description: Оборудование не найдено
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Error'
+ *             example:
+ *                error:
+ *                 code: NOT_FOUND
+ *                 message: Не найдено
+ *                 requestId: 457dab4b-cc25-46e1-b071-8481e909111f
+ * 
  *   patch:
  *     tags:
  *       - Оборудование
@@ -77,6 +167,46 @@
  *     responses:
  *       204:
  *         description: Оборудование обновлено
+ *       400:
+ *         description: Ошибка валидации
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Error'
+ *       401:
+ *         description: Не авторизован (пустой или невалидный acess токен)
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Error'
+ *             example:
+ *                error:
+ *                 code: AUTHENTICATION_ERROR
+ *                 message: Токен не предоставлен
+ *                 requestId: 457dab4b-cc25-46e1-b071-8481e909111f
+ *       403:
+ *         description: Нет доступа: не хватает прав для операции
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Error'
+ *             example:
+ *                error:
+ *                 code: ACCESS_ERROR
+ *                 message: Нет доступа
+ *                 requestId: 457dab4b-cc25-46e1-b071-8481e909111f
+ *       404:
+ *         description: Оборудование не найдено
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Error'
+ *             example:
+ *                error:
+ *                 code: NOT_FOUND
+ *                 message: Не найдено
+ *                 requestId: 457dab4b-cc25-46e1-b071-8481e909111f
+ * 
  *   delete:
  *     tags:
  *       - Оборудование
@@ -88,6 +218,56 @@
  *     responses:
  *       204:
  *         description: Оборудование удалено
+ *       400:
+ *         description: Ошибка валидации
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Error'
+ *       401:
+ *         description: Не авторизован (пустой или невалидный acess токен)
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Error'
+ *             example:
+ *                error:
+ *                 code: AUTHENTICATION_ERROR
+ *                 message: Токен не предоставлен
+ *                 requestId: 457dab4b-cc25-46e1-b071-8481e909111f
+ *       403:
+ *         description: Нет доступа: не хватает прав для операции
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Error'
+ *             example:
+ *                error:
+ *                 code: ACCESS_ERROR
+ *                 message: Нет доступа
+ *                 requestId: 457dab4b-cc25-46e1-b071-8481e909111f
+ *       404:
+ *         description: Оборудование не найдено
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Error'
+ *             example:
+ *                error:
+ *                 code: NOT_FOUND
+ *                 message: Не найдено
+ *                 requestId: 457dab4b-cc25-46e1-b071-8481e909111f
+ *       409:
+ *         description: Есть незакрытые заявки
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Error'
+ *             example:
+ *                error:
+ *                 code: CONFLICT_ERROR
+ *                 message: Для данного оборудования есть незавершенные заявки
+ *                 requestId: 457dab4b-cc25-46e1-b071-8481e909111f
  *
  * /api/equipments/{id}/requests:
  *   get:
@@ -114,6 +294,36 @@
  *           application/json:
  *             schema:
  *               $ref: '#/components/schemas/MaintenanceRequestListResponse'
+*       204:
+ *         description: Оборудование удалено
+ *       400:
+ *         description: Ошибка валидации
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Error'
+ *       401:
+ *         description: Не авторизован (пустой или невалидный acess токен)
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Error'
+ *             example:
+ *                error:
+ *                 code: AUTHENTICATION_ERROR
+ *                 message: Токен не предоставлен
+ *                 requestId: 457dab4b-cc25-46e1-b071-8481e909111f
+ *       404:
+ *         description: Оборудование не найдено
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Error'
+ *             example:
+ *                error:
+ *                 code: NOT_FOUND
+ *                 message: Не найдено
+ *                 requestId: 457dab4b-cc25-46e1-b071-8481e909111f
  *
  * /api/equipments/{id}/weather:
  *   get:
@@ -132,5 +342,57 @@
  *           application/json:
  *             schema:
  *               $ref: '#/components/schemas/EquipmentWeatherResponse'
+*       204:
+ *         description: Оборудование удалено
+ *       400:
+ *         description: Ошибка валидации
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Error'
+ *       401:
+ *         description: Не авторизован (пустой или невалидный acess токен)
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Error'
+ *             example:
+ *                error:
+ *                 code: AUTHENTICATION_ERROR
+ *                 message: Токен не предоставлен
+ *                 requestId: 457dab4b-cc25-46e1-b071-8481e909111f
+ *       404:
+ *         description: Оборудование не найдено
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Error'
+ *             example:
+ *                error:
+ *                 code: NOT_FOUND
+ *                 message: Не найдено
+ *                 requestId: 457dab4b-cc25-46e1-b071-8481e909111f
+ *       502:
+ *         description: Ошибка внешнего WEATHER API
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Error'
+ *             example:
+ *                error:
+ *                 code: ERROR
+ *                 message: Ошибка получения погоды
+ *                 requestId: 457dab4b-cc25-46e1-b071-8481e909111f
+ *       504:
+ *         description: Таймаут к WEATHER API
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Error'
+ *             example:
+ *                error:
+ *                 code: WEATHER_API_TIMEOUT
+ *                 message: Ошибка получения погоды: таймаут
+ *                 requestId: 457dab4b-cc25-46e1-b071-8481e909111f
  */
 export {};

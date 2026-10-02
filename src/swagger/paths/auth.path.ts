@@ -60,7 +60,7 @@
  *             schema:
  *               $ref: '#/components/schemas/Error'
  *       401:
- *         description: Неверные данные для входа
+ *         description: Неверные данные для входа: пользователя с комбинацией логин+пароль не существует
  *         content:
  *           application/json:
  *             schema:
@@ -98,17 +98,27 @@
  *             schema:
  *               $ref: '#/components/schemas/Error'
  *       401:
- *         description: Отсутствует refresh токен или неверные данные для входа
+ *         description: Отсутствует refresh токен
  *         content:
  *           application/json:
  *             schema:
  *               $ref: '#/components/schemas/Error'
+ *             example:
+ *                error:
+ *                 code: AUTHENTICATION_ERROR
+ *                 message: Неверные данные для входа
+ *                 requestId: 457dab4b-cc25-46e1-b071-8481e909111f
  *       403:
- *         description: Невалидный токен для входа
+ *         description: Невалидный токен для операции refresh
  *         content:
  *           application/json:
  *             schema:
  *               $ref: '#/components/schemas/Error'
+ *             example:
+ *                error:
+ *                 code: ACCESS_ERROR
+ *                 message: Невалидный токен
+ *                 requestId: 457dab4b-cc25-46e1-b071-8481e909111f
  *
  * /api/auth/logout:
  *   post:
@@ -150,10 +160,15 @@
  *             schema:
  *               $ref: '#/components/schemas/User'
  *       401:
- *         description: Пользователь не авторизован
+ *         description: Пустой или невалидный access токен 
  *         content:
  *           application/json:
  *             schema:
  *               $ref: '#/components/schemas/Error'
+ *             example:
+ *                error:
+ *                 code: AUTHENTICATION_ERROR
+ *                 message: Токен не предоставлен
+ *                 requestId: 457dab4b-cc25-46e1-b071-8481e909111f
  */
 export {};
