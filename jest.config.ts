@@ -38,6 +38,7 @@ const config: Config = {
       testTimeout: 60_000,
     },
   ],
+  maxWorkers: 1,
 };
 
 export default config;

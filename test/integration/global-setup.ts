@@ -1,7 +1,9 @@
 import dotenv from 'dotenv';
 dotenv.config({ quiet: true });
 
-import { PostgreSqlContainer, StartedPostgreSqlContainer } from "@testcontainers/postgresql";
+import { PostgreSqlContainer } from "@testcontainers/postgresql";
+
+export const AUTH_PATH = '/api/auth';
 
 export default async function globalSetup() {
   const container = await new PostgreSqlContainer('postgres:18-alpine')

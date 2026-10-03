@@ -2,7 +2,6 @@ import { sequelize } from '../../src/infrastructure/sequelize.js';
 import { beforeAll, beforeEach, afterAll  } from '@jest/globals';
 import { migrator } from './../../dist/config/umzug.config';
 import { QueryTypes } from 'sequelize';
-// import { container } from './global-setup.js';
 
 beforeAll(async () => {
   await migrator.up();  
@@ -18,6 +17,8 @@ beforeEach(async () => {
     { type: QueryTypes.SELECT },   
   );
 
+  rows.push({tablename: "SequelizeMeta"});
+
   const tables = rows.map(r => r.tablename).map(name => `"public"."${name}"`).join(', ');
 
   if (tables) {
@@ -27,8 +28,4 @@ beforeEach(async () => {
 
 afterAll(async () => {
   await sequelize.close();
-
-  // if (container) {
-  //   container.stop();
-  // }
 });
