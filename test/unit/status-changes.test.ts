@@ -8,7 +8,6 @@ import { NotFoundError } from '../../src/errors/not-found.error.js';
 import { createRequest, createTechnician, setupRequestSpies } from './utils.js';
 import { AccessError } from '../../src/errors/accesss.error.js';
 import { ConflictError } from '../../src/errors/conflicts.error.js';
-import { sequelize } from '../../src/infrastructure/sequelize.js';
 
 describe(`Изменение статуса заявки`, () => {
 

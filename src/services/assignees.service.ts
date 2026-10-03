@@ -25,7 +25,7 @@ export const setRequestTechnicians = async(requestId: string, technicians: SetRe
 };
 
 export const deleteRequestTechnician = async(requestId: string, technicianId: string): Promise<void> => {
-  const exist = requestRepository.getById(requestId);
+  const exist = await requestRepository.getById(requestId);
   if (!exist) {
     throw new NotFoundError("Заявка не найдена!", [{field: "id", message: `Заявки с id = ${requestId} не существует`}]);
   }
