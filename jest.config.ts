@@ -4,7 +4,7 @@ const config: Config = {
   testEnvironment: 'node',
   preset: 'ts-jest/presets/default-esm',
   extensionsToTreatAsEsm: ['.ts'],
-  testMatch: ['**/*.test.ts'],
+  testMatch: ['<rootDir>/test/**/*.test.ts'],
   testPathIgnorePatterns: ['/node_modules/', '/dist/'],
   moduleFileExtensions: ['ts', 'tsx', 'js', 'json'],
   moduleNameMapper: {
@@ -16,7 +16,7 @@ const config: Config = {
       tsconfig: 'tsconfig.json',
     }],
   },
-  setupFiles: ['<rootDir>/test/setup-env.ts'],
+  // setupFiles: ['<rootDir>/test/setup-env.ts'],
 };
 
 export default config;
