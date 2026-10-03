@@ -24,4 +24,4 @@ COPY --from=depend /src/node_modules ./node_modules
 COPY --from=builder /src/dist ./dist
 COPY package.json ./
 
-CMD ["node", "dist/server.js"]
+CMD ["npm", "run", "start"]

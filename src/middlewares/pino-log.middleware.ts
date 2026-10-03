@@ -28,6 +28,6 @@ export const httpLogger = pinoHttp({
     return 'info';
   },
   autoLogging: {
-    ignore: (req: Request) => req.url === '/healthz',
+    ignore: (req: Request) => req.url === '/api/live',
   },
 });
