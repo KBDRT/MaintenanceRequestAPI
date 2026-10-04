@@ -10,7 +10,7 @@
     "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js",
     "test:int": "node --experimental-vm-modules node_modules/jest/bin/jest.js --selectProjects integration",
     "test:unit": "node --experimental-vm-modules node_modules/jest/bin/jest.js --selectProjects unit",
-    "test:coverage": "jest --coverage",
+    "test:coverage": "node --experimental-vm-modules node_modules/jest/bin/jest.js --coverage",
     "migration:up": "npx tsx src/scripts/migrate.ts migration common all up",
     "migration:down": "npx tsx src/scripts/migrate.ts migration common all down",
     "prod:migration:up": "node dist/scripts/migrate.js migration common all up",
