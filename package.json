@@ -5,21 +5,18 @@
   "main": "dist/server.js",
   "scripts": {
     "dev": "tsx watch src/server.ts",
-    "build": "tsc",
+    "build": "tsc && copyfiles -u 1 \"src/swagger/**/*.yaml\" dist",
     "start": "node dist/server.js",
-
     "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js",
     "test:int": "node --experimental-vm-modules node_modules/jest/bin/jest.js --selectProjects integration",
     "test:unit": "node --experimental-vm-modules node_modules/jest/bin/jest.js --selectProjects unit",
     "test:coverage": "node --experimental-vm-modules node_modules/jest/bin/jest.js --coverage",
-
     "migration:up": "npx tsx src/scripts/migrate.ts migration common all up",
     "migration:down": "npx tsx src/scripts/migrate.ts migration common all down",
     "prod:migration:up": "node dist/scripts/migrate.js migration common all up",
     "prod:migration:down": "node dist/scripts/migrate.js migration common all down",
     "test:migration:up": "npx tsx src/scripts/migrate.ts migration test all up",
     "test:migration:down": "npx tsx src/scripts/migrate.ts migration test all down",
-    
     "seeds:up": "npx tsx src/scripts/migrate.ts seed common all up",
     "seeds:down": "npx tsx src/scripts/migrate.ts seed common all down",
     "prod:seeds:up": "node dist/scripts/migrate.js seed common all up",
@@ -68,6 +65,7 @@
     "@types/swagger-jsdoc": "^6.0.4",
     "@types/swagger-ui-express": "^4.1.8",
     "@types/validator": "^13.15.10",
+    "copyfiles": "^2.4.1",
     "jest": "^30.5.2",
     "jest-fetch-mock": "^4.2.0",
     "set-cookie-parser": "^3.1.2",

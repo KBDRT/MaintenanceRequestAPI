@@ -1,0 +1,95 @@
+components:
+  schemas:
+    MaintenanceRequestStatus:
+      type: string
+      description: Статус заявки на обслуживание
+      enum:
+        - new
+        - in_progress
+        - done
+        - rejected
+
+    MaintenanceRequestPriority:
+      type: string
+      description: Приоритет заявки на обслуживание
+      enum:
+        - low
+        - medium
+        - high
+        - critical
+
+    RequestsStatusPriorityStats:
+      type: object
+      required:
+        - count
+      properties:
+        status:
+          $ref: '#/components/schemas/MaintenanceRequestStatus'
+        priority:
+          $ref: '#/components/schemas/MaintenanceRequestPriority'
+        count:
+          type: integer
+          description: Количество заявок
+      example:
+        status: in_progress
+        priority: high
+        count: 12
+
+    GetSiteSummaryResult:
+      type: object
+      required:
+        - statistics
+        - averageHoursRequestFinish
+      properties:
+        statistics:
+          type: array
+          description: Статистика заявок по статусу и приоритету
+          items:
+            $ref: '#/components/schemas/RequestsStatusPriorityStats'
+        averageHoursRequestFinish:
+          type: number
+          description: Среднее время выполнения заявки в часах
+      example:
+        statistics:
+          - status: done
+            priority: high
+            count: 5
+          - status: in_progress
+            priority: critical
+            count: 2
+        averageHoursRequestFinish: 18.5
+
+    EquipmentsLoadResult:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: ID оборудования
+        name:
+          type: string
+          description: Название оборудования
+        serialNumber:
+          type: string
+          description: Серийный номер
+        lastCheckDate:
+          type: string
+          format: date
+          description: Дата последней проверки
+        requests:
+          type: integer
+          description: Общее количество заявок
+        sumPlannedHours:
+          type: number
+          description: Суммарное запланированное время в часах
+        finishedRequests:
+          type: integer
+          description: Количество завершённых заявок
+      example:
+        id: 457dab4b-cc25-46e1-b071-8481e909111f
+        name: Насос центробежный
+        serialNumber: SN-00123
+        lastCheckDate: "2025-03-14"
+        requests: 20
+        sumPlannedHours: 120.5
+        finishedRequests: 15

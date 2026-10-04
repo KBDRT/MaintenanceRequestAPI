@@ -27,7 +27,7 @@ app.use(httpLogger);
 
 app.use(saveMetrics);
 
-app.use(helmet());
+app.use(helmet({ contentSecurityPolicy: false }));
 app.use(cors(corsSettings));
 
 app.use(globalLimiter);
@@ -44,7 +44,7 @@ app.use('/api/auth', authRouter);
 app.use('/', rootRouter);
 app.use('/api/equipments', authenticate, equipmentRouter);
 app.use('/api/requests', authenticate, maintenanceRequestRouter);
-app.use('/api/', authenticate, reportsRouter);
+app.use('/api/', reportsRouter);
 
 app.use(endpointNotFound);
 
