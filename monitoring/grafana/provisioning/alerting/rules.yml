@@ -3,7 +3,7 @@ groups:
     - orgId: 1
       name: app
       folder: Alerts
-      interval: 1m
+      interval: 20s
       rules:
         - uid: ffzwy075ng9ogc
           title: High 5xx rate
@@ -92,7 +92,7 @@ groups:
                 type: threshold
           noDataState: NoData
           execErrState: Error
-          for: 1m
+          for: 20s
           annotations: {}
           labels: {}
           isPaused: false
