@@ -1,0 +1,43 @@
+components:
+  schemas:
+    HealthStatus:
+      type: object
+      required:
+        - status 
+        - timeStamp 
+        - uptime 
+        - database 
+      properties:
+        status:
+          type: string
+          example: "OK"
+        timeStamp:
+          type: string
+          format: date-time
+        uptime: 
+          type: number
+          example: 121
+        database:
+          type: string
+          example: "up"
+
+    HealthStatusError:
+      type: object
+      required:
+        - status 
+        - timeStamp 
+        - uptime 
+        - database 
+      properties:
+        status:
+          type: string
+          example: "Error"
+        timeStamp:
+          type: string
+          format: date-time
+        uptime: 
+          type: number
+          example: 1210
+        database:
+          type: string
+          example: "down"

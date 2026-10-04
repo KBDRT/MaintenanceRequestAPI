@@ -1,4 +1,11 @@
 import swaggerJsdoc from 'swagger-jsdoc';
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+const extension = __filename.endsWith(".ts") ? "ts" : "js";
 
 export const options: swaggerJsdoc.Options = {
   definition: {
@@ -30,7 +37,14 @@ export const options: swaggerJsdoc.Options = {
       },
     ],
   },
-  apis: ['./src/swagger/paths/*.ts', './src/swagger/schemas/*.ts'],
+
+  apis: extension == 'js' ? [
+    './dist/swagger/paths/*.yaml',
+    './dist/swagger/schemas/*.yaml',
+  ] : [
+    './src/swagger/paths/*.yaml',
+    './src/swagger/schemas/*.yaml',
+  ],
 };
 
 export const specs = swaggerJsdoc(options); 

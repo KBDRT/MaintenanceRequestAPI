@@ -27,7 +27,7 @@ app.use(httpLogger);
 
 app.use(saveMetrics);
 
-app.use(helmet());
+app.use(helmet({ contentSecurityPolicy: false }));
 app.use(cors(corsSettings));
 
 app.use(globalLimiter);
