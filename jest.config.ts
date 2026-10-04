@@ -30,7 +30,7 @@ const config: Config = {
       displayName: 'integration',
       testMatch: ['<rootDir>/test/integration/**/*.test.ts'],
       globalSetup: '<rootDir>/test/integration/utils/global-setup.ts',
-      setupFilesAfterEnv: ['<rootDir>/test/integration/utils/setup.ts'],       
+      setupFilesAfterEnv: ['<rootDir>/test/integration/utils/setup.ts', 'jest-fetch-mock/setup'],       
       testTimeout: 60_000,
     },
   ],
@@ -39,6 +39,7 @@ const config: Config = {
     'src/**/*.ts',
     '!src/migrations/**/*.ts',
     '!src/seeds/**/*.ts',
+    '!src/srcripts/**/*.ts',
   ]
 };
 

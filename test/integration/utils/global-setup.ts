@@ -27,6 +27,10 @@ export default async function globalSetup() {
   process.env.DB_USER = TEST_DB_USER;
   process.env.DB_PASSWORD = TEST_DB_PASSWORD;
 
+  process.env.WEATHER_RULE_MAX_PRECIPITATION = String(2.5)
+  process.env.WEATHER_RULE_MAX_TEMPERATURE = String(10)
+  process.env.WEATHER_RULE_MIN_TEMPERATURE = String(-10)
+
   process.env.JWT_SALT_ROUNDS = "4";
   
   process.env.LOG_LEVEL = 'silent';
