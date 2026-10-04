@@ -17,39 +17,14 @@
           application/json:
             schema:
               $ref: '#/components/schemas/HealthStatusError' 
-/api/health/live:
+
+/api/test500:
   get:
     tags:
       - Технические
-    summary: Жизнеспособность процесса
-    security: []
-    responses:
-      200:
-        description: Сервис доступен
-        content:
-          application/json:
-            schema:
-              type: object
-              required:
-                - status
-              properties:
-                status:
-                  type: string
-                  default: "ok" 
-
-/api/test500:
-  post:
-    tags:
-      - Технические
     summary: Получить 500 ответ для тестирования
-    description: Обновление access-токена по refresh токену из cookie
+    description: Получить 500 ответ для тестирования мониторинга
     security: [{ bearerAuth: [] }]
-    requestBody:
-      required: true
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/LoginUserRequest'
     responses:
       401:
         description: Не авторизован
