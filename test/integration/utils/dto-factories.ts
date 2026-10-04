@@ -1,10 +1,11 @@
 import { randomUUID } from "node:crypto";
+import { faker } from "@faker-js/faker";
 
 export function createEquipmentBody() {
   return {
     name: "новое",
     type: "turbine",
-    serialNumber: randomUUID(),
+    serialNumber: faker.string.alphanumeric(10).toUpperCase(),
     location: {
       lat: 10,
       lon: 30

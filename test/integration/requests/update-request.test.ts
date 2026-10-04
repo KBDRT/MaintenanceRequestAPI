@@ -3,12 +3,16 @@ import { faker } from '@faker-js/faker';
 import app from '../../../src/app.js';
 import { test, expect, describe } from '@jest/globals';
 import { UserRole } from '../../../src/domains/enums/user-role.enum.js';
-import { createDBAssigne, createDBRequest, createDBTechnician, createDBUser, loginAs } from '../utils.js';
 import { MaintenanceRequestPriority } from '../../../src/domains/enums/maintenance-request-priotiry.enum.js';
 import { MaintenanceRequest } from '../../../src/domains/models/maintenance-request.model.js';
-import { createTechnician } from '../../unit/utils.js';
+import { DEFAULT_PATHS } from '../utils/global-setup.js';
+import { loginAs } from '../utils/auth.js';
+import { createDBRequest } from '../utils/db-factories/request-factory.js';
+import { createDBTechnician } from '../utils/db-factories/technician-factory.js';
+import { createDBUser } from '../utils/db-factories/user-factory.js';
+import { createDBAssigne } from '../utils/db-factories/assigne-factory.js';
 
-const PATH = '/api/requests';
+const PATH = DEFAULT_PATHS.requests;
 
 describe(`Обновление заявки: PATCH ${PATH}/:id`, () => {
 

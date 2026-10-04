@@ -3,10 +3,12 @@ import { faker } from '@faker-js/faker';
 import app from '../../../src/app.js';
 import { test, expect, describe } from '@jest/globals';
 import { UserRole } from '../../../src/domains/enums/user-role.enum.js';
-import { createDBRequest, loginAs } from '../utils.js';
 import { MaintenanceRequest } from '../../../src/domains/models/maintenance-request.model.js';
+import { DEFAULT_PATHS } from '../utils/global-setup.js';
+import { loginAs } from '../utils/auth.js';
+import { createDBRequest } from '../utils/db-factories/request-factory.js';
 
-const PATH = '/api/requests';
+const PATH = DEFAULT_PATHS.requests;
 
 describe(`Удаление заявки: DELETE ${PATH}/:id`, () => {
 

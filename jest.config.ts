@@ -4,7 +4,6 @@ const shared = {
   testEnvironment: 'node',
   preset: 'ts-jest/presets/default-esm',
   extensionsToTreatAsEsm: ['.ts'],
-  // testMatch: ['<rootDir>/test/**/*.test.ts'],
   testPathIgnorePatterns: ['/node_modules/', '/dist/'],
   moduleFileExtensions: ['ts', 'tsx', 'js', 'json'],
   moduleNameMapper: {
@@ -16,7 +15,6 @@ const shared = {
       tsconfig: 'tsconfig.json',
     }],
   },
-  // setupFiles: ['<rootDir>/test/setup-env.ts'],
 };
 
 const config: Config = {
@@ -31,14 +29,17 @@ const config: Config = {
       ...shared,
       displayName: 'integration',
       testMatch: ['<rootDir>/test/integration/**/*.test.ts'],
-      globalSetup: '<rootDir>/test/integration/global-setup.ts',
-      // globalTeardown: '<rootDir>/test/integration/global-teardown.ts',
-      // setupFiles: ['<rootDir>/test/integration/setup-env.ts'],
-      setupFilesAfterEnv: ['<rootDir>/test/integration/setup.ts'],       
+      globalSetup: '<rootDir>/test/integration/utils/global-setup.ts',
+      setupFilesAfterEnv: ['<rootDir>/test/integration/utils/setup.ts'],       
       testTimeout: 60_000,
     },
   ],
   maxWorkers: 1,
+  collectCoverageFrom: [
+    'src/**/*.ts',
+    '!src/migrations/**/*.ts',
+    '!src/seeds/**/*.ts',
+  ]
 };
 
 export default config;

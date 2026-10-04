@@ -3,10 +3,12 @@ import { faker } from '@faker-js/faker';
 import app from '../../../src/app.js';
 import { test, expect, describe } from '@jest/globals';
 import { UserRole } from '../../../src/domains/enums/user-role.enum.js';
-import { createDBEquipment, loginAs } from '../utils.js';
 import { randomUUID } from 'node:crypto';
+import { DEFAULT_PATHS } from '../utils/global-setup.js';
+import { createDBEquipment } from '../utils/db-factories/equipment-factory.js';
+import { loginAs } from '../utils/auth.js';
 
-const PATH = '/api/equipments';
+const PATH = DEFAULT_PATHS.equipment;
 
 describe(`Получение оборудования: GET ${PATH}`, () => {
 

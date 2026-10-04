@@ -1,11 +1,11 @@
 import { test, describe, expect } from '@jest/globals';
 import request from 'supertest';
 import app from '../../../src/app.js';
-import { AUTH_PATH } from '../global-setup.js';
+import { DEFAULT_PATHS } from '../utils/global-setup.js';
 import { faker } from "@faker-js/faker";
 import { User } from '../../../src/domains/models/user.model.js';
 import { UserRole } from '../../../src/domains/enums/user-role.enum.js';
-import { createDBUser } from '../utils.js';
+import { createDBUser } from '../utils/db-factories/user-factory.js';
 
 describe(`Регистрация пользователя`, () => {
   test('Ответ 201 + сохранение пользователя, при валидном', async () => {
@@ -13,7 +13,7 @@ describe(`Регистрация пользователя`, () => {
     const body = { login: faker.internet.username(), password: "Password" };
 
     // Act
-    const response = await request(app).post(`${AUTH_PATH}/register`).send(body);
+    const response = await request(app).post(`${DEFAULT_PATHS.auth}/register`).send(body);
 
     // Assert
     expect(response.status).toBe(201);
@@ -37,7 +37,7 @@ describe(`Регистрация пользователя`, () => {
     const body = { login: user.login, password: "PASSWORD" };
 
     // Act
-    const response = await request(app).post(`${AUTH_PATH}/register`).send(body);
+    const response = await request(app).post(`${DEFAULT_PATHS.auth}/register`).send(body);
 
     // Assert
     expect(response.status).toBe(409);
@@ -61,7 +61,7 @@ describe(`Регистрация пользователя`, () => {
     // Arrange
 
     // Act
-    const response = await request(app).post(`${AUTH_PATH}/register`).send(body);
+    const response = await request(app).post(`${DEFAULT_PATHS.auth}/register`).send(body);
     
     // Assert
     expect(response.status).toBe(400);

@@ -2,8 +2,8 @@ import { test, describe, expect } from '@jest/globals';
 import request from 'supertest';
 import app from '../../../src/app.js';
 import setCookie from 'set-cookie-parser';
-import { AUTH_PATH } from '../global-setup.js';
-import { createDBUser } from '../utils.js';
+import { DEFAULT_PATHS } from '../utils/global-setup.js';
+import { createDBUser } from '../utils/db-factories/user-factory.js';
 
 describe(`Логин пользователя`, () => {
   test('Ответ 200 + возврат access токена + установка refresh в cookie, при валидных данных пользователя', async () => {
@@ -13,7 +13,7 @@ describe(`Логин пользователя`, () => {
     const body = { login: user.login, password: password };
 
     // Act
-    const response = await request(app).post(`${AUTH_PATH}/login`).send(body);
+    const response = await request(app).post(`${DEFAULT_PATHS.auth}/login`).send(body);
 
     // Assert
     expect(response.status).toBe(200);
@@ -36,7 +36,7 @@ describe(`Логин пользователя`, () => {
     const body = { login: user.login, password: "wrong-password" };
 
     // Act
-    const response = await request(app).post(`${AUTH_PATH}/login`).send(body);
+    const response = await request(app).post(`${DEFAULT_PATHS.auth}/login`).send(body);
 
     // Assert
     expect(response.status).toBe(401);
@@ -56,7 +56,7 @@ describe(`Логин пользователя`, () => {
     const body = { login: "LOGIN", password: "TEST" };
 
     // Act
-    const response = await request(app).post(`${AUTH_PATH}/login`).send(body);
+    const response = await request(app).post(`${DEFAULT_PATHS.auth}/login`).send(body);
 
     // Assert
     expect(response.status).toBe(401);
@@ -79,7 +79,7 @@ describe(`Логин пользователя`, () => {
     // Arrange
 
     // Act
-    const response = await request(app).post(`${AUTH_PATH}/login`).send(body);
+    const response = await request(app).post(`${DEFAULT_PATHS.auth}/login`).send(body);
     
     // Assert
     expect(response.status).toBe(400);

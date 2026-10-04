@@ -3,11 +3,14 @@ import { faker } from '@faker-js/faker';
 import app from '../../../src/app.js';
 import { test, expect, describe } from '@jest/globals';
 import { UserRole } from '../../../src/domains/enums/user-role.enum.js';
-import { createDBEquipment, createRequestBody, loginAs } from '../utils.js';
 import { MaintenanceRequest } from '../../../src/domains/models/maintenance-request.model.js';
 import { MaintenanceRequestStatus } from '../../../src/domains/enums/maintenance-request-status.enum.js';
+import { DEFAULT_PATHS } from '../utils/global-setup.js';
+import { loginAs } from '../utils/auth.js';
+import { createDBEquipment } from '../utils/db-factories/equipment-factory.js';
+import { createRequestBody } from '../utils/dto-factories.js';
 
-const PATH = '/api/requests';
+const PATH = DEFAULT_PATHS.requests;
 
 describe(`Создание заявки: POST ${PATH}`, () => {
 

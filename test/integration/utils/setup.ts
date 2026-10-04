@@ -1,6 +1,6 @@
-import { sequelize } from '../../src/infrastructure/sequelize.js';
+import { sequelize } from '../../../src/infrastructure/sequelize.js';
 import { beforeAll, beforeEach, afterAll  } from '@jest/globals';
-import { migrator } from './../../dist/config/umzug.config.js';
+import { migrator } from '../../../dist/config/umzug.config.js';
 import { QueryTypes } from 'sequelize';
 
 beforeAll(async () => {

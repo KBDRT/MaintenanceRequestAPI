@@ -3,7 +3,7 @@ import { MaintenanceRequest } from "../../src/domains/entities/maintenance-reque
 import { MaintenanceRequestPriority } from "../../src/domains/enums/maintenance-request-priotiry.enum";
 import { MaintenanceRequestStatus } from "../../src/domains/enums/maintenance-request-status.enum";
 import { Technician } from "../../src/domains/entities/technician.entity";
-import { test, expect, describe, jest, beforeEach } from '@jest/globals';
+import { jest } from '@jest/globals';
 import { RequestRepository } from "../../src/repositories/implementations/db-maintenance.repository";
 import { RequestHistoryRepisotory } from '../../src/repositories/implementations/db-request-history.repository';
 import { sequelize } from "../../src/infrastructure/sequelize";

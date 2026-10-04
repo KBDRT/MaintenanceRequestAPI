@@ -1,10 +1,10 @@
 import { test, describe, expect } from '@jest/globals';
 import request from 'supertest';
 import app from '../../../src/app.js';
-import { AUTH_PATH } from '../global-setup.js';
+import { DEFAULT_PATHS } from '../utils/global-setup.js';
 import setCookie from 'set-cookie-parser';
 import jwt from "jsonwebtoken";
-import { createDBUser } from '../utils.js';
+import { createDBUser } from '../utils/db-factories/user-factory.js';
 
 describe(`Обновление токена`, () => {
   test('Ответ 200 + обновление токена, при валидных данных', async () => {
@@ -12,12 +12,12 @@ describe(`Обновление токена`, () => {
     const user = await createDBUser({password: "password"});
     const body = { login: user.login, password: "password" };
     const agent = request.agent(app);
-    const loginResponse = await agent.post(`${AUTH_PATH}/login`).send(body);
+    const loginResponse = await agent.post(`${DEFAULT_PATHS.auth}/login`).send(body);
     const loginCookies = setCookie.parse(loginResponse.headers['set-cookie'], { map: true });
     const originalRefreshToken = loginCookies.refreshToken.value;
 
     // Act
-    const response = await agent.post(`${AUTH_PATH}/refresh`).send();
+    const response = await agent.post(`${DEFAULT_PATHS.auth}/refresh`).send();
 
     // Assert
     expect(response.status).toBe(200);
@@ -38,7 +38,7 @@ describe(`Обновление токена`, () => {
     // Arrange
 
     // Act
-    const response = await request(app).post(`${AUTH_PATH}/refresh`).send();
+    const response = await request(app).post(`${DEFAULT_PATHS.auth}/refresh`).send();
 
     // Assert
     expect(response.status).toBe(401);
@@ -63,7 +63,7 @@ describe(`Обновление токена`, () => {
     );
 
     // Act
-    const response = await request(app).post(`${AUTH_PATH}/refresh`).set('Cookie', `refreshToken=${badToken}`);
+    const response = await request(app).post(`${DEFAULT_PATHS.auth}/refresh`).set('Cookie', `refreshToken=${badToken}`);
 
     // Assert
     expect(response.status).toBe(403);
