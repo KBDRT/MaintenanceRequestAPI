@@ -44,7 +44,7 @@ app.use('/api/auth', authRouter);
 app.use('/', rootRouter);
 app.use('/api/equipments', authenticate, equipmentRouter);
 app.use('/api/requests', authenticate, maintenanceRequestRouter);
-app.use('/api/', authenticate, reportsRouter);
+app.use('/api/', reportsRouter);
 
 app.use(endpointNotFound);
 
