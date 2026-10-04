@@ -85,7 +85,7 @@ export const generateTokens = async(payload: TokenPayload): Promise<GetTokensRes
       technicianId: payload.technicianId
     }, 
     authConfig.accessToken.secretKey, 
-    { expiresIn: authConfig.accessToken.maxAge / 1000 }
+    { expiresIn: authConfig.accessToken.maxAge }
   );
 
   result.refreshToken = jwt.sign(
@@ -94,7 +94,7 @@ export const generateTokens = async(payload: TokenPayload): Promise<GetTokensRes
       login: payload.login,
     }, 
     authConfig.refreshToken.secretKey, 
-    { expiresIn: authConfig.refreshToken.maxAge }
+    { expiresIn: authConfig.refreshToken.maxAge / 1000 }
   );
 
   return result;

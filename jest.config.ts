@@ -1,10 +1,9 @@
 import type { Config } from 'jest';
 
-const config: Config = {
+const shared = {
   testEnvironment: 'node',
   preset: 'ts-jest/presets/default-esm',
   extensionsToTreatAsEsm: ['.ts'],
-  testMatch: ['**/*.test.ts'],
   testPathIgnorePatterns: ['/node_modules/', '/dist/'],
   moduleFileExtensions: ['ts', 'tsx', 'js', 'json'],
   moduleNameMapper: {
@@ -16,7 +15,32 @@ const config: Config = {
       tsconfig: 'tsconfig.json',
     }],
   },
-  setupFiles: ['<rootDir>/test/setup-env.ts'],
+};
+
+const config: Config = {
+  projects: [
+    {
+      ...shared,
+      displayName: 'unit',
+      testMatch: ['<rootDir>/test/unit/**/*.test.ts'],
+    },
+
+    {
+      ...shared,
+      displayName: 'integration',
+      testMatch: ['<rootDir>/test/integration/**/*.test.ts'],
+      globalSetup: '<rootDir>/test/integration/utils/global-setup.ts',
+      setupFilesAfterEnv: ['<rootDir>/test/integration/utils/setup.ts', 'jest-fetch-mock/setup'],       
+      testTimeout: 60_000,
+    },
+  ],
+  maxWorkers: 1,
+  collectCoverageFrom: [
+    'src/**/*.ts',
+    '!src/migrations/**/*.ts',
+    '!src/seeds/**/*.ts',
+    '!src/srcripts/**/*.ts',
+  ]
 };
 
 export default config;

@@ -7,7 +7,8 @@ import { TokenPayload } from '../dto/types/tokens-payload.type.js';
 
 export function checkAccess(allowedRoles: UserRole[]) {
   return (req: Request, res: Response, next: NextFunction) => {
-    if (appConfig.nodeEnv != NODE_ENV_VALUES.PRODUCTION) 
+    
+    if (appConfig.nodeEnv == NODE_ENV_VALUES.DEVELOPMENT) 
     {
       next();
       return;
