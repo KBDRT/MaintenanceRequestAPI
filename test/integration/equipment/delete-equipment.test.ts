@@ -1,0 +1,93 @@
+import request from 'supertest';
+import { faker } from '@faker-js/faker';
+import app from '../../../src/app.js';
+import { test, expect, describe } from '@jest/globals';
+import { UserRole } from '../../../src/domains/enums/user-role.enum.js';
+import { createDBEquipment, createEquipmentBody, loginAs } from '../utils.js';
+import { Equipment } from '../../../src/domains/models/equipment.model.js';
+
+const PATH = '/api/equipments';
+
+describe(`Удаление оборудования: DELETE ${PATH}/:id`, () => {
+
+  test('204 — валидные данные, оборудование удалено из БД', async () => {
+    // Arrange
+    const { token } = await loginAs(UserRole.admin);
+    const savedEquipment = await createDBEquipment();
+    const id = savedEquipment.id;
+
+    // Act
+    const response = await request(app)
+      .delete(`${PATH}/${id}`)
+      .set('Authorization', `Bearer ${token}`);
+
+    // Assert
+    expect(response.status).toBe(204);
+
+    const saved = await Equipment.findByPk(id);
+    expect(saved).toBeNull();
+
+    const getResponse = await request(app)
+      .get(`${PATH}/${id}`)
+      .set('Authorization', `Bearer ${token}`);
+    expect(getResponse.status).toBe(404);
+  });
+
+  test('401 — без токена, оборудование не удалено', async () => {
+    // Arrange
+    const savedEquipment = await createDBEquipment();
+    const id = savedEquipment.id;
+
+    // Act
+    const response = await request(app).delete(`${PATH}/${id}`);
+
+    // Assert
+    expect(response.status).toBe(401);
+
+    const saved = await Equipment.findByPk(id);
+    expect(saved).not.toBeNull();
+  });
+
+  test('403 — роль без прав, оборудование не удалено', async () => {
+    // Arrange
+    const { token: viewerToken } = await loginAs(UserRole.viewer);
+    const savedEquipment = await createDBEquipment();
+    const id = savedEquipment.id;
+
+    // Act
+    const response = await request(app)
+      .delete(`${PATH}/${id}`)
+      .set('Authorization', `Bearer ${viewerToken}`);
+
+    // Assert
+    expect(response.status).toBe(403);
+
+    const saved = await Equipment.findByPk(id);
+    expect(saved).not.toBeNull();
+  });
+
+  test('404 — оборудование не найдено', async () => {
+    // Arrange
+    const { token } = await loginAs(UserRole.admin);
+    const id = faker.string.uuid();
+
+    // Act
+    const response = await request(app)
+      .delete(`${PATH}/${id}`)
+      .set('Authorization', `Bearer ${token}`);
+
+    // Assert
+    expect(response.status).toBe(404);
+    expect(response.body).toMatchObject({
+      error: {
+        code: expect.any(String),
+        message: expect.any(String),
+        details: expect.anything(),
+        requestId: expect.any(String),
+      },
+    });
+
+    expect(await Equipment.count()).toBe(0);
+  });
+
+});

@@ -1,12 +1,12 @@
 import { test, describe, expect } from '@jest/globals';
 import request from 'supertest';
 import app from '../../../src/app.js';
-import { createDBUser } from './utils.js';
 import { AUTH_PATH } from '../global-setup.js';
 import setCookie from 'set-cookie-parser';
 import jwt from "jsonwebtoken";
+import { createDBUser } from '../utils.js';
 
-describe(`Регистрация пользователя`, () => {
+describe(`Обновление токена`, () => {
   test('Ответ 200 + обновление токена, при валидных данных', async () => {
     // Arrange
     const user = await createDBUser({password: "password"});

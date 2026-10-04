@@ -7,7 +7,7 @@ import NODE_ENV_VALUES from '../config/node_env.enum.js';
 
 export function authenticate(req: Request, res: Response, next: NextFunction) {
 
-  if (appConfig.nodeEnv != NODE_ENV_VALUES.PRODUCTION) 
+  if (appConfig.nodeEnv == NODE_ENV_VALUES.DEVELOPMENT) 
   {
     next();
     return;

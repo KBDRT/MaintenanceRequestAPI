@@ -1,11 +1,11 @@
 import { test, describe, expect } from '@jest/globals';
 import request from 'supertest';
 import app from '../../../src/app.js';
-import { createDBUser } from './utils.js';
 import { AUTH_PATH } from '../global-setup.js';
 import { faker } from "@faker-js/faker";
 import { User } from '../../../src/domains/models/user.model.js';
 import { UserRole } from '../../../src/domains/enums/user-role.enum.js';
+import { createDBUser } from '../utils.js';
 
 describe(`Регистрация пользователя`, () => {
   test('Ответ 201 + сохранение пользователя, при валидном', async () => {

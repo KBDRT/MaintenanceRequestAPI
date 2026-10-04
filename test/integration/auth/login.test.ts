@@ -1,9 +1,9 @@
 import { test, describe, expect } from '@jest/globals';
 import request from 'supertest';
 import app from '../../../src/app.js';
-import { createDBUser } from './utils.js';
 import setCookie from 'set-cookie-parser';
 import { AUTH_PATH } from '../global-setup.js';
+import { createDBUser } from '../utils.js';
 
 describe(`Логин пользователя`, () => {
   test('Ответ 200 + возврат access токена + установка refresh в cookie, при валидных данных пользователя', async () => {
