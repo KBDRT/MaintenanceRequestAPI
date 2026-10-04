@@ -16,8 +16,7 @@ import cookieParser from 'cookie-parser';
 import reportsRouter from './routes/reports.route.js';
 import { saveMetrics } from './middlewares/metrics.middleware.js';
 import swaggerUi from 'swagger-ui-express';
-import { options, specs } from './swagger/swagger.config.js';
-import swaggerJSDoc from 'swagger-jsdoc';
+import { specs } from './swagger/swagger.config.js';
 import { authenticate } from './middlewares/auth.middleware.js';
 
 const app = express();
@@ -39,23 +38,7 @@ app.use(cookieParser());
 
 app.use(setRequestId);
 
-app.get('/api-docs.json', (_req, res) => {
-  const spec = swaggerJSDoc(options);
-  res.setHeader('Content-Type', 'application/json');
-  res.send(spec);
-});
-
-
-app.use(
-  '/api-docs',
-  swaggerUi.serve,
-  swaggerUi.setup(undefined, {
-    swaggerOptions: {
-      url: '/api-docs.json',
-    },
-  }),
-);
-
+app.use('/api/docs', swaggerUi.serve, swaggerUi.setup(specs));
 
 app.use('/api/auth', authRouter);
 app.use('/', rootRouter);
